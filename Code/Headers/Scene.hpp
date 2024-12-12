@@ -27,15 +27,15 @@ namespace udit
 
         Scene(unsigned width, unsigned height);
 
-        void   update ();
-        void   render ();
-        void   resize (unsigned width, unsigned height);
+        void   update();
+        void   render();
+        void   resize(unsigned width, unsigned height);
 
     private:
 
-        GLuint compile_shaders        ();
-        void   show_compilation_error (GLuint  shader_id);
-        void   show_linkage_error     (GLuint program_id);
+        GLuint compile_shaders();
+        void   show_compilation_error(GLuint  shader_id);
+        void   show_linkage_error(GLuint program_id);
 
     };
 
