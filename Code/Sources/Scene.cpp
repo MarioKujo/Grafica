@@ -79,19 +79,37 @@ namespace udit
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Se rota el cubo y se empuja hacia el fondo:
-
+        // Se crea la matriz de modelo y vista para la cámara (alejarla un poco)
         glm::mat4 model_view_matrix(1);
+        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -10.f));  // Alejar la cámara
 
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        // Se rota el cubo
+        glm::mat4 cube_model_view_matrix = model_view_matrix;
+        cube_model_view_matrix = glm::translate(cube_model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
+        cube_model_view_matrix = glm::rotate(cube_model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
 
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+        // Actualizar la matriz del cubo
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cube_model_view_matrix));
 
-        // Se dibuja el cubo:
-
+        // Dibujar el cubo
         cube.render();
+
+        // Ahora renderizamos el plano
+        // Creamos la matriz para el plano, primero trasladando el plano hacia abajo
+        glm::mat4 plane_model_view_matrix = model_view_matrix;
+        plane_model_view_matrix = glm::translate(plane_model_view_matrix, glm::vec3(0.f, -2.f, 0.f));  // Mover el plano hacia abajo
+
+        // Rotamos el plano ligeramente hacia adelante para simular un "suelo"
+        plane_model_view_matrix = glm::rotate(plane_model_view_matrix, glm::radians(-75.f), glm::vec3(1.f, 0.f, 0.f));  // Rotación en el eje X
+
+        // Actualizar la matriz del plano
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_model_view_matrix));
+
+        // Dibujar el plano
+        plane.render();
     }
+
+
 
     void Scene::resize(unsigned width, unsigned height)
     {
