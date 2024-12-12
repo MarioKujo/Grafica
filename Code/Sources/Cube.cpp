@@ -51,52 +51,52 @@ namespace udit
     {
         // Se generan índices para los VBOs del cubo:
 
-        glGenBuffers(VBO_COUNT, vbo_ids);
-        glGenVertexArrays(1, &vao_id);
+        glGenBuffers (VBO_COUNT, vbo_ids);
+        glGenVertexArrays (1, &vao_id);
 
         // Se activa el VAO del cubo para configurarlo:
 
-        glBindVertexArray(vao_id);
+        glBindVertexArray (vao_id);
 
         // Se suben a un VBO los datos de coordenadas y se vinculan al VAO:
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COORDINATES_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(coordinates), coordinates, GL_STATIC_DRAW);
+        glBindBuffer (GL_ARRAY_BUFFER, vbo_ids[COORDINATES_VBO]);
+        glBufferData (GL_ARRAY_BUFFER, sizeof(coordinates), coordinates, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray (0);
+        glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         // Se suben a un VBO los datos de color y se vinculan al VAO:
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+        glBindBuffer (GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
+        glBufferData (GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray (1);
+        glVertexAttribPointer (1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         // Se suben a un EBO los datos de índices:
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
+        glBufferData (GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-        glBindVertexArray(0);
+        glBindVertexArray (0);
     }
 
     Cube::~Cube()
     {
         // Se liberan los VBOs y el VAO usados:
 
-        glDeleteVertexArrays(1, &vao_id);
-        glDeleteBuffers(VBO_COUNT, vbo_ids);
+        glDeleteVertexArrays (1, &vao_id);
+        glDeleteBuffers      (VBO_COUNT, vbo_ids);
     }
 
-    void Cube::render()
+    void Cube::render ()
     {
         // Se selecciona el VAO que contiene los datos del objeto y se dibujan sus elementos:
-
-        glBindVertexArray(vao_id);
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_BYTE, 0);
-        glBindVertexArray(0);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDisable(GL_CULL_FACE);
+        glBindVertexArray (vao_id);
+        glDrawElements    (GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_BYTE, 0);
+        glBindVertexArray (0);
     }
-
 }
