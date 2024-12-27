@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Headers\Cylinder.hpp" />
     <ClInclude Include="..\Code\Headers\Cube.hpp" />
     <ClInclude Include="..\Code\Headers\Plane.hpp" />
     <ClInclude Include="..\Code\Headers\Scene.hpp" />
     <ClInclude Include="..\Shared\Code\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Sources\Cylinder.cpp" />
     <ClCompile Include="..\Code\Sources\Cube.cpp" />
     <ClCompile Include="..\Code\Sources\main.cpp" />
     <ClCompile Include="..\Code\Sources\Plane.cpp" />
@@ -64,6 +66,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Shared/Code</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -79,25 +79,14 @@ namespace udit
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Se crea la matriz de modelo y vista para la cámara (alejarla un poco)
+        // Se crea la matriz de modelo y vista para la cámara
         glm::mat4 model_view_matrix(1);
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -10.f));  // Alejar la cámara
+        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(-1.25f, 0.f, -10.f));  // Alejar la cámara
 
-        // Se rota el cubo
-        glm::mat4 cube_model_view_matrix = model_view_matrix;
-        cube_model_view_matrix = glm::translate(cube_model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        cube_model_view_matrix = glm::rotate(cube_model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
-
-        // Actualizar la matriz del cubo
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cube_model_view_matrix));
-
-        // Dibujar el cubo
-        cube.render();
-
-        // Ahora renderizamos el plano
-        // Creamos la matriz para el plano, primero trasladando el plano hacia abajo
+        // Renderizamos el plano
+        // Creamos la matriz para el plano
         glm::mat4 plane_model_view_matrix = model_view_matrix;
-        plane_model_view_matrix = glm::translate(plane_model_view_matrix, glm::vec3(0.f, -2.f, 0.f));  // Mover el plano hacia abajo
+        plane_model_view_matrix = glm::translate(plane_model_view_matrix, glm::vec3(0.f, -2.f, 0.f));  // Movemos el plano hacia abajo
 
         // Rotamos el plano ligeramente hacia adelante para simular un "suelo"
         plane_model_view_matrix = glm::rotate(plane_model_view_matrix, glm::radians(-75.f), glm::vec3(1.f, 0.f, 0.f));  // Rotación en el eje X
@@ -107,6 +96,18 @@ namespace udit
 
         // Dibujar el plano
         plane.render();
+
+        // Renderizamos el cilindro
+        // Creamos la matriz para el cilindro
+        glm::mat4 cylinder_model_view_matrix = model_view_matrix;
+        cylinder_model_view_matrix = glm::translate(cylinder_model_view_matrix, glm::vec3(0.f, 0.f, -2.f));
+        cylinder_model_view_matrix = glm::rotate(cylinder_model_view_matrix, glm::radians(30.f), glm::vec3(1.f, 0.f, 0.f));
+
+        // Actualizar la matriz del cilindro
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_model_view_matrix));
+
+        // Dibujar el cilindro
+        cylinder.render();
     }
 
 

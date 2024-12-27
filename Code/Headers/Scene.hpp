@@ -3,8 +3,7 @@
 // angel.rodriguez@udit.es
 
 #pragma once
-
-#include "Cube.hpp"
+#include "Cylinder.hpp"
 #include "Plane.hpp"
 #include <string>
 
@@ -21,7 +20,7 @@ namespace udit
         GLint  model_view_matrix_id;
         GLint  projection_matrix_id;
 
-        Cube   cube;
+        Cylinder cylinder;
         Plane  plane;
         float  angle;
 
