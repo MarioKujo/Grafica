@@ -39,19 +39,11 @@ namespace udit
         int grid_width;  /**< Ancho de la cuadrícula. */
         int grid_height; /**< Alto de la cuadrícula. */
 
-        /**
-         * @brief Constantes para la cantidad de VBOs y los índices de los buffers.
-         */
-        static const int VBO_COUNT = 3; /**< Número total de VBOs. */
-        static const int COORDINATES_VBO = 0; /**< Índice del VBO de coordenadas. */
-        static const int COLORS_VBO = 1; /**< Índice del VBO de colores. */
-        static const int INDICES_EBO = 2; /**< Índice del VBO de índices (EBO). */
-
+        enum {COORDINATES_VBO, COLORS_VBO, INDICES_EBO, VBO_COUNT};
         static GLfloat* coordinates;
         static GLfloat* colors;
         static GLubyte* indices;
 
         void generateGeometry();
     };
-
 }

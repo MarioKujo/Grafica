@@ -101,8 +101,8 @@ namespace udit
         // Renderizado del plano
         glm::mat4 plane_model_view_matrix = model_view_matrix;
         plane_model_view_matrix = glm::translate(plane_model_view_matrix, glm::vec3(0.f, -2.f, 0.f));
-        plane_model_view_matrix = glm::rotate(plane_model_view_matrix, glm::radians(-75.f),
-            glm::vec3(1.f, 0.f, 0.f)); // Rotación del plano
+
+        plane_model_view_matrix = glm::rotate(plane_model_view_matrix, glm::radians(-75.f), glm::vec3(1.f, 0.f, 0.f)); // Rotación del plano
 
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_model_view_matrix));
         plane.render(); // Dibuja el plano
