@@ -6,7 +6,7 @@
  * manejar su ciclo de vida y realizar operaciones básicas como el intercambio de buffers.
  *
  * @author Angel Rodriguez
- * @date Public domain
+ * @note Public domain
  */
 
 #pragma once

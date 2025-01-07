@@ -6,7 +6,7 @@
  * renderizado de objetos, manejo de eventos y configuración de la cámara.
  *
  * @author Angel Rodriguez
- * @date Public domain
+ * @note Public domain
  */
 
 #pragma once

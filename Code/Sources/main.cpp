@@ -6,7 +6,7 @@
  * Permite procesar eventos del ratón, actualizar una escena y renderizarla.
  *
  * @author Angel Rodriguez
- * @date Public domain
+ * @note Public domain
  */
 
 #include "../Headers/Scene.hpp"
