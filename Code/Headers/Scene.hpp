@@ -1,11 +1,14 @@
-
-// Este código es de dominio público
-// angel.rodriguez@udit.es
-
 #pragma once
 
 #include "Cube.hpp"
+#include "Camera.hpp" // Incluir la cámara
 #include <string>
+#include <iostream>
+#include <cassert>
+#include <SDL.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 namespace udit
 {
@@ -23,13 +26,17 @@ namespace udit
         Cube   cube;
         float  angle;
 
+        Camera camera; // Añadido: Cámara como parte de la escena
+
     public:
 
         Scene(unsigned width, unsigned height);
 
-        void   update();
+        void   update(float delta_time); // Se pasa el delta_time para movimientos suaves
         void   render();
         void   resize(unsigned width, unsigned height);
+
+        void   handle_mouse_motion(int xrel, int yrel); // Para manejar movimientos del ratón
 
     private:
 

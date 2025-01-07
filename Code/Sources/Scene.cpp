@@ -6,30 +6,18 @@
 
 #include "../Headers/Scene.hpp"
 
-#include <iostream>
-#include <cassert>
-
-#include <glm.hpp>                          // vec3, vec4, ivec4, mat4
-#include <gtc/matrix_transform.hpp>         // translate, rotate, scale, perspective
-#include <gtc/type_ptr.hpp>                 // value_ptr
-
 namespace udit
 {
 
     using namespace std;
 
     const string Scene::vertex_shader_code =
-
         "#version 330\n"
-        ""
         "uniform mat4 model_view_matrix;"
         "uniform mat4 projection_matrix;"
-        ""
         "layout (location = 0) in vec3 vertex_coordinates;"
         "layout (location = 1) in vec3 vertex_color;"
-        ""
         "out vec3 front_color;"
-        ""
         "void main()"
         "{"
         "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
@@ -37,28 +25,20 @@ namespace udit
         "}";
 
     const string Scene::fragment_shader_code =
-
         "#version 330\n"
-        ""
         "in  vec3    front_color;"
         "out vec4 fragment_color;"
-        ""
         "void main()"
         "{"
         "    fragment_color = vec4(front_color, 1.0);"
         "}";
 
     Scene::Scene(unsigned width, unsigned height)
-        :
-        angle(0)
+        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)) // Inicialización de la cámara
     {
-        // Se establece la configuración básica:
-
         glEnable(GL_CULL_FACE);
         glDisable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
-
-        // Se compilan y se activan los shaders:
 
         GLuint program_id = compile_shaders();
 
@@ -70,37 +50,59 @@ namespace udit
         resize(width, height);
     }
 
-    void Scene::update()
+    void Scene::update(float delta_time)
     {
         angle += 0.01f;
+
+        const Uint8* keyboard_state = SDL_GetKeyboardState(nullptr);
+        camera.process_keyboard(keyboard_state, delta_time);
     }
 
     void Scene::render()
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Se rota el cubo y se empuja hacia el fondo:
+        // Obtenemos la matriz de vista desde la cámara
+        glm::mat4 view_matrix = camera.get_view_matrix();
 
-        glm::mat4 model_view_matrix(1);
+        // Cubo 1
+        glm::mat4 model_matrix1(1);
+        model_matrix1 = glm::translate(model_matrix1, glm::vec3(0.f, 0.f, -4.f));
+        model_matrix1 = glm::rotate(model_matrix1, angle, glm::vec3(1.f, 2.f, 1.f));
 
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        // Calculamos la matriz model-view para el cubo 1
+        glm::mat4 model_view_matrix1 = view_matrix * model_matrix1;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix1));
 
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+        // Dibujamos el primer cubo
+        cube.render();
 
-        // Se dibuja el cubo:
+        // Cubo 2
+        glm::mat4 model_matrix2(1);
+        model_matrix2 = glm::translate(model_matrix2, glm::vec3(2.f, 0.f, -8.f));
+        model_matrix2 = glm::rotate(model_matrix2, angle, glm::vec3(1.f, 2.f, 1.f));
 
+        // Calculamos la matriz model-view para el cubo 2
+        glm::mat4 model_view_matrix2 = view_matrix * model_matrix2;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix2));
+
+        // Dibujamos el segundo cubo
         cube.render();
     }
+
 
     void Scene::resize(unsigned width, unsigned height)
     {
         glm::mat4 projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
-
         glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-
         glViewport(0, 0, width, height);
     }
+
+    void Scene::handle_mouse_motion(int xrel, int yrel)
+    {
+        camera.process_mouse_motion(xrel, yrel);
+    }
+
 
     GLuint Scene::compile_shaders()
     {

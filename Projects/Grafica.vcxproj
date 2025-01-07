@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Headers\Camera.hpp" />
     <ClInclude Include="..\Code\Headers\Cube.hpp" />
     <ClInclude Include="..\Code\Headers\Scene.hpp" />
     <ClInclude Include="..\Shared\Code\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Sources\Camera.cpp" />
     <ClCompile Include="..\Code\Sources\Cube.cpp" />
     <ClCompile Include="..\Code\Sources\main.cpp" />
     <ClCompile Include="..\Code\Sources\Scene.cpp" />
