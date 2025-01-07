@@ -1,6 +1,13 @@
-
-// Este código es de dominio público
-// angel.rodriguez@udit.es
+/**
+ * @file Scene.cpp
+ * @brief Implementación de la clase Scene para gestionar una escena en OpenGL.
+ *
+ * Este archivo define los métodos de la clase Scene, incluyendo la inicialización de shaders,
+ * renderizado de objetos, manejo de eventos y configuración de la cámara.
+ *
+ * @author Angel Rodriguez
+ * @date Public domain
+ */
 
 #pragma once
 
@@ -11,6 +18,9 @@ namespace udit
 
     using namespace std;
 
+    /**
+     * @brief Código del shader de vértices en GLSL.
+     */
     const string Scene::vertex_shader_code =
         "#version 330\n"
         "uniform mat4 model_view_matrix;"
@@ -24,6 +34,9 @@ namespace udit
         "   front_color = vertex_color;"
         "}";
 
+    /**
+     * @brief Código del shader de fragmentos en GLSL.
+     */
     const string Scene::fragment_shader_code =
         "#version 330\n"
         "in  vec3    front_color;"
@@ -33,8 +46,17 @@ namespace udit
         "    fragment_color = vec4(front_color, 1.0);"
         "}";
 
+    /**
+     * @brief Constructor de la clase Scene.
+     *
+     * Configura los parámetros iniciales, compila shaders, inicializa la cámara
+     * y ajusta el viewport.
+     *
+     * @param width Ancho inicial del viewport.
+     * @param height Alto inicial del viewport.
+     */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)) // Inicialización de la cámara
+        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)) ///< Inicialización de la cámara.
     {
         glEnable(GL_CULL_FACE);
         glDisable(GL_DEPTH_TEST);
@@ -52,10 +74,10 @@ namespace udit
 
     void Scene::update(float delta_time)
     {
-        angle += 0.01f;
+        angle += 0.01f; ///< Incremento del ángulo para animación.
 
         const Uint8* keyboard_state = SDL_GetKeyboardState(nullptr);
-        camera.process_keyboard(keyboard_state, delta_time);
+        camera.process_keyboard(keyboard_state, delta_time); ///< Actualización de la cámara.
     }
 
     void Scene::render()
@@ -65,31 +87,22 @@ namespace udit
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
 
-        // Cubo 1
+        // Renderizado del primer cubo
         glm::mat4 model_matrix1(1);
         model_matrix1 = glm::translate(model_matrix1, glm::vec3(0.f, 0.f, -4.f));
         model_matrix1 = glm::rotate(model_matrix1, angle, glm::vec3(1.f, 2.f, 1.f));
-
-        // Calculamos la matriz model-view para el cubo 1
         glm::mat4 model_view_matrix1 = view_matrix * model_matrix1;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix1));
-
-        // Dibujamos el primer cubo
         cube.render();
 
-        // Cubo 2
+        // Renderizado del segundo cubo
         glm::mat4 model_matrix2(1);
         model_matrix2 = glm::translate(model_matrix2, glm::vec3(2.f, 0.f, -8.f));
         model_matrix2 = glm::rotate(model_matrix2, angle, glm::vec3(1.f, 2.f, 1.f));
-
-        // Calculamos la matriz model-view para el cubo 2
         glm::mat4 model_view_matrix2 = view_matrix * model_matrix2;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix2));
-
-        // Dibujamos el segundo cubo
         cube.render();
     }
-
 
     void Scene::resize(unsigned width, unsigned height)
     {
@@ -100,35 +113,26 @@ namespace udit
 
     void Scene::handle_mouse_motion(int xrel, int yrel)
     {
-        camera.process_mouse_motion(xrel, yrel);
+        camera.process_mouse_motion(xrel, yrel); ///< Actualización de la orientación de la cámara.
     }
-
 
     GLuint Scene::compile_shaders()
     {
         GLint succeeded = GL_FALSE;
 
-        // Se crean objetos para los shaders:
-
-        GLuint   vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+        GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
         GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-
-        // Se carga el código de los shaders:
 
         const char* vertex_shaders_code[] = { vertex_shader_code.c_str() };
         const char* fragment_shaders_code[] = { fragment_shader_code.c_str() };
-        const GLint    vertex_shaders_size[] = { (GLint)vertex_shader_code.size() };
-        const GLint  fragment_shaders_size[] = { (GLint)fragment_shader_code.size() };
+        const GLint vertex_shaders_size[] = { (GLint)vertex_shader_code.size() };
+        const GLint fragment_shaders_size[] = { (GLint)fragment_shader_code.size() };
 
         glShaderSource(vertex_shader_id, 1, vertex_shaders_code, vertex_shaders_size);
         glShaderSource(fragment_shader_id, 1, fragment_shaders_code, fragment_shaders_size);
 
-        // Se compilan los shaders:
-
         glCompileShader(vertex_shader_id);
         glCompileShader(fragment_shader_id);
-
-        // Se comprueba que si la compilación ha tenido éxito:
 
         glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &succeeded);
         if (!succeeded) show_compilation_error(vertex_shader_id);
@@ -136,25 +140,15 @@ namespace udit
         glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &succeeded);
         if (!succeeded) show_compilation_error(fragment_shader_id);
 
-        // Se crea un objeto para un programa:
-
         GLuint program_id = glCreateProgram();
-
-        // Se cargan los shaders compilados en el programa:
 
         glAttachShader(program_id, vertex_shader_id);
         glAttachShader(program_id, fragment_shader_id);
 
-        // Se linkan los shaders:
-
         glLinkProgram(program_id);
-
-        // Se comprueba si el linkage ha tenido éxito:
 
         glGetProgramiv(program_id, GL_LINK_STATUS, &succeeded);
         if (!succeeded) show_linkage_error(program_id);
-
-        // Se liberan los shaders compilados una vez se han linkado:
 
         glDeleteShader(vertex_shader_id);
         glDeleteShader(fragment_shader_id);
@@ -165,7 +159,7 @@ namespace udit
     void Scene::show_compilation_error(GLuint shader_id)
     {
         string info_log;
-        GLint  info_log_length;
+        GLint info_log_length;
 
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
 
@@ -175,17 +169,13 @@ namespace udit
 
         cerr << info_log.c_str() << endl;
 
-#ifdef _MSC_VER
-        //OutputDebugStringA (info_log.c_str ());
-#endif
-
         assert(false);
     }
 
     void Scene::show_linkage_error(GLuint program_id)
     {
         string info_log;
-        GLint  info_log_length;
+        GLint info_log_length;
 
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &info_log_length);
 
@@ -194,10 +184,6 @@ namespace udit
         glGetProgramInfoLog(program_id, info_log_length, NULL, &info_log.front());
 
         cerr << info_log.c_str() << endl;
-
-#ifdef _MSC_VER
-        //OutputDebugStringA (info_log.c_str ());
-#endif
 
         assert(false);
     }
