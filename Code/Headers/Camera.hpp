@@ -85,6 +85,8 @@ namespace udit
          */
         void process_keyboard(const Uint8* state, float delta_time);
 
+        void start_camera_control();
+
         /**
          * @brief Procesa el movimiento del ratón para actualizar la orientación de la cámara.
          *

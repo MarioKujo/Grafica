@@ -29,6 +29,7 @@ namespace udit
     Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch, float movement_speed, float mouse_sensitivity)
         : position(position), up(up), yaw(yaw), pitch(pitch), movement_speed(movement_speed), mouse_sensitivity(mouse_sensitivity)
     {
+        start_camera_control();
         update_camera_vectors();
     }
 
@@ -70,6 +71,12 @@ namespace udit
             position += right * velocity;
     }
 
+    void Camera::start_camera_control()
+    {
+        // Capturar el ratón y ocultarlo
+        SDL_SetRelativeMouseMode(SDL_TRUE);  // El ratón no puede salir de la ventana
+        SDL_ShowCursor(SDL_FALSE);           // Ocultar el ratón
+    }
     /**
      * @brief Procesa el movimiento del ratón para actualizar la orientación de la cámara.
      *
