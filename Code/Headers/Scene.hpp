@@ -15,7 +15,8 @@
 #include "Cone.hpp"
 #include "Plane.hpp"
 #include "Cube.hpp"
-#include "Camera.hpp" ///< Incluir la cámara para la gestión de la vista y proyección.
+#include "Camera.hpp"
+#include "TextureLoader.hpp"
 #include <string>
 #include <iostream>
 #include <cassert>
@@ -50,6 +51,11 @@ namespace udit
 
         Camera camera; ///< Cámara para gestionar la vista y la proyección.
 
+        TextureLoader textureLoader; ///< Instancia de TextureLoader para cargar texturas
+        GLuint cubeTextureID; ///< ID de la textura del cubo
+        GLuint planeTextureID; ///< ID de la textura del plano
+        GLuint cylinderTextureID; ///< ID de la textura del cilindro
+        GLuint coneTextureID; ///< ID de la textura del cono
     public:
 
         /**

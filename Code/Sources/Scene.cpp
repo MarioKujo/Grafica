@@ -41,9 +41,10 @@ namespace udit
         "#version 330\n"
         "in  vec3    front_color;"
         "out vec4 fragment_color;"
+        "uniform sampler2D textureSampler;" ///< Uniform de la textura
         "void main()"
         "{"
-        "    fragment_color = vec4(front_color, 1.0);"
+        "    fragment_color = texture(textureSampler, front_color.xy);"
         "}";
 
     /**
@@ -68,6 +69,11 @@ namespace udit
 
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
+
+        // Cargar las texturas
+        coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
+
+        glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
     }
@@ -121,6 +127,7 @@ namespace udit
 
         glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, coneTextureID);
         cone.render(); // Dibuja el cono
     }
 
