@@ -56,13 +56,13 @@ namespace udit
      * @param height Alto inicial del viewport.
      */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)) ///< Inicialización de la cámara.
+        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5) ///< Inicialización de la cámara.
     {
         glEnable(GL_CULL_FACE);
         glDisable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
 
-        GLuint program_id = compile_shaders();
+        program_id = compile_shaders();
 
         glUseProgram(program_id);
 
@@ -87,21 +87,41 @@ namespace udit
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
 
-        // Renderizado del primer cubo
-        glm::mat4 model_matrix1(1);
-        model_matrix1 = glm::translate(model_matrix1, glm::vec3(0.f, 0.f, -4.f));
-        model_matrix1 = glm::rotate(model_matrix1, angle, glm::vec3(1.f, 2.f, 1.f));
-        glm::mat4 model_view_matrix1 = view_matrix * model_matrix1;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix1));
+        // Renderizado del cubo
+        glm::mat4 cube_matrix(1);
+        cube_matrix = glm::translate(cube_matrix, glm::vec3(0.f, 0.f, -4.f));
+        cube_matrix = glm::rotate(cube_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        glm::mat4 cube_view_matrix = view_matrix * cube_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cube_view_matrix));
         cube.render();
+        // Renderizado del plano
+        glm::mat4 plane_matrix(1);
+        plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
+        plane_matrix = glm::rotate(plane_matrix, glm::radians(-75.f),
+            glm::vec3(1.f, 0.f, 0.f)); // Rotación del plano
+        glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
+        plane.render(); // Dibuja el plano
 
-        // Renderizado del segundo cubo
-        glm::mat4 model_matrix2(1);
-        model_matrix2 = glm::translate(model_matrix2, glm::vec3(2.f, 0.f, -8.f));
-        model_matrix2 = glm::rotate(model_matrix2, angle, glm::vec3(1.f, 2.f, 1.f));
-        glm::mat4 model_view_matrix2 = view_matrix * model_matrix2;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix2));
-        cube.render();
+        // Renderizado del cilindro
+        glm::mat4 cylinder_matrix(1);
+        cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(-4.f, 1.1f, -2.f));
+        cylinder_matrix = glm::rotate(cylinder_matrix, glm::radians(15.f),
+            glm::vec3(1.f, 0.f, 0.f));
+
+        glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
+        cylinder.render(); // Dibuja el cilindro
+
+        // Renderizado del cono
+        glm::mat4 cone_matrix(1);
+        cone_matrix = glm::translate(cone_matrix, glm::vec3(4.f, -1.45f, -2.f));
+        cone_matrix = glm::rotate(cone_matrix, glm::radians(15.f),
+            glm::vec3(1.f, 0.f, 0.f));
+
+        glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+        cone.render(); // Dibuja el cono
     }
 
     void Scene::resize(unsigned width, unsigned height)
