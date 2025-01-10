@@ -14,7 +14,6 @@
 #include "Cylinder.hpp"
 #include "Cone.hpp"
 #include "Plane.hpp"
-#include "Cube.hpp"
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include <string>
@@ -43,7 +42,6 @@ namespace udit
         GLint  model_view_matrix_id; ///< ID del uniforme para la matriz de vista-modelo.
         GLint  projection_matrix_id; ///< ID del uniforme para la matriz de proyección.
         GLuint program_id;
-        Cube   cube; ///< Objeto Cube para renderizar.
         Cone cone; /**< Cono 3D que forma parte de la escena. */
         Cylinder cylinder; /**< Cilindro 3D que forma parte de la escena. */
         Plane plane; /**< Plano 3D que forma parte de la escena. */

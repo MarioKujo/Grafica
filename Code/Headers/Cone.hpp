@@ -23,14 +23,13 @@ namespace udit
         GLfloat height;
 
         vector<GLfloat> coordinates;
-        vector<GLfloat> colors;
         vector<GLfloat> texCoords;
         vector<GLubyte> indices;
 
         GLuint vao_id;
-        GLuint vbo_ids[4];
+        GLuint vbo_ids[3];
 
-        enum { COORDINATES_VBO, COLORS_VBO, INDICES_EBO, TEXCOORDS_VBO, VBO_COUNT };
+        enum { COORDINATES_VBO, INDICES_EBO, TEXCOORDS_VBO, VBO_COUNT };
 
 
         void generateGeometry();

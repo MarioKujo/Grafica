@@ -14,14 +14,13 @@ namespace udit
 
     private:
         GLuint vao_id;
-        GLuint vbo_ids[4]; // Updated to include texCoords VBO
+        GLuint vbo_ids[3]; // Updated to include texCoords VBO
 
         int grid_width;
         int grid_height;
-        enum { COORDINATES_VBO, COLORS_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT };
+        enum { COORDINATES_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT };
 
         vector<GLfloat> coordinates;
-        vector<GLfloat> colors;
         vector<GLfloat> texCoords; // New vector for texture coordinates
         vector<GLubyte> indices;
 

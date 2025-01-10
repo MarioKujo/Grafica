@@ -24,12 +24,11 @@ namespace udit
         GLfloat radius;
         GLfloat height;
         vector<GLfloat> coordinates;
-        vector<GLfloat> colors;
         vector<GLfloat> texCoords; // Añadido vector para coordenadas de textura
         vector<GLubyte> indices;
         GLuint vao_id;
         GLuint vbo_ids[4]; // Aumentado tamaño para incluir texCoords
-        enum { COORDINATES_VBO, COLORS_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT };
+        enum { COORDINATES_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT };
         void generateGeometry();
     };
 }

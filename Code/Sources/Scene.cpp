@@ -27,7 +27,7 @@ namespace udit
         "uniform mat4 projection_matrix;"
         ""
         "layout (location = 0) in vec3 vertex_coordinates;"
-        "layout (location = 2) in vec2 vertex_texCoords;"
+        "layout (location = 1) in vec2 vertex_texCoords;"
         ""
         "out vec2 texCoords;"
         ""
@@ -77,9 +77,9 @@ namespace udit
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
         // Cargar las texturas
-        coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
+        coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
@@ -100,18 +100,12 @@ namespace udit
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
 
-        // Renderizado del cubo
-        glm::mat4 cube_matrix(1);
-        cube_matrix = glm::translate(cube_matrix, glm::vec3(0.f, 0.f, -4.f));
-        cube_matrix = glm::rotate(cube_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
-        glm::mat4 cube_view_matrix = view_matrix * cube_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cube_view_matrix));
-        cube.render();
         // Renderizado del plano
         glm::mat4 plane_matrix(1);
         plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
         plane_matrix = glm::rotate(plane_matrix, glm::radians(-75.f),
             glm::vec3(1.f, 0.f, 0.f)); // Rotación del plano
+
         glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
         glBindTexture(GL_TEXTURE_2D, planeTextureID);

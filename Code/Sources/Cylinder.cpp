@@ -18,17 +18,11 @@ namespace udit
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        // Colores
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
         // Coordenadas de textura
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORDS_VBO]);
         glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
         // Índices
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
@@ -49,7 +43,6 @@ namespace udit
         int indexCount = stack_count * slice_count * 6 + slice_count * 6;
 
         coordinates.resize(vertexCount * 3);
-        colors.resize(vertexCount * 3);
         texCoords.resize(vertexCount * 2); // Reservar espacio para texCoords
         indices.resize(indexCount);
 
@@ -93,22 +86,6 @@ namespace udit
         texCoords[texCoordIndex++] = 1.0f;
 
         int topCenterIndex = (vertexIndex / 3) - 1;
-
-        GLfloat rainbowColors[7][3] = {
-            {1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f},
-            {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.29f, 0.0f, 0.51f}, {0.56f, 0.0f, 1.0f} };
-
-        vertexIndex = 0;
-        for (int stack = 0; stack < stack_count; ++stack)
-        {
-            for (int slice = 0; slice < slice_count; ++slice)
-            {
-                GLfloat* color = rainbowColors[slice % 7];
-                colors[vertexIndex++] = color[0];
-                colors[vertexIndex++] = color[1];
-                colors[vertexIndex++] = color[2];
-            }
-        }
 
         int index = 0;
         for (int stack = 0; stack < stack_count - 1; ++stack)

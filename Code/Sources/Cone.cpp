@@ -17,15 +17,10 @@ namespace udit
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORDS_VBO]);
         glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLubyte), indices.data(), GL_STATIC_DRAW);
@@ -45,7 +40,6 @@ namespace udit
         int indexCount = divisions * 6;   // Índices para las caras laterales + la base
 
         coordinates.resize(vertexCount * 3);
-        colors.resize(vertexCount * 3);
         texCoords.resize(vertexCount * 2);  // Coordenadas de textura (2D)
         indices.resize(indexCount);
 
@@ -81,21 +75,6 @@ namespace udit
 
         texCoords[apexIndex * 2] = 0.5f;  // U (centrado en la cima)
         texCoords[apexIndex * 2 + 1] = 0.0f;  // V (en la cima)
-
-        // Asignar colores a los vértices (opcional)
-        GLfloat rainbowColors[7][3] = {
-            {1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f},
-            {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.29f, 0.0f, 0.51f}, {0.56f, 0.0f, 1.0f}
-        };
-
-        vertexIndex = 0;
-        for (int i = 0; i < vertexCount; i++)
-        {
-            GLfloat* color = rainbowColors[i % 7];
-            colors[vertexIndex++] = color[0];
-            colors[vertexIndex++] = color[1];
-            colors[vertexIndex++] = color[2];
-        }
 
         // Índices para las caras laterales (conectar los vértices con el ápice)
         int index = 0;

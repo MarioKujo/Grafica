@@ -19,17 +19,11 @@ namespace udit
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-        // Colors VBO
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
         // Texture Coordinates VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORDS_VBO]);
         glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
         // Indices EBO
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
@@ -50,7 +44,6 @@ namespace udit
         int indexCount = (grid_width - 1) * (grid_height - 1) * 6;
 
         coordinates.resize(vertexCount * 3, 0.0f);
-        colors.resize(vertexCount * 3, 0.0f);
         texCoords.resize(vertexCount * 2, 0.0f); // Allocate space for texture coordinates
         indices.resize(indexCount, 0);
 
@@ -70,14 +63,6 @@ namespace udit
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(x) / (grid_width - 1);
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(y) / (grid_height - 1);
             }
-        }
-
-        vertexIndex = 0;
-        for (int i = 0; i < vertexCount; ++i)
-        {
-            colors[vertexIndex++] = 0.0f;
-            colors[vertexIndex++] = 1.0f;
-            colors[vertexIndex++] = 0.0f;
         }
 
         int index = 0;
@@ -104,6 +89,7 @@ namespace udit
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+        glDisable(GL_CULL_FACE);
         glBindVertexArray(vao_id);
         glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_BYTE, 0);
         glBindVertexArray(0);

@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClInclude Include="..\Code\Headers\Camera.hpp" />
     <ClInclude Include="..\Code\Headers\Cone.hpp" />
-    <ClInclude Include="..\Code\Headers\Cube.hpp" />
     <ClInclude Include="..\Code\Headers\Cylinder.hpp" />
     <ClInclude Include="..\Code\Headers\Plane.hpp" />
     <ClInclude Include="..\Code\Headers\Scene.hpp" />
@@ -24,7 +23,6 @@
   <ItemGroup>
     <ClCompile Include="..\Code\Sources\Camera.cpp" />
     <ClCompile Include="..\Code\Sources\Cone.cpp" />
-    <ClCompile Include="..\Code\Sources\Cube.cpp" />
     <ClCompile Include="..\Code\Sources\Cylinder.cpp" />
     <ClCompile Include="..\Code\Sources\main.cpp" />
     <ClCompile Include="..\Code\Sources\Plane.cpp" />
