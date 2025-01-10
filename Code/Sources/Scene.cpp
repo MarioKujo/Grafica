@@ -66,7 +66,7 @@ namespace udit
         : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5) ///< Inicialización de la cámara.
     {
         glEnable(GL_CULL_FACE);
-        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
 
         program_id = compile_shaders();
@@ -79,6 +79,7 @@ namespace udit
         // Cargar las texturas
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
+        cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
@@ -94,7 +95,7 @@ namespace udit
 
     void Scene::render()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
@@ -124,6 +125,7 @@ namespace udit
 
         glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
         cylinder.render(); // Dibuja el cilindro
 
         // Renderizado del cono

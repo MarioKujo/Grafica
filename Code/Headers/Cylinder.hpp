@@ -1,4 +1,4 @@
-// Este código es de dominio público
+// Este código es de dominio público 
 // andrmatgonros@gmail.com
 #pragma once
 #include <glad/glad.h>
@@ -25,10 +25,11 @@ namespace udit
         GLfloat height;
         vector<GLfloat> coordinates;
         vector<GLfloat> colors;
+        vector<GLfloat> texCoords; // Añadido vector para coordenadas de textura
         vector<GLubyte> indices;
         GLuint vao_id;
-        GLuint vbo_ids[3];
-        enum { COORDINATES_VBO, COLORS_VBO, INDICES_EBO, VBO_COUNT };
+        GLuint vbo_ids[4]; // Aumentado tamaño para incluir texCoords
+        enum { COORDINATES_VBO, COLORS_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT };
         void generateGeometry();
     };
 }
