@@ -78,7 +78,7 @@ namespace udit
 
         // Cargar las texturas
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
-
+        planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
@@ -113,6 +113,7 @@ namespace udit
             glm::vec3(1.f, 0.f, 0.f)); // Rotación del plano
         glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, planeTextureID);
         plane.render(); // Dibuja el plano
 
         // Renderizado del cilindro

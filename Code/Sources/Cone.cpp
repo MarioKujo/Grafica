@@ -116,7 +116,6 @@ namespace udit
             indices[index++] = next;      // Vértice de la base
         }
 
-
         // Índices para la base (conectar los vértices de la base entre sí)
         for (int i = 0; i < divisions; ++i)
         {
