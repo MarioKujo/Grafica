@@ -13,16 +13,25 @@ namespace udit
 
         glBindVertexArray(vao_id);
 
+        // Coordinates VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COORDINATES_VBO]);
         glBufferData(GL_ARRAY_BUFFER, coordinates.size() * sizeof(GLfloat), coordinates.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+        // Colors VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
         glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+        // Texture Coordinates VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORDS_VBO]);
+        glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+        // Indices EBO
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLubyte), indices.data(), GL_STATIC_DRAW);
 
@@ -42,9 +51,11 @@ namespace udit
 
         coordinates.resize(vertexCount * 3, 0.0f);
         colors.resize(vertexCount * 3, 0.0f);
+        texCoords.resize(vertexCount * 2, 0.0f); // Allocate space for texture coordinates
         indices.resize(indexCount, 0);
 
         int vertexIndex = 0;
+        int texCoordIndex = 0;
         for (int y = 0; y < grid_height; ++y)
         {
             for (int x = 0; x < grid_width; ++x)
@@ -55,6 +66,9 @@ namespace udit
                 coordinates[vertexIndex++] = posX;
                 coordinates[vertexIndex++] = posY;
                 coordinates[vertexIndex++] = 0.0f;
+
+                texCoords[texCoordIndex++] = static_cast<GLfloat>(x) / (grid_width - 1);
+                texCoords[texCoordIndex++] = static_cast<GLfloat>(y) / (grid_height - 1);
             }
         }
 
@@ -88,8 +102,7 @@ namespace udit
 
     void Plane::render()
     {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         glBindVertexArray(vao_id);
         glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_BYTE, 0);

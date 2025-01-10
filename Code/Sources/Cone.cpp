@@ -104,20 +104,18 @@ namespace udit
             int next = (i + 1) % divisions;
 
             // Coordenadas de textura para la cara lateral
-            // U: Proporcional al ángulo de cada vértice
-            texCoords[i * 2] = (GLfloat)(i) / divisions;
-
-            // V: Interpolación lineal desde la base (V=1) hasta el ápice (V=0)
-            texCoords[i * 2 + 1] = 1.0f - (i / (GLfloat)divisions);  // Ajuste para mantener las líneas horizontales
+            texCoords[i * 2] = (GLfloat)(i) / divisions;  // U: Proporcional al ángulo de cada vértice
+            texCoords[i * 2 + 1] = 1.0f;  // V: Para la base, siempre 1
 
             texCoords[next * 2] = (GLfloat)(next) / divisions;  // U: Para el siguiente vértice
-            texCoords[next * 2 + 1] = 1.0f - (next / (GLfloat)divisions);  // V: Interpolación lineal
+            texCoords[next * 2 + 1] = 1.0f;  // V: Para la base, siempre 1
 
             // Conectar los vértices de la cara lateral
             indices[index++] = i;         // Vértice de la base
             indices[index++] = apexIndex; // Vértice del ápice
             indices[index++] = next;      // Vértice de la base
         }
+
 
         // Índices para la base (conectar los vértices de la base entre sí)
         for (int i = 0; i < divisions; ++i)

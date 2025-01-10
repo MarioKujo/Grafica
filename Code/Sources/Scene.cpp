@@ -25,13 +25,16 @@ namespace udit
         "#version 330\n"
         "uniform mat4 model_view_matrix;"
         "uniform mat4 projection_matrix;"
+        ""
         "layout (location = 0) in vec3 vertex_coordinates;"
-        "layout (location = 1) in vec3 vertex_color;"
-        "out vec3 front_color;"
+        "layout (location = 2) in vec2 vertex_texCoords;"
+        ""
+        "out vec2 texCoords;"
+        ""
         "void main()"
         "{"
         "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
-        "   front_color = vertex_color;"
+        "   texCoords = vertex_texCoords;"
         "}";
 
     /**
@@ -39,12 +42,15 @@ namespace udit
      */
     const string Scene::fragment_shader_code =
         "#version 330\n"
-        "in  vec3    front_color;"
+        "in  vec2    texCoords;"
+        ""
         "out vec4 fragment_color;"
+        ""
         "uniform sampler2D textureSampler;" ///< Uniform de la textura
+        ""
         "void main()"
         "{"
-        "    fragment_color = texture(textureSampler, front_color.xy);"
+        "    fragment_color = texture(textureSampler, texCoords);"
         "}";
 
     /**
