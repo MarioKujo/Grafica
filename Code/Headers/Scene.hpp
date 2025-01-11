@@ -38,6 +38,8 @@ namespace udit
 
         static const std::string vertex_shader_code;   ///< Código fuente del shader de vértices.
         static const std::string fragment_shader_code; ///< Código fuente del shader de fragmentos.
+        static const std::string skybox_vertex_shader;
+        static const std::string skybox_fragment_shader;
 
         GLint  model_view_matrix_id; ///< ID del uniforme para la matriz de vista-modelo.
         GLint  projection_matrix_id; ///< ID del uniforme para la matriz de proyección.
@@ -54,6 +56,7 @@ namespace udit
         GLuint planeTextureID; ///< ID de la textura del plano
         GLuint cylinderTextureID; ///< ID de la textura del cilindro
         GLuint coneTextureID; ///< ID de la textura del cono
+        GLuint skyboxTextureID; ///< ID de la textura del cono
     public:
 
         /**

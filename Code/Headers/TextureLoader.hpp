@@ -16,7 +16,7 @@ public:
 
     // Cargar textura desde archivo
     GLuint loadTexture(const string& filePath);
-
+    GLuint loadCubemap(const vector<string>& faces);
 private:
     GLuint textureID;
 };

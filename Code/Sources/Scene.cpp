@@ -53,6 +53,32 @@ namespace udit
         "    fragment_color = texture(textureSampler, texCoords);"
         "}";
 
+    const std::string Scene::skybox_vertex_shader =
+        "#version 330 core\n"
+        ""
+        "layout (location = 0) in vec3 aPos;"
+        "out vec3 TexCoords;"
+        "uniform mat4 projection;"
+        "uniform mat4 view;"
+        ""
+        "void main()"
+        "{"
+        "   TexCoords = aPos;"
+        "   vec4 pos = projection * mat4(mat3(view)) * vec4(aPos, 1.0);"
+        "   gl_Position = pos.xyww;"
+        "}";
+
+    const string Scene::skybox_fragment_shader =
+        "#version 330 core\n"
+        ""
+        "in vec3 TexCoords;"
+        "out vec4 FragColor;"
+        "uniform samplerCube skybox;"
+        ""
+        "void main()"
+        "{"
+        "   FragColor = texture(skybox, TexCoords);"
+        "}";
     /**
      * @brief Constructor de la clase Scene.
      *
@@ -80,6 +106,7 @@ namespace udit
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
+        skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", });
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
@@ -99,7 +126,7 @@ namespace udit
 
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
-
+        glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), 1024.0f / 576.0f, 0.1f, 100.0f);
         // Renderizado del plano
         glm::mat4 plane_matrix(1);
         plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
