@@ -54,12 +54,10 @@ namespace udit
          * @param sensitivity Sensibilidad inicial del ratón (por defecto en 0.1f).
          */
         Camera(
-            glm::vec3 start_position = glm::vec3(0.0f, 0.0f, 3.0f),
-            glm::vec3 start_up = glm::vec3(0.0f, 1.0f, 0.0f),
-            float start_yaw = -90.0f,
-            float start_pitch = 0.0f,
-            float speed = 2.5f,
-            float sensitivity = 0.1f
+            glm::vec3 start_position,
+            glm::vec3 start_up,
+            float start_yaw,
+            float start_pitch
         );
 
         /**
@@ -96,7 +94,7 @@ namespace udit
          * @param xrel Movimiento del ratón en el eje X.
          * @param yrel Movimiento del ratón en el eje Y.
          */
-        void process_mouse_motion(int xrel, int yrel);
+        void process_mouse_motion(float xrel, float yrel);
 
     private:
         /**

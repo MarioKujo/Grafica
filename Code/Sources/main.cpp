@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     Scene scene(viewport_width, viewport_height);
 
     bool exit = false; ///< Bandera para controlar el bucle principal.
-
+    Uint32 last_time = SDL_GetTicks();
     do
     {
         // Procesamiento de eventos acumulados:
@@ -75,13 +75,15 @@ int main(int argc, char* argv[])
                  *
                  * Pasa los desplazamientos relativos del ratón a la escena.
                  */
-                scene.handle_mouse_motion(event.motion.xrel, event.motion.yrel);
+                scene.handle_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
             }
         }
 
         // Actualización de la escena:
 
-        float delta_time = 0.016f; ///< Aproximación básica para un intervalo de 60 FPS.
+        Uint32 current_time = SDL_GetTicks();
+        float delta_time = (current_time - last_time) / 1000.0f;
+        last_time = current_time;
         scene.update(delta_time); ///< Actualiza la lógica de la escena.
 
         // Renderizado de la escena:

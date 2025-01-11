@@ -17,6 +17,7 @@
     <ClInclude Include="..\Code\Headers\Plane.hpp" />
     <ClInclude Include="..\Code\Headers\Scene.hpp" />
     <ClInclude Include="..\Code\Headers\Skybox.hpp" />
+    <ClInclude Include="..\Code\Headers\Sphere.hpp" />
     <ClInclude Include="..\Code\Headers\stb_image.hpp" />
     <ClInclude Include="..\Code\Headers\TextureLoader.hpp" />
     <ClInclude Include="..\Shared\Code\Window.hpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="..\Code\Sources\Plane.cpp" />
     <ClCompile Include="..\Code\Sources\Scene.cpp" />
     <ClCompile Include="..\Code\Sources\Skybox.cpp" />
+    <ClCompile Include="..\Code\Sources\Sphere.cpp" />
     <ClCompile Include="..\Code\Sources\stb_image.cpp" />
     <ClCompile Include="..\Code\Sources\TextureLoader.cpp" />
     <ClCompile Include="..\Shared\Code\Window.cpp" />

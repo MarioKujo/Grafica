@@ -41,17 +41,22 @@ namespace udit
      * @brief Código del shader de fragmentos en GLSL.
      */
     const string Scene::fragment_shader_code =
-        "#version 330\n"
-        "in  vec2    texCoords;"
+        "#version 330 core\n"
+        ""
+        "in  vec2 texCoords;"
         ""
         "out vec4 fragment_color;"
         ""
-        "uniform sampler2D textureSampler;" ///< Uniform de la textura
+        "uniform sampler2D textureSampler;"
+        "uniform float transparency;"
         ""
         "void main()"
         "{"
-        "    fragment_color = texture(textureSampler, texCoords);"
+        "    vec4 texColor = texture(textureSampler, texCoords);"
+        ""
+        "    fragment_color = vec4(texColor.rgb, texColor.a * transparency);"
         "}";
+
 
     const std::string Scene::skybox_vertex_shader =
         "#version 330 core\n"
@@ -89,7 +94,7 @@ namespace udit
      * @param height Alto inicial del viewport.
      */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", }) ///< Inicialización de la cámara.
+        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10,10,3.5f), sphere2(10, 10, 3.75f), skybox({"../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png",}) ///< Inicialización de la cámara.
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -108,6 +113,7 @@ namespace udit
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
+        sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
         skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", });
         skybox.set_texture(skyboxTextureID);
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
@@ -169,6 +175,42 @@ namespace udit
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
         glBindTexture(GL_TEXTURE_2D, coneTextureID);
         cone.render(); // Dibuja el cono
+        
+        // Renderizado de la esfera
+        glm::mat4 sphere1_matrix(1);
+        sphere1_matrix = glm::translate(sphere1_matrix, glm::vec3(0.f, 7.f, -2.f));
+        sphere1_matrix = glm::rotate(sphere1_matrix, angle,
+            glm::vec3(0.f, 1.f, 0.f));
+
+        glm::mat4 sphere1_view_matrix = view_matrix * sphere1_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere1_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+        sphere1.render(); // Dibuja la esfera
+
+        // Habilitar el blending
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Mezcla para la transparencia
+
+        // Establecer transparencia
+        GLint transparency = glGetUniformLocation(program_id, "transparency");
+        glUniform1f(transparency, 0.5f);
+        // Configuración de la matriz de la esfera
+        glm::mat4 sphere2_matrix(1);
+        sphere2_matrix = glm::translate(sphere2_matrix, glm::vec3(0.f, 7.f, -2.f));
+        sphere2_matrix = glm::rotate(sphere2_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+
+        glm::mat4 sphere2_view_matrix = view_matrix * sphere2_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere2_view_matrix));
+
+        // Enlazar la textura de la esfera
+        glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+
+        // Llamar a la función de renderizado de la esfera
+        sphere2.render();
+
+        // Deshabilitar el blending después de renderizar
+        glDisable(GL_BLEND);
+
     }
 
     void Scene::resize(unsigned width, unsigned height)
@@ -178,7 +220,7 @@ namespace udit
         glViewport(0, 0, width, height);
     }
 
-    void Scene::handle_mouse_motion(int xrel, int yrel)
+    void Scene::handle_mouse_motion(float xrel, float yrel)
     {
         camera.process_mouse_motion(xrel, yrel); ///< Actualización de la orientación de la cámara.
     }

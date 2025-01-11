@@ -13,8 +13,7 @@ public:
     ~Skybox();
     void set_texture(GLuint texture_id);
     GLuint get_texture_id();
-    void render();  // Recibe las matrices desde la escena
-
+    void render();
 private:
     GLuint vao_id;
     GLuint vbo_id;

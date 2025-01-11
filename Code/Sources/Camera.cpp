@@ -26,8 +26,8 @@ namespace udit
      * @param movement_speed Velocidad de movimiento de la cámara.
      * @param mouse_sensitivity Sensibilidad del ratón para ajustar el movimiento de la cámara.
      */
-    Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch, float movement_speed, float mouse_sensitivity)
-        : position(position), up(up), yaw(yaw), pitch(pitch), movement_speed(movement_speed), mouse_sensitivity(mouse_sensitivity)
+    Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+        : position(position), up(up), yaw(yaw), pitch(pitch), movement_speed(2.5f), mouse_sensitivity(0.1f)
     {
         start_camera_control();
         update_camera_vectors();
@@ -87,20 +87,21 @@ namespace udit
      * @param xrel Movimiento del ratón en el eje X.
      * @param yrel Movimiento del ratón en el eje Y.
      */
-    void Camera::process_mouse_motion(int xrel, int yrel)
+    void Camera::process_mouse_motion(float xrel, float yrel)
     {
-        float xoffset = static_cast<float>(xrel) * mouse_sensitivity;
-        float yoffset = static_cast<float>(yrel) * mouse_sensitivity;
+        xrel *= mouse_sensitivity;
+        yrel *= mouse_sensitivity;
 
-        yaw += xoffset;
-        pitch -= yoffset;
+        yaw += xrel;
+        pitch -= yrel;
 
-        // Limitar el ángulo vertical
+        // Limitar el ángulo vertical (pitch) para evitar que la cámara se invierta
         if (pitch > 89.0f)
             pitch = 89.0f;
         if (pitch < -89.0f)
             pitch = -89.0f;
 
+        // Actualizar los vectores de la cámara
         update_camera_vectors();
     }
 
@@ -114,15 +115,15 @@ namespace udit
     void Camera::update_camera_vectors()
     {
         // Calcular el nuevo vector frontal
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        this->front = glm::normalize(front);
+        glm::vec3 newFront;
+        newFront.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        newFront.y = sin(glm::radians(pitch));
+        newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        front = glm::normalize(newFront);
 
-        // También recalcular los vectores derecha y arriba
-        right = glm::normalize(glm::cross(this->front, up)); // Normalizar el vector cruzado
-        up = glm::normalize(glm::cross(right, this->front));
+        // Recalcular los vectores derecha y arriba
+        right = glm::normalize(glm::cross(front, up)); // Normalizar el vector cruzado
+        up = glm::normalize(glm::cross(right, front));  // Recalcular el vector "up" basándose en el "right"
     }
 
 }

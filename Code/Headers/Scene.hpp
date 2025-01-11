@@ -17,6 +17,7 @@
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
+#include "Sphere.hpp"
 #include <string>
 #include <iostream>
 #include <cassert>
@@ -47,6 +48,8 @@ namespace udit
         GLuint program_id;
         GLuint skybox_program_id;
         Skybox skybox;
+        Sphere sphere1;
+        Sphere sphere2;
         Cone cone; /**< Cono 3D que forma parte de la escena. */
         Cylinder cylinder; /**< Cilindro 3D que forma parte de la escena. */
         Plane plane; /**< Plano 3D que forma parte de la escena. */
@@ -59,7 +62,8 @@ namespace udit
         GLuint planeTextureID; ///< ID de la textura del plano
         GLuint cylinderTextureID; ///< ID de la textura del cilindro
         GLuint coneTextureID; ///< ID de la textura del cono
-        GLuint skyboxTextureID; ///< ID de la textura del cono
+        GLuint skyboxTextureID; ///< ID de la textura del skybox
+        GLuint sphereTextureID; ///< ID de la textura de la esfera
     public:
 
         /**
@@ -106,7 +110,7 @@ namespace udit
          * @param xrel Movimiento relativo en el eje X.
          * @param yrel Movimiento relativo en el eje Y.
          */
-        void handle_mouse_motion(int xrel, int yrel);
+        void handle_mouse_motion(float xrel, float yrel);
 
     private:
 
