@@ -89,7 +89,7 @@ namespace udit
      * @param height Alto inicial del viewport.
      */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5) ///< Inicialización de la cámara.
+        : angle(0), camera(glm::vec3(0.0f, 0.0f, 3.0f)), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", }) ///< Inicialización de la cámara.
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -99,6 +99,8 @@ namespace udit
 
         glUseProgram(program_id);
 
+        skybox_program_id = compile_skybox_shaders();
+
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
@@ -107,6 +109,7 @@ namespace udit
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", });
+        skybox.set_texture(skyboxTextureID);
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
 
         resize(width, height);
@@ -123,10 +126,17 @@ namespace udit
     void Scene::render()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        glUseProgram(skybox_program_id);
         // Obtenemos la matriz de vista desde la cámara
         glm::mat4 view_matrix = camera.get_view_matrix();
-        glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), 1024.0f / 576.0f, 0.1f, 100.0f);
+        glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
+        // Renderizar Skybox
+        glUniformMatrix4fv(glGetUniformLocation(skybox_program_id, "view"), 1, GL_FALSE, glm::value_ptr(view_matrix));
+        glUniformMatrix4fv(glGetUniformLocation(skybox_program_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
+        skybox.render();
+        glUseProgram(program_id);
         // Renderizado del plano
         glm::mat4 plane_matrix(1);
         plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
@@ -211,6 +221,45 @@ namespace udit
         glDeleteShader(fragment_shader_id);
 
         return (program_id);
+    }
+
+    GLuint Scene::compile_skybox_shaders() {
+        GLint succeeded = GL_FALSE;
+
+        GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+        GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+
+        const char* vertex_shader_code[] = { skybox_vertex_shader.c_str() };
+        const char* fragment_shader_code[] = { skybox_fragment_shader.c_str() };
+        const GLint vertex_shader_size[] = { (GLint)skybox_vertex_shader.size() };
+        const GLint fragment_shader_size[] = { (GLint)skybox_fragment_shader.size() };
+
+        glShaderSource(vertex_shader_id, 1, vertex_shader_code, vertex_shader_size);
+        glShaderSource(fragment_shader_id, 1, fragment_shader_code, fragment_shader_size);
+
+        glCompileShader(vertex_shader_id);
+        glCompileShader(fragment_shader_id);
+
+        glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &succeeded);
+        if (!succeeded) show_compilation_error(vertex_shader_id);
+
+        glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &succeeded);
+        if (!succeeded) show_compilation_error(fragment_shader_id);
+
+        GLuint program_id = glCreateProgram();
+
+        glAttachShader(program_id, vertex_shader_id);
+        glAttachShader(program_id, fragment_shader_id);
+
+        glLinkProgram(program_id);
+
+        glGetProgramiv(program_id, GL_LINK_STATUS, &succeeded);
+        if (!succeeded) show_linkage_error(program_id);
+
+        glDeleteShader(vertex_shader_id);
+        glDeleteShader(fragment_shader_id);
+
+        return program_id;
     }
 
     void Scene::show_compilation_error(GLuint shader_id)

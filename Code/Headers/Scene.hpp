@@ -16,6 +16,7 @@
 #include "Plane.hpp"
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
+#include "Skybox.hpp"
 #include <string>
 #include <iostream>
 #include <cassert>
@@ -44,6 +45,8 @@ namespace udit
         GLint  model_view_matrix_id; ///< ID del uniforme para la matriz de vista-modelo.
         GLint  projection_matrix_id; ///< ID del uniforme para la matriz de proyección.
         GLuint program_id;
+        GLuint skybox_program_id;
+        Skybox skybox;
         Cone cone; /**< Cono 3D que forma parte de la escena. */
         Cylinder cylinder; /**< Cilindro 3D que forma parte de la escena. */
         Plane plane; /**< Plano 3D que forma parte de la escena. */
@@ -113,6 +116,7 @@ namespace udit
          * @return ID del programa de shaders compilado.
          */
         GLuint compile_shaders();
+        GLuint compile_skybox_shaders();
 
         /**
          * @brief Muestra errores de compilación de shaders.
