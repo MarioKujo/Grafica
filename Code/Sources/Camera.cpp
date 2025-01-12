@@ -121,8 +121,11 @@ namespace udit
         newFront.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         front = glm::normalize(newFront);
 
-        // Recalcular los vectores derecha y arriba
-        right = glm::normalize(glm::cross(front, up)); // Normalizar el vector cruzado
+        // Asegurarse de que el vector "up" global no se vea afectado por las rotaciones
+        glm::vec3 world_up(0.0f, 1.0f, 0.0f);  // Fijo, siempre apunta hacia arriba en el espacio global
+
+        // Calcular el vector derecho (right) usando un "up" global fijo
+        right = glm::normalize(glm::cross(front, world_up));
         up = glm::normalize(glm::cross(right, front));  // Recalcular el vector "up" basándose en el "right"
     }
 
