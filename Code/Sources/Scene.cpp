@@ -95,7 +95,7 @@ namespace udit
      * @param height Alto inicial del viewport.
      */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10,10,3.5f), sphere2(10, 10, 3.75f), skybox({"../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png",}), heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 1.0f)
+        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10,10,3.5f), sphere2(10, 10, 3.75f), skybox({"../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png",}), heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 0.5f)
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -114,6 +114,7 @@ namespace udit
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
+        heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
         skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", });
         skybox.set_texture(skyboxTextureID);
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0); ///< Unir la textura al slot 0
@@ -213,14 +214,13 @@ namespace udit
 
         glm::mat4 heightmap_matrix(1);
 
-        heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.0f, -2.0f, 0.0f)); // Posiciona el heightmap en el mundo
-        heightmap_matrix = glm::scale(heightmap_matrix, glm::vec3(10.0f, 10.0f, 10.0f)); // Ajusta la escala del heightmap
+        heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.0f, -45.0f, 0.0f)); // Posiciona el heightmap en el mundo
+        heightmap_matrix = glm::scale(heightmap_matrix, glm::vec3(100.0f, 100.0f, 100.0f)); // Ajusta la escala del heightmap
         glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
         glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-        glBindTexture(GL_TEXTURE_2D, heightmap.getTextureID());
+        glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
         heightmap.render();
-
     }
 
     void Scene::resize(unsigned width, unsigned height)

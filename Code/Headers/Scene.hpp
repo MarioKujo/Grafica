@@ -68,6 +68,7 @@ namespace udit
         GLuint coneTextureID; ///< ID de la textura del cono
         GLuint skyboxTextureID; ///< ID de la textura del skybox
         GLuint sphereTextureID; ///< ID de la textura de la esfera
+        GLuint heightmapTextureID; ///< ID de la textura de la esfera
     public:
 
         /**
