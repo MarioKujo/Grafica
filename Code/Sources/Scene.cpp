@@ -84,6 +84,7 @@ namespace udit
         "{"
         "   FragColor = texture(skybox, TexCoords);"
         "}";
+
     /**
      * @brief Constructor de la clase Scene.
      *
@@ -94,7 +95,7 @@ namespace udit
      * @param height Alto inicial del viewport.
      */
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10,10,3.5f), sphere2(10, 10, 3.75f), skybox({"../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png",}) ///< Inicialización de la cámara.
+        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10,10,3.5f), sphere2(10, 10, 3.75f), skybox({"../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png",}), heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 1.0f)
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -108,7 +109,6 @@ namespace udit
 
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
-
         // Cargar las texturas
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
@@ -210,6 +210,16 @@ namespace udit
 
         // Deshabilitar el blending después de renderizar
         glDisable(GL_BLEND);
+
+        glm::mat4 heightmap_matrix(1);
+
+        heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.0f, -2.0f, 0.0f)); // Posiciona el heightmap en el mundo
+        heightmap_matrix = glm::scale(heightmap_matrix, glm::vec3(10.0f, 10.0f, 10.0f)); // Ajusta la escala del heightmap
+        glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
+        glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+        glBindTexture(GL_TEXTURE_2D, heightmap.getTextureID());
+        heightmap.render();
 
     }
 

@@ -12,6 +12,7 @@
 #pragma once
 
 #include "Cylinder.hpp"
+#include "Heightmap.hpp"
 #include "Cone.hpp"
 #include "Plane.hpp"
 #include "Camera.hpp"
@@ -42,6 +43,8 @@ namespace udit
         static const std::string fragment_shader_code; ///< Código fuente del shader de fragmentos.
         static const std::string skybox_vertex_shader;
         static const std::string skybox_fragment_shader;
+        static const std::string heightmap_vertex_shader;
+        static const std::string heightmap_fragment_shader;
 
         GLint  model_view_matrix_id; ///< ID del uniforme para la matriz de vista-modelo.
         GLint  projection_matrix_id; ///< ID del uniforme para la matriz de proyección.
@@ -53,6 +56,7 @@ namespace udit
         Cone cone; /**< Cono 3D que forma parte de la escena. */
         Cylinder cylinder; /**< Cilindro 3D que forma parte de la escena. */
         Plane plane; /**< Plano 3D que forma parte de la escena. */
+        Heightmap heightmap;
         float  angle; ///< Ángulo de rotación del cubo.
 
         Camera camera; ///< Cámara para gestionar la vista y la proyección.
@@ -121,7 +125,6 @@ namespace udit
          */
         GLuint compile_shaders();
         GLuint compile_skybox_shaders();
-
         /**
          * @brief Muestra errores de compilación de shaders.
          *

@@ -9,9 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Code\Headers\Cube.hpp">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\Headers\Scene.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -36,11 +33,17 @@
     <ClInclude Include="..\Code\Headers\TextureLoader.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Headers\Heightmap.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Headers\Skybox.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Code\Headers\Sphere.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Code\Sources\Cube.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\Sources\main.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -66,6 +69,15 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\TextureLoader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sources\Skybox.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sources\Sphere.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sources\Heightmap.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
