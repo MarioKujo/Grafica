@@ -1,12 +1,15 @@
 /**
  * @file Scene.hpp
- * @brief Declaración de la clase Scene para gestionar una escena en OpenGL.
+ * @author angel.rodriguez@udit.es
+ * @editor andrmatgonros@gmail.com
+ * @date 2025-01-12
  *
- * Esta clase incluye funcionalidades para manejar la cámara, renderizar objetos 3D,
- * procesar eventos y actualizar el estado de la escena.
+ * Este código es de dominio público.
  *
- * @author Angel Rodriguez
- * @date Public domain
+ * @brief Definición de la clase Scene, encargada de manejar y renderizar la escena 3D.
+ *
+ * Esta clase es responsable de gestionar los objetos 3D en la escena, las texturas, las cámaras, y los shaders.
+ * También se encarga de las operaciones de actualización y renderizado de la escena utilizando OpenGL.
  */
 
 #pragma once
@@ -31,115 +34,146 @@ namespace udit
 {
     /**
      * @class Scene
-     * @brief Clase para gestionar una escena con OpenGL.
+     * @brief Clase para representar y gestionar una escena 3D.
      *
-     * Contiene métodos para actualizar, renderizar y manejar eventos en una escena.
+     * Esta clase encapsula la creación de objetos 3D (como esferas, conos, cilindros, planos, etc.), la configuración
+     * de la cámara, la carga de texturas, y la administración de los shaders para la representación visual de la escena.
+     * Permite renderizar la escena y actualizarla durante la ejecución del programa.
      */
     class Scene
     {
     private:
-
-        static const std::string vertex_shader_code;   ///< Código fuente del shader de vértices.
+        /// Códigos de los shaders
+        static const std::string vertex_shader_code; ///< Código fuente del shader de vértices.
         static const std::string fragment_shader_code; ///< Código fuente del shader de fragmentos.
-        static const std::string skybox_vertex_shader;
-        static const std::string skybox_fragment_shader;
-        static const std::string heightmap_vertex_shader;
-        static const std::string heightmap_fragment_shader;
+        static const std::string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
+        static const std::string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+        static const std::string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el heightmap.
+        static const std::string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el heightmap.
 
-        GLint  model_view_matrix_id; ///< ID del uniforme para la matriz de vista-modelo.
-        GLint  projection_matrix_id; ///< ID del uniforme para la matriz de proyección.
-        GLuint program_id;
-        GLuint skybox_program_id;
-        Skybox skybox;
-        Sphere sphere1;
-        Sphere sphere2;
-        Cone cone; /**< Cono 3D que forma parte de la escena. */
-        Cylinder cylinder; /**< Cilindro 3D que forma parte de la escena. */
-        Plane plane; /**< Plano 3D que forma parte de la escena. */
-        Heightmap heightmap;
-        float  angle; ///< Ángulo de rotación del cubo.
+        /// Identificadores de las matrices y programas de los shaders
+        GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
+        GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
+        GLuint program_id; ///< ID del programa principal de shaders.
+        GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
 
-        Camera camera; ///< Cámara para gestionar la vista y la proyección.
+        /// Objetos 3D de la escena
+        Skybox skybox; ///< Objeto para representar el skybox.
+        Sphere sphere1; ///< Primer objeto esfera.
+        Sphere sphere2; ///< Segundo objeto esfera.
+        Cone cone; ///< Objeto cono.
+        Cylinder cylinder; ///< Objeto cilindro.
+        Plane plane; ///< Objeto plano.
+        Heightmap heightmap; ///< Objeto heightmap para representar terrenos.
 
-        TextureLoader textureLoader; ///< Instancia de TextureLoader para cargar texturas
-        GLuint cubeTextureID; ///< ID de la textura del cubo
-        GLuint planeTextureID; ///< ID de la textura del plano
-        GLuint cylinderTextureID; ///< ID de la textura del cilindro
-        GLuint coneTextureID; ///< ID de la textura del cono
-        GLuint skyboxTextureID; ///< ID de la textura del skybox
-        GLuint sphereTextureID; ///< ID de la textura de la esfera
-        GLuint heightmapTextureID; ///< ID de la textura de la esfera
-    public:
+        /// Ángulo de rotación de la escena.
+        float angle; ///< Ángulo de rotación para objetos en la escena.
+
+        /// Cámara que gestiona la vista.
+        Camera camera; ///< Cámara que define la perspectiva de la escena.
+
+        /// Gestor de texturas
+        TextureLoader textureLoader; ///< Cargador de texturas para los objetos 3D.
+
+        /// Identificadores de las texturas para cada objeto 3D
+        GLuint cubeTextureID; ///< ID de la textura para el cubo.
+        GLuint planeTextureID; ///< ID de la textura para el plano.
+        GLuint cylinderTextureID; ///< ID de la textura para el cilindro.
+        GLuint coneTextureID; ///< ID de la textura para el cono.
+        GLuint skyboxTextureID; ///< ID de la textura para el skybox.
+        GLuint sphereTextureID; ///< ID de la textura para la esfera.
+        GLuint heightmapTextureID; ///< ID de la textura para el heightmap.
 
         /**
-         * @brief Constructor de Scene.
+         * @brief Compila los shaders para la escena.
          *
-         * Inicializa la escena con el ancho y alto especificados.
+         * Compila los shaders de vértices y fragmentos para la escena 3D.
+         * Los shaders definen cómo se procesan los vértices y los fragmentos (pixeles)
+         * de los objetos 3D renderizados en la escena.
          *
-         * @param width Ancho del viewport.
-         * @param height Alto del viewport.
+         * @return El identificador del programa de shaders compilado.
+         */
+        GLuint compile_shaders();
+
+        /**
+         * @brief Compila los shaders para el skybox.
+         *
+         * Compila los shaders de vértices y fragmentos específicos para el skybox,
+         * que se usa para simular un entorno 3D alrededor de la escena.
+         *
+         * @return El identificador del programa de shaders para el skybox compilado.
+         */
+        GLuint compile_skybox_shaders();
+
+        /**
+         * @brief Muestra los errores de compilación de un shader.
+         *
+         * Si ocurre un error durante la compilación de un shader, este método muestra
+         * los detalles del error para facilitar la depuración.
+         *
+         * @param shader_id El identificador del shader cuya compilación falló.
+         */
+        void show_compilation_error(GLuint shader_id);
+
+        /**
+         * @brief Muestra los errores de enlace de un programa de shaders.
+         *
+         * Si ocurre un error al enlazar los shaders (vértices y fragmentos)
+         * en un solo programa, este método muestra los detalles del error.
+         *
+         * @param program_id El identificador del programa de shaders cuyo enlace falló.
+         */
+        void show_linkage_error(GLuint program_id);
+
+    public:
+        /**
+         * @brief Constructor de la clase Scene.
+         *
+         * Inicializa la escena con los objetos 3D, la cámara, las texturas y los shaders
+         * necesarios para renderizar la escena correctamente.
+         *
+         * @param width Ancho de la ventana de la escena.
+         * @param height Alto de la ventana de la escena.
          */
         Scene(unsigned width, unsigned height);
 
         /**
-         * @brief Actualiza el estado de la escena.
+         * @brief Actualiza la escena.
          *
-         * Permite animaciones y otros cambios en función del tiempo transcurrido.
+         * Este método actualiza los elementos de la escena en función del tiempo transcurrido,
+         * incluyendo las animaciones de los objetos y los movimientos de la cámara.
          *
-         * @param delta_time Tiempo transcurrido desde la última actualización (en segundos).
+         * @param delta_time Tiempo transcurrido desde la última actualización.
          */
         void update(float delta_time);
 
         /**
          * @brief Renderiza la escena.
          *
-         * Dibuja los objetos en el contexto de OpenGL.
+         * Este método dibuja todos los objetos 3D de la escena utilizando OpenGL,
+         * aplicando las transformaciones y shaders correspondientes.
          */
         void render();
 
         /**
-         * @brief Ajusta el tamaño del viewport.
+         * @brief Cambia el tamaño de la ventana de la escena.
          *
-         * Permite actualizar las proyecciones al cambiar las dimensiones de la ventana.
+         * Ajusta la relación de aspecto y las matrices de proyección en función del nuevo tamaño
+         * de la ventana para asegurar una correcta visualización de la escena.
          *
-         * @param width Nuevo ancho del viewport.
-         * @param height Nuevo alto del viewport.
+         * @param width Nuevo ancho de la ventana.
+         * @param height Nuevo alto de la ventana.
          */
         void resize(unsigned width, unsigned height);
 
         /**
-         * @brief Maneja los movimientos del ratón.
+         * @brief Maneja el movimiento del ratón en la ventana.
          *
-         * Actualiza la orientación de la cámara en respuesta al movimiento relativo del ratón.
+         * Permite controlar la cámara con el ratón, ajustando su orientación.
          *
-         * @param xrel Movimiento relativo en el eje X.
-         * @param yrel Movimiento relativo en el eje Y.
+         * @param xrel Movimiento del ratón en el eje X.
+         * @param yrel Movimiento del ratón en el eje Y.
          */
         void handle_mouse_motion(float xrel, float yrel);
-
-    private:
-
-        /**
-         * @brief Compila los shaders necesarios para la escena.
-         *
-         * @return ID del programa de shaders compilado.
-         */
-        GLuint compile_shaders();
-        GLuint compile_skybox_shaders();
-        /**
-         * @brief Muestra errores de compilación de shaders.
-         *
-         * @param shader_id ID del shader con errores.
-         */
-        void show_compilation_error(GLuint shader_id);
-
-        /**
-         * @brief Muestra errores de enlace del programa de shaders.
-         *
-         * @param program_id ID del programa con errores.
-         */
-        void show_linkage_error(GLuint program_id);
-
     };
-
 }

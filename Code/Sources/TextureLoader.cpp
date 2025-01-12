@@ -1,14 +1,45 @@
+/**
+ * @file TextureLoader.cpp
+ * @author andrmatgonros@gmail.com
+ * @date 2025-01-12
+ *
+ * Este archivo contiene la implementación de la clase `TextureLoader`, que facilita la carga
+ * de texturas 2D y cubemaps en OpenGL.
+ */
+
 #include "../Headers/TextureLoader.hpp"
+
+ /**
+  * @brief Constructor de la clase TextureLoader.
+  *
+  * Inicializa el ID de la textura en 0. Este constructor se utiliza para crear un objeto
+  * de la clase `TextureLoader`, el cual no contiene texturas asignadas inicialmente.
+  */
 TextureLoader::TextureLoader() : textureID(0) {}
 
+/**
+ * @brief Destructor de la clase TextureLoader.
+ *
+ * Si el ID de la textura es válido (no es 0), se elimina la textura cargada para liberar recursos.
+ */
 TextureLoader::~TextureLoader() {
     if (textureID) {
         glDeleteTextures(1, &textureID);
     }
 }
 
+/**
+ * @brief Carga una textura 2D desde un archivo.
+ *
+ * Este método carga una imagen desde un archivo y la utiliza para crear una textura 2D en OpenGL.
+ * Además, genera los mipmaps correspondientes para mejorar la calidad de la textura a medida que
+ * se aleja de la cámara.
+ *
+ * @param filePath Ruta del archivo de la imagen que se desea cargar como textura.
+ * @return GLuint ID de la textura cargada. Si hay un error al cargar la imagen, devuelve 0.
+ */
 GLuint TextureLoader::loadTexture(const string& filePath) {
-    // Cargar la imagen usando stb_image
+
     int width, height, channels;
     unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 
@@ -17,7 +48,6 @@ GLuint TextureLoader::loadTexture(const string& filePath) {
         return 0;
     }
 
-    // Generar textura en OpenGL
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -27,22 +57,28 @@ GLuint TextureLoader::loadTexture(const string& filePath) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    // Determinar formato según el número de canales de la imagen
     GLenum format = GL_RGB;
     if (channels == 4) {
         format = GL_RGBA;
     }
 
-    // Cargar los datos de la imagen a la textura
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    // Liberar la memoria de la imagen
     stbi_image_free(data);
 
     return textureID;
 }
 
+/**
+ * @brief Carga un cubemap desde una lista de imágenes.
+ *
+ * Este método carga una serie de imágenes que representan las caras de un cubemap.
+ * Los cubemaps son utilizados para efectos como el reflejo o el fondo del entorno 3D.
+ *
+ * @param faces Lista de rutas de los archivos de imagen que representan las caras del cubemap.
+ * @return GLuint ID del cubemap cargado. Si hay un error al cargar alguna imagen, devuelve 0.
+ */
 GLuint TextureLoader::loadCubemap(const vector<string>& faces) {
     GLuint cubemapID;
     glGenTextures(1, &cubemapID);
@@ -61,10 +97,12 @@ GLuint TextureLoader::loadCubemap(const vector<string>& faces) {
             format = GL_RGBA;
         }
 
+        // Asigna cada imagen a una cara del cubemap
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         stbi_image_free(data);
     }
 
+    // Establecer parámetros del cubemap
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

@@ -1,12 +1,10 @@
 /**
  * @file Window.hpp
- * @brief Declaración de la clase Window para la creación y gestión de ventanas con soporte OpenGL.
+ * @author angel.rodriguez@udit.es
+ * @date 2025-01-12
  *
- * Proporciona una interfaz para inicializar una ventana SDL con un contexto OpenGL,
- * manejar su ciclo de vida y realizar operaciones básicas como el intercambio de buffers.
- *
- * @author Angel Rodriguez
- * @note Public domain
+ * Este archivo contiene la definición de la clase `Window`, que facilita la creación y manejo
+ * de una ventana con contexto OpenGL utilizando SDL.
  */
 
 #pragma once
@@ -17,52 +15,66 @@
 
 namespace udit
 {
+
     /**
      * @class Window
-     * @brief Clase para gestionar una ventana SDL con soporte para OpenGL.
+     * @brief Clase que gestiona la creación y manipulación de una ventana con contexto OpenGL.
+     *
+     * Esta clase proporciona una interfaz sencilla para crear una ventana que utilice OpenGL
+     * como contexto de renderizado, configurando los detalles del contexto de OpenGL y ofreciendo
+     * funcionalidades como el intercambio de buffers.
      */
     class Window
     {
     public:
 
         /**
-         * @brief Enumeración para especificar la posición de la ventana.
+         * @enum Position
+         * @brief Define las posiciones predefinidas para la ventana.
+         *
+         * Esta enumeración contiene las posibles posiciones que la ventana puede tener en la pantalla.
          */
         enum Position
         {
-            UNDEFINED = SDL_WINDOWPOS_UNDEFINED, ///< Posición no definida.
-            CENTERED = SDL_WINDOWPOS_CENTERED,  ///< Posición centrada en la pantalla.
+            UNDEFINED = SDL_WINDOWPOS_UNDEFINED, /**< La posición de la ventana no está definida. */
+            CENTERED = SDL_WINDOWPOS_CENTERED,   /**< La ventana se centrará en la pantalla. */
         };
 
         /**
-         * @brief Configuración del contexto OpenGL asociado a la ventana.
+         * @struct OpenGL_Context_Settings
+         * @brief Estructura que contiene los detalles del contexto OpenGL.
+         *
+         * Esta estructura permite configurar los detalles del contexto de OpenGL al crear la ventana.
          */
         struct OpenGL_Context_Settings
         {
-            unsigned version_major = 3; ///< Versión mayor de OpenGL.
-            unsigned version_minor = 3; ///< Versión menor de OpenGL.
-            bool     core_profile = true; ///< Activar el perfil principal de OpenGL.
-            unsigned depth_buffer_size = 24; ///< Tamaño del buffer de profundidad.
-            unsigned stencil_buffer_size = 0;  ///< Tamaño del buffer de stencil.
-            bool     enable_vsync = true; ///< Activar sincronización vertical (V-Sync).
+            unsigned version_major = 3; /**< Versión principal de OpenGL. */
+            unsigned version_minor = 3; /**< Versión secundaria de OpenGL. */
+            bool     core_profile = true; /**< Si se debe usar el perfil core de OpenGL. */
+            unsigned depth_buffer_size = 24; /**< Tamaño del buffer de profundidad. */
+            unsigned stencil_buffer_size = 0; /**< Tamaño del buffer de stencil. */
+            bool     enable_vsync = true; /**< Si se debe habilitar el V-Sync. */
         };
 
     private:
 
-        SDL_Window* window_handle; ///< Puntero al manejador de la ventana SDL.
-        SDL_GLContext opengl_context; ///< Contexto OpenGL asociado a la ventana.
+        SDL_Window* window_handle; /**< Manejador de la ventana de SDL. */
+        SDL_GLContext opengl_context; /**< Contexto de OpenGL asociado con la ventana. */
 
     public:
 
         /**
-         * @brief Constructor para inicializar una ventana con título y configuración OpenGL.
+         * @brief Constructor de la clase `Window`.
+         *
+         * Este constructor crea una ventana con las especificaciones dadas y configura
+         * el contexto OpenGL utilizando los parámetros proporcionados.
          *
          * @param title Título de la ventana.
-         * @param left_x Posición X de la esquina superior izquierda.
-         * @param top_y Posición Y de la esquina superior izquierda.
-         * @param width Ancho de la ventana en píxeles.
-         * @param height Alto de la ventana en píxeles.
-         * @param context_details Configuración del contexto OpenGL.
+         * @param left_x Posición en el eje X de la ventana.
+         * @param top_y Posición en el eje Y de la ventana.
+         * @param width Ancho de la ventana.
+         * @param height Alto de la ventana.
+         * @param context_details Detalles del contexto OpenGL.
          */
         Window
         (
@@ -79,14 +91,17 @@ namespace udit
         }
 
         /**
-         * @brief Constructor para inicializar una ventana con título (como cadena C) y configuración OpenGL.
+         * @brief Constructor de la clase `Window` (versión con título como `const char*`).
+         *
+         * Este constructor permite crear una ventana con un título de tipo `const char*` y
+         * las especificaciones necesarias para el contexto OpenGL.
          *
          * @param title Título de la ventana.
-         * @param left_x Posición X de la esquina superior izquierda.
-         * @param top_y Posición Y de la esquina superior izquierda.
-         * @param width Ancho de la ventana en píxeles.
-         * @param height Alto de la ventana en píxeles.
-         * @param context_details Configuración del contexto OpenGL.
+         * @param left_x Posición en el eje X de la ventana.
+         * @param top_y Posición en el eje Y de la ventana.
+         * @param width Ancho de la ventana.
+         * @param height Alto de la ventana.
+         * @param context_details Detalles del contexto OpenGL.
          */
         Window
         (
@@ -99,30 +114,37 @@ namespace udit
         );
 
         /**
-         * @brief Destructor de la clase Window.
+         * @brief Destructor de la clase `Window`.
          *
-         * Libera los recursos de la ventana y el contexto OpenGL.
+         * Este destructor destruye la ventana y limpia el contexto OpenGL asociado.
          */
         ~Window();
 
     public:
 
         /**
-         * @brief Elimina el constructor de copia para evitar duplicación de recursos.
+         * @brief Constructor de copia deshabilitado.
+         *
+         * Este constructor de copia ha sido deshabilitado para evitar la copia del objeto
+         * `Window`, ya que no tiene sentido clonar una ventana.
          */
         Window(const Window&) = delete;
 
         /**
-         * @brief Elimina el operador de asignación por copia.
+         * @brief Operador de asignación deshabilitado.
+         *
+         * El operador de asignación ha sido deshabilitado para evitar la asignación de un objeto
+         * `Window` a otro, ya que este tipo de operación no es válida en este contexto.
          */
         Window& operator = (const Window&) = delete;
 
         /**
          * @brief Constructor de movimiento.
          *
-         * Transfiere la propiedad de los recursos al nuevo objeto.
+         * Este constructor transfiere la propiedad de la ventana y el contexto OpenGL de un objeto
+         * `Window` a otro mediante el uso de `std::exchange`.
          *
-         * @param other Objeto Window del que se transfieren los recursos.
+         * @param other Objeto `Window` cuyo contenido se moverá.
          */
         Window(Window&& other) noexcept
         {
@@ -133,10 +155,11 @@ namespace udit
         /**
          * @brief Operador de asignación por movimiento.
          *
-         * Transfiere la propiedad de los recursos al objeto actual.
+         * Este operador transfiere la propiedad de la ventana y el contexto OpenGL de un objeto
+         * `Window` a otro mediante el uso de `std::exchange`.
          *
-         * @param other Objeto Window del que se transfieren los recursos.
-         * @return Referencia al objeto actual.
+         * @param other Objeto `Window` cuyo contenido se moverá.
+         * @return Referencia al objeto `Window` actualizado.
          */
         Window& operator = (Window&& other) noexcept
         {
@@ -149,7 +172,8 @@ namespace udit
         /**
          * @brief Intercambia los buffers de la ventana.
          *
-         * Este método presenta en pantalla el contenido renderizado.
+         * Este método intercambia los buffers del contexto OpenGL, mostrando el contenido renderizado
+         * en el buffer de la ventana.
          */
         void swap_buffers();
 
