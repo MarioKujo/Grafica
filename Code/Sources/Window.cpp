@@ -1,10 +1,5 @@
-/* @file Window.cpp
- * @author Original Author <angel.rodriguez@udit.es
- * @author andrmatgonros@gmail.com
- * @date 2025-01-12
- *
- * Este código es de dominio público.
- */
+// Este código es de dominio público
+// andrmatgonros@gmail.com
 #pragma once
 
 #include <cassert>

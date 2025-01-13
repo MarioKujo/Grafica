@@ -1,15 +1,11 @@
-/* @file Heightmap.cpp
- * @author andrmatgonros@gmail.com
- * @date 2025-01-12
- *
- * Este código es de dominio público.
- */
+// Este código es de dominio público
+// andrmatgonros@gmail.com
 #include "../Headers/Heightmap.hpp"
 #include "../Headers/stb_image.hpp"
 #include <iostream>
 
-namespace udit {
-
+namespace udit
+{
     // Constructor de la clase Heightmap.
     // Carga los datos del mapa de altura desde una imagen y genera la malla correspondiente.
     Heightmap::Heightmap(const std::string& heightmapPath, float width, float height, float maxHeight)

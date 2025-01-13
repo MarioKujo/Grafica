@@ -1,9 +1,5 @@
-/* @file Cone.cpp
- * @author andrmatgonros@gmail.com
- * @date 2025-01-12
- *
- * Este código es de dominio público.
- */
+// Este código es de dominio público
+// andrmatgonros@gmail.com
 #include "../Headers/Cone.hpp"
 
 namespace udit
