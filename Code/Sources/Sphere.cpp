@@ -1,28 +1,13 @@
-/**
- * @file Sphere.cpp
+/* @file Sphere.cpp
  * @author andrmatgonros@gmail.com
  * @date 2025-01-12
  *
- * Este archivo implementa la clase `Sphere`, la cual genera y renderiza una esfera 3D
- * utilizando OpenGL. La esfera se genera utilizando una malla de subdivisiones latitudinales
- * y longitudinales, lo que permite definir la resolución de la geometría.
+ * Este código es de dominio público.
  */
-
 #include "../Headers/Sphere.hpp"
 
 namespace udit
 {
-    /**
-     * @brief Constructor de la clase Sphere.
-     *
-     * El constructor toma las divisiones latitudinales, longitudinales y el radio de la
-     * esfera, luego genera la geometría y configura los buffers de OpenGL para los vértices,
-     * coordenadas de textura y los índices.
-     *
-     * @param latDivisions Número de divisiones latitudinales de la esfera.
-     * @param longDivisions Número de divisiones longitudinales de la esfera.
-     * @param radius Radio de la esfera.
-     */
     Sphere::Sphere(int latDivisions, int longDivisions, GLfloat radius)
         : latitudeDivisions(latDivisions), longitudeDivisions(longDivisions), radius(radius)
     {
@@ -54,29 +39,18 @@ namespace udit
         glBindVertexArray(0);
     }
 
-    /**
-     * @brief Destructor de la clase Sphere.
-     *
-     * El destructor limpia los recursos de OpenGL, eliminando los buffers de vértices y
-     * el Vertex Array Object (VAO) utilizados para renderizar la esfera.
-     */
     Sphere::~Sphere()
     {
+        // Limpia los recursos de OpenGL
         glDeleteVertexArrays(1, &vao_id);
         glDeleteBuffers(VBO_COUNT, vbo_ids);
     }
 
-    /**
-     * @brief Genera la geometría de la esfera.
-     *
-     * Este método calcula los vértices, las coordenadas de textura y los índices que definen
-     * la malla de la esfera utilizando las divisiones latitudinales, longitudinales y el radio.
-     */
     void Sphere::generateGeometry()
     {
         int indexCount = latitudeDivisions * longitudeDivisions * 6;
 
-        // Redimensiona los vectores para almacenar las coordenadas de vértices, las coordenadas de textura y los índices
+        // Redimensiona los vectores para las coordenadas de vértices, coordenadas de textura e índices
         coordinates.resize((latitudeDivisions + 1) * (longitudeDivisions + 1) * 3);
         texCoords.resize((latitudeDivisions + 1) * (longitudeDivisions + 1) * 2);
         indices.resize(indexCount);
@@ -84,7 +58,7 @@ namespace udit
         int index = 0;
         int coordIndex = 0;
 
-        // Calcula los vértices y las coordenadas de textura para la esfera
+        // Calcula los vértices y coordenadas de textura
         for (int lat = 0; lat <= latitudeDivisions; ++lat)
         {
             for (int lon = 0; lon <= longitudeDivisions; ++lon)
@@ -92,6 +66,7 @@ namespace udit
                 GLfloat theta = static_cast<GLfloat>((static_cast<double>(lat) / latitudeDivisions) * std::numbers::pi);
                 GLfloat phi = static_cast<GLfloat>((static_cast<double>(lon) / longitudeDivisions) * 2.0f * std::numbers::pi);
 
+                // Calcula las coordenadas esféricas
                 GLfloat x = radius * sin(theta) * cos(phi);
                 GLfloat y = radius * cos(theta);
                 GLfloat z = radius * sin(theta) * sin(phi);
@@ -107,9 +82,8 @@ namespace udit
             }
         }
 
-        index = 0;
-
         // Genera los índices para los triángulos de la esfera
+        index = 0;
         for (int lat = 0; lat < latitudeDivisions; ++lat)
         {
             for (int lon = 0; lon < longitudeDivisions; ++lon)
@@ -117,6 +91,7 @@ namespace udit
                 int first = (lat * (longitudeDivisions + 1)) + lon;
                 int second = first + longitudeDivisions + 1;
 
+                // Triángulos para la malla de la esfera
                 indices[index++] = first;
                 indices[index++] = first + 1;
                 indices[index++] = second;
@@ -128,20 +103,15 @@ namespace udit
         }
     }
 
-    /**
-     * @brief Renderiza la esfera.
-     *
-     * Este método dibuja la esfera utilizando los datos de vértices, coordenadas de textura e índices
-     * almacenados en los buffers. Utiliza un `Vertex Array Object` (VAO) para hacer uso de los
-     * datos de la malla y renderiza los triángulos utilizando el modo de dibujo `GL_TRIANGLES`.
-     */
     void Sphere::render()
     {
+        // Configura el modo de polígonos y activa el culling
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_CULL_FACE);
 
+        // Dibuja la esfera utilizando los índices
         glBindVertexArray(vao_id);
-        glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_BYTE, 0);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_BYTE, 0);
         glBindVertexArray(0);
     }
 }

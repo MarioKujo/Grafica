@@ -21,7 +21,7 @@
     <ClInclude Include="..\Code\Headers\Sphere.hpp" />
     <ClInclude Include="..\Code\Headers\stb_image.hpp" />
     <ClInclude Include="..\Code\Headers\TextureLoader.hpp" />
-    <ClInclude Include="..\Shared\Code\Window.hpp" />
+    <ClInclude Include="..\Code\Headers\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Sources\Camera.cpp" />
@@ -35,7 +35,7 @@
     <ClCompile Include="..\Code\Sources\Sphere.cpp" />
     <ClCompile Include="..\Code\Sources\stb_image.cpp" />
     <ClCompile Include="..\Code\Sources\TextureLoader.cpp" />
-    <ClCompile Include="..\Shared\Code\Window.cpp" />
+    <ClCompile Include="..\Code\Sources\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/glfw-3.4/include/GLFW;../Shared/Code</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/glfw-3.4/include/GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

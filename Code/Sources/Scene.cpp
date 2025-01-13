@@ -1,75 +1,52 @@
-/**
- * @file Scene.cpp
- * @author angel.rodriguez@udit.es
- * @editor andrmatgonros@gmail.com
+/* @file Scene.cpp
+ * @author Original Author <angel.rodriguez@udit.es
+ * @author andrmatgonros@gmail.com
  * @date 2025-01-12
  *
- * Este archivo contiene la implementación de la clase Scene, que representa una escena 3D con múltiples objetos,
- * incluyendo esferas, conos, cilindros, un plano, un mapa de alturas y un skybox.
- * El código es responsable de la creación de los objetos, la carga de texturas y la gestión de la cámara,
- * además de los shaders necesarios para renderizar los objetos en OpenGL.
+ * Este código es de dominio público.
  */
-
 #pragma once
 
 #include "../Headers/Scene.hpp"
 
 namespace udit
 {
-
     using namespace std;
 
-    /**
-     * @brief Código fuente del shader de vértices para la escena.
-     */
+    // Código fuente del shader de vértices para la escena
     const string Scene::vertex_shader_code =
         "#version 330\n"
         "uniform mat4 model_view_matrix;"
         "uniform mat4 projection_matrix;"
-        ""
         "layout (location = 0) in vec3 vertex_coordinates;"
         "layout (location = 1) in vec2 vertex_texCoords;"
-        ""
         "out vec2 texCoords;"
-        ""
         "void main()"
         "{"
         "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
         "   texCoords = vertex_texCoords;"
         "}";
 
-    /**
-     * @brief Código fuente del shader de fragmentos para la escena.
-     */
+    // Código fuente del shader de fragmentos para la escena
     const string Scene::fragment_shader_code =
         "#version 330 core\n"
-        ""
         "in  vec2 texCoords;"
-        ""
         "out vec4 fragment_color;"
-        ""
         "uniform sampler2D textureSampler;"
         "uniform float transparency;"
-        ""
         "void main()"
         "{"
         "    vec4 texColor = texture(textureSampler, texCoords);"
-        ""
         "    fragment_color = vec4(texColor.rgb, texColor.a * transparency);"
         "}";
 
-
-    /**
-     * @brief Código fuente del shader de vértices para el skybox.
-     */
-    const std::string Scene::skybox_vertex_shader =
+    // Código fuente del shader de vértices para el skybox
+    const string Scene::skybox_vertex_shader =
         "#version 330 core\n"
-        ""
         "layout (location = 0) in vec3 aPos;"
         "out vec3 TexCoords;"
         "uniform mat4 projection;"
         "uniform mat4 view;"
-        ""
         "void main()"
         "{"
         "   TexCoords = aPos;"
@@ -77,81 +54,63 @@ namespace udit
         "   gl_Position = pos.xyww;"
         "}";
 
-    /**
-     * @brief Código fuente del shader de fragmentos para el skybox.
-     */
+    // Código fuente del shader de fragmentos para el skybox
     const string Scene::skybox_fragment_shader =
         "#version 330 core\n"
-        ""
         "in vec3 TexCoords;"
         "out vec4 FragColor;"
         "uniform samplerCube skybox;"
-        ""
         "void main()"
         "{"
         "   FragColor = texture(skybox, TexCoords);"
         "}";
 
-    /**
-     * @brief Constructor de la clase Scene.
-     *
-     * Inicializa todos los objetos 3D, la cámara y los shaders necesarios para la escena.
-     * También se cargan las texturas y se configura el entorno OpenGL.
-     *
-     * @param width Ancho de la ventana para el renderizado.
-     * @param height Altura de la ventana para el renderizado.
-     */
+    // Constructor de la escena, inicializa objetos 3D, cámara, shaders y texturas
     Scene::Scene(unsigned width, unsigned height)
-        : angle(0), camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f), plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5), sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", }), heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 0.5f)
+        : angle(0),
+        camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
+        plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5),
+        sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
+        skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
+                 "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
+                 "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" }),
+        heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 0.5f)
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
 
         program_id = compile_shaders();
-
         glUseProgram(program_id);
-
         skybox_program_id = compile_skybox_shaders();
 
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
-        // Carga las texturas de los objetos
+        // Cargar texturas
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
         heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
-        skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png","../Textures/sky-cube-map-2.png","../Textures/sky-cube-map-3.png","../Textures/sky-cube-map-4.png","../Textures/sky-cube-map-5.png", });
+        skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
+                                                     "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
+                                                     "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" });
         skybox.set_texture(skyboxTextureID);
 
         glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0);
-
         resize(width, height);
     }
 
-    /**
-     * @brief Actualiza la escena en función del tiempo transcurrido.
-     *
-     * Esto incluye la actualización de la cámara y el ángulo de rotación de algunos objetos.
-     *
-     * @param delta_time Tiempo transcurrido desde la última actualización.
-     */
+    // Actualiza la escena (cámara y rotación de objetos)
     void Scene::update(float delta_time)
     {
         angle += 0.01f;
-
         const Uint8* keyboard_state = SDL_GetKeyboardState(nullptr);
         camera.process_keyboard(keyboard_state, delta_time);
     }
 
-    /**
-     * @brief Renderiza todos los objetos en la escena.
-     *
-     * Esto incluye el renderizado del skybox, las esferas, los conos, los cilindros,
-     * el plano y el mapa de alturas con sus respectivas texturas.
-     */
+    // Renderiza todos los objetos en la escena
     void Scene::render()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -165,6 +124,7 @@ namespace udit
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
         skybox.render();
+
         glUseProgram(program_id);
 
         // Renderiza el plano
@@ -230,12 +190,7 @@ namespace udit
         heightmap.render();
     }
 
-    /**
-     * @brief Ajusta el tamaño de la ventana y la matriz de proyección.
-     *
-     * @param width Nuevo ancho de la ventana.
-     * @param height Nueva altura de la ventana.
-     */
+    // Ajusta el tamaño de la ventana y la proyección
     void Scene::resize(unsigned width, unsigned height)
     {
         glm::mat4 projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
@@ -243,22 +198,13 @@ namespace udit
         glViewport(0, 0, width, height);
     }
 
-    /**
-     * @brief Maneja el movimiento del ratón para mover la cámara.
-     *
-     * @param xrel Movimiento del ratón en el eje X.
-     * @param yrel Movimiento del ratón en el eje Y.
-     */
+    // Maneja el movimiento del ratón para mover la cámara
     void Scene::handle_mouse_motion(float xrel, float yrel)
     {
         camera.process_mouse_motion(xrel, yrel);
     }
 
-    /**
-     * @brief Compila los shaders de la escena.
-     *
-     * @return GLuint El identificador del programa de shaders compilado.
-     */
+    // Compila los shaders de la escena
     GLuint Scene::compile_shaders()
     {
         GLint succeeded = GL_FALSE;
@@ -284,10 +230,8 @@ namespace udit
         if (!succeeded) show_compilation_error(fragment_shader_id);
 
         GLuint program_id = glCreateProgram();
-
         glAttachShader(program_id, vertex_shader_id);
         glAttachShader(program_id, fragment_shader_id);
-
         glLinkProgram(program_id);
 
         glGetProgramiv(program_id, GL_LINK_STATUS, &succeeded);
@@ -296,15 +240,12 @@ namespace udit
         glDeleteShader(vertex_shader_id);
         glDeleteShader(fragment_shader_id);
 
-        return (program_id);
+        return program_id;
     }
 
-    /**
-     * @brief Compila los shaders para el skybox.
-     *
-     * @return GLuint El identificador del programa de shaders del skybox compilado.
-     */
-    GLuint Scene::compile_skybox_shaders() {
+    // Compila los shaders del skybox
+    GLuint Scene::compile_skybox_shaders()
+    {
         GLint succeeded = GL_FALSE;
 
         GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
@@ -328,10 +269,8 @@ namespace udit
         if (!succeeded) show_compilation_error(fragment_shader_id);
 
         GLuint program_id = glCreateProgram();
-
         glAttachShader(program_id, vertex_shader_id);
         glAttachShader(program_id, fragment_shader_id);
-
         glLinkProgram(program_id);
 
         glGetProgramiv(program_id, GL_LINK_STATUS, &succeeded);
@@ -343,11 +282,7 @@ namespace udit
         return program_id;
     }
 
-    /**
-     * @brief Muestra los errores de compilación de un shader.
-     *
-     * @param shader_id El identificador del shader con error de compilación.
-     */
+    // Muestra errores de compilación del shader
     void Scene::show_compilation_error(GLuint shader_id)
     {
         string info_log;
@@ -361,11 +296,7 @@ namespace udit
         }
     }
 
-    /**
-     * @brief Muestra los errores de enlace del programa de shaders.
-     *
-     * @param program_id El identificador del programa de shaders con error de enlace.
-     */
+    // Muestra errores de enlace del programa de shaders
     void Scene::show_linkage_error(GLuint program_id)
     {
         string info_log;
@@ -375,7 +306,7 @@ namespace udit
         if (info_log_length > 0) {
             info_log.resize(info_log_length);
             glGetProgramInfoLog(program_id, info_log_length, nullptr, &info_log[0]);
-            cerr << "Program linkage error: " << endl << info_log << endl;
+            cerr << "Shader program linkage error: " << endl << info_log << endl;
         }
     }
 }
