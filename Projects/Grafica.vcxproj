@@ -77,14 +77,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/glfw-3.4/include/GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../Libraries/sdl/lib/windows/visual-studio-2022/static-x64;../Libraries/glad/lib/windows/visual-studio-2022/static-x64;../Libraries/glfw-3.4/lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-staticd.lib;SDL2maind.lib;gladd.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../Libraries/sdl/lib/windows/visual-studio-2022/static-x64;../Libraries/glad/lib/windows/visual-studio-2022/static-x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2-staticd.lib;SDL2maind.lib;gladd.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
