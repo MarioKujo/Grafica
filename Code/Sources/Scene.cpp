@@ -12,6 +12,7 @@
 #include <glm.hpp>                          // vec3, vec4, ivec4, mat4
 #include <gtc/matrix_transform.hpp>         // translate, rotate, scale, perspective
 #include <gtc/type_ptr.hpp>                 // value_ptr
+#include <vector>
 
 namespace udit
 {
@@ -79,19 +80,60 @@ namespace udit
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Se rota el cubo y se empuja hacia el fondo:
-
+        // Se rota la espiral y se empuja hacia el fondo:
         glm::mat4 model_view_matrix(1);
-
         model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
         model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
 
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
-        // Se dibuja el cubo:
-
-        cube.render();
+        // Dibujar la espiral ascendente sobre el plano XZ
+        draw_spiral(1000, 5); // 1000 vértices, 5 giros
     }
+
+    void Scene::draw_spiral(int num_vertices, float num_turns)
+    {
+        // El número total de vértices
+        float step = num_turns * 2.0f * glm::pi<float>(); // 5 giros (en radianes)
+        float height_step = 4.0f / num_vertices; // Asignamos una altura normalizada para la espiral
+
+        // Creamos los vértices
+        vector<glm::vec3> vertices;
+        for (int i = 0; i < num_vertices; ++i)
+        {
+            float t = (i / float(num_vertices)) * step; // Ángulo para cada vértice
+
+            // Coordenadas en el plano XZ, con altura creciente
+            float x = cos(t);
+            float z = sin(t);
+            float y = i * height_step; // Altura creciente
+
+            vertices.push_back(glm::vec3(x, y, z));
+        }
+
+        GLuint vbo, vao;
+        glGenBuffers(1, &vbo);
+        glGenVertexArrays(1, &vao);
+
+        glBindVertexArray(vao);
+
+        // Copiar datos de los vértices al VBO
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+
+        // Enlazar el atributo de vértices (posición)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        // Dibujar la espiral
+        glDrawArrays(GL_LINE_STRIP, 0, vertices.size());
+
+        // Limpiar
+        glBindVertexArray(0);
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
+    }
+
 
     void Scene::resize(unsigned width, unsigned height)
     {
