@@ -37,6 +37,8 @@ namespace udit
         void   show_compilation_error(GLuint  shader_id);
         void   show_linkage_error(GLuint program_id);
 
+        void render_rubiks_cube();
+
     };
 
 }
