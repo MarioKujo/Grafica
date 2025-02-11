@@ -18,6 +18,7 @@ namespace udit
         unsigned height,
         const OpenGL_Context_Settings& context_details
     )
+        : camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f)
     {
         // Inicializar el subsistema de video de SDL
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
@@ -93,5 +94,34 @@ namespace udit
     {
         // Intercambiar los buffers del contexto OpenGL para mostrar el contenido renderizado
         SDL_GL_SwapWindow(window_handle);
+    }
+    void Window::move_camera(bool* exit)
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event) > 0)
+        {
+            switch (event.type)
+            {
+                case SDL_KEYDOWN:
+                {
+                    camera.process_keyboard(event.key.keysym.scancode);
+                    break;
+                }
+                case SDL_MOUSEMOTION:
+                {
+                    camera.process_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
+                    break;
+                }
+                case SDL_QUIT:
+                {
+                    *exit = true;
+                    break;
+                }
+            }
+        }
+    }
+    Camera Window::get_camera()
+    {
+        return camera;
     }
 }

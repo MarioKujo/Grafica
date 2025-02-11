@@ -61,7 +61,7 @@ namespace udit
             float start_yaw,
             float start_pitch
         );
-
+        Camera();
         /**
          * @brief Obtiene la matriz de vista de la cámara.
          *
@@ -81,7 +81,7 @@ namespace udit
          * @param state Puntero a un array que representa el estado de las teclas.
          * @param delta_time Tiempo transcurrido entre fotogramas.
          */
-        void process_keyboard(const Uint8* state, float delta_time);
+        void process_keyboard(SDL_Scancode scancode);
 
         /**
          * @brief Inicia el control de la cámara mediante entradas de ratón.

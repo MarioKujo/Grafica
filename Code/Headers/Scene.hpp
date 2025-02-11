@@ -178,5 +178,10 @@ namespace udit
          * @param height Nuevo alto de la ventana.
          */
         void resize(unsigned width, unsigned height);
+
+        /**
+        * @brief Recibe una Cámara y cambia los valores de la cámara de la escena
+        */
+        void set_camera(Camera new_camera);
     };
 }

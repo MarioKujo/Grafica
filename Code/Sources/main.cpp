@@ -40,24 +40,16 @@ int main(int argc, char* argv[])
     Scene scene(viewport_width, viewport_height); ///< Crea la escena 3D con el tamaño de la ventana.
 
     bool exit = false; ///< Flag para determinar si el programa debe salir.
-    Uint32 last_time = SDL_GetTicks(); ///< Tiempo del último fotograma.
     do
     {
-        SDL_Event event;
-
-        // Bucle de eventos, captura y maneja los eventos del sistema.
-        while (SDL_PollEvent(&event) > 0)
-        {
-            if (event.type == SDL_QUIT)
-            {
-                exit = true; ///< Salir cuando el evento sea un cierre de ventana.
-            }
-        }
+        
         scene.update(); ///< Actualiza la escena.
 
         scene.render(); ///< Renderiza la escena.
 
         window.swap_buffers(); ///< Intercambia los buffers para mostrar la imagen renderizada.
+        window.move_camera(&exit); ///< Mueve la cámara
+        scene.set_camera(window.get_camera()); ///< La cámara de la escena recibe los valores de la cámara de la ventana
     } while (not exit);
 
     SDL_Quit(); ///< Finaliza SDL al salir del bucle.

@@ -191,6 +191,11 @@ namespace udit
         glViewport(0, 0, width, height);
     }
 
+    void Scene::set_camera(Camera new_camera)
+    {
+        camera = new_camera;
+    }
+
     // Compila los shaders de la escena
     GLuint Scene::compile_shaders()
     {

@@ -11,25 +11,41 @@ namespace udit
         update_camera_vectors(); // Calcula los vectores iniciales de la cámara.
     }
 
+    Camera::Camera(): position(glm::vec3(0.f, 0.f, 0.f)), up(glm::vec3(0.f, 0.f, 0.f)), yaw (-90.f), pitch(0.f)
+    {
+    }
+
     glm::mat4 Camera::get_view_matrix() const
     {
         // Genera la matriz de vista utilizando la posición, dirección (front) y orientación (up).
         return glm::lookAt(position, position + front, up);
     }
 
-    void Camera::process_keyboard(const Uint8* keyboard_state, float delta_time)
-    {
-        float velocity = movement_speed * delta_time;
-
-        // Mueve la cámara según las teclas presionadas.
-        if (keyboard_state[SDL_SCANCODE_W])
-            position += front * velocity;
-        if (keyboard_state[SDL_SCANCODE_S])
-            position -= front * velocity;
-        if (keyboard_state[SDL_SCANCODE_A])
-            position -= right * velocity;
-        if (keyboard_state[SDL_SCANCODE_D])
-            position += right * velocity;
+    void Camera::process_keyboard(SDL_Scancode scancode)
+	{
+		switch (scancode)
+		{
+		    case SDL_SCANCODE_W:
+		    {
+			    position += front * movement_speed;
+			    break;
+		    }
+		    case SDL_SCANCODE_S:
+		    {
+			    position -= front * movement_speed;
+			    break;
+		    }
+		    case SDL_SCANCODE_A:
+		    {
+			    position -= right * movement_speed;
+			    break;
+		    }
+		    case SDL_SCANCODE_D:
+		    {
+			    position += right * movement_speed;
+			    break;
+		    }
+		}
     }
 
     void Camera::start_camera_control()

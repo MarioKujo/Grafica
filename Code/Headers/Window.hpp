@@ -12,6 +12,7 @@
 #include <SDL.h>
 #include <string>
 #include <utility>
+#include "Camera.hpp"
 
 namespace udit
 {
@@ -60,7 +61,7 @@ namespace udit
 
         SDL_Window* window_handle; /**< Manejador de la ventana de SDL. */
         SDL_GLContext opengl_context; /**< Contexto de OpenGL asociado con la ventana. */
-
+        Camera camera; /**< Cámara para observar los objetos de la escena. */
     public:
 
         /**
@@ -177,6 +178,21 @@ namespace udit
          */
         void swap_buffers();
 
+        /**
+        * @brief Actualiza el movimiento de la cámara.
+        * 
+        * Este método recibe las entradas de teclado mediante un evento de SDL y ejecuta
+        * la función de la clase Camera.
+        */
+        void move_camera(bool* exit);
+
+        /**
+        * @brief Devuelve la cámara.
+        * 
+        * Este método sirve para que otra clase pueda recibir la cámara de la ventana para 
+        pasarla a otro lado, como la escena, por ejemplo.
+        */
+        Camera get_camera();
     };
 
 }
