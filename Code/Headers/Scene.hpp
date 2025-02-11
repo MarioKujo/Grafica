@@ -158,7 +158,7 @@ namespace udit
          *
          * @param delta_time Tiempo transcurrido desde la última actualización.
          */
-        void update(float delta_time);
+        void update();
 
         /**
          * @brief Renderiza la escena.
@@ -178,15 +178,5 @@ namespace udit
          * @param height Nuevo alto de la ventana.
          */
         void resize(unsigned width, unsigned height);
-
-        /**
-         * @brief Maneja el movimiento del ratón en la ventana.
-         *
-         * Permite controlar la cámara con el ratón, ajustando su orientación.
-         *
-         * @param xrel Movimiento del ratón en el eje X.
-         * @param yrel Movimiento del ratón en el eje Y.
-         */
-        void handle_mouse_motion(float xrel, float yrel);
     };
 }

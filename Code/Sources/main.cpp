@@ -52,19 +52,8 @@ int main(int argc, char* argv[])
             {
                 exit = true; ///< Salir cuando el evento sea un cierre de ventana.
             }
-            else if (event.type == SDL_MOUSEMOTION)
-            {
-                // Llama a handle_mouse_motion para mover la cámara con el ratón.
-                scene.handle_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
-            }
         }
-
-        // Calcula el delta_time para la actualización de la escena.
-        Uint32 current_time = SDL_GetTicks(); ///< Obtiene el tiempo actual.
-        float delta_time = (current_time - last_time) / 1000.0f; ///< Tiempo transcurrido desde el último fotograma.
-        last_time = current_time; ///< Actualiza el tiempo del último fotograma.
-
-        scene.update(delta_time); ///< Actualiza la escena con el tiempo transcurrido.
+        scene.update(); ///< Actualiza la escena.
 
         scene.render(); ///< Renderiza la escena.
 

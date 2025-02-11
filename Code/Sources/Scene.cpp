@@ -98,11 +98,9 @@ namespace udit
     }
 
     // Actualiza la escena (cámara y rotación de objetos)
-    void Scene::update(float delta_time)
+    void Scene::update()
     {
         angle += 0.01f;
-        const Uint8* keyboard_state = SDL_GetKeyboardState(nullptr);
-        camera.process_keyboard(keyboard_state, delta_time);
     }
 
     // Renderiza todos los objetos en la escena
@@ -191,12 +189,6 @@ namespace udit
         glm::mat4 projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
         glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
         glViewport(0, 0, width, height);
-    }
-
-    // Maneja el movimiento del ratón para mover la cámara
-    void Scene::handle_mouse_motion(float xrel, float yrel)
-    {
-        camera.process_mouse_motion(xrel, yrel);
     }
 
     // Compila los shaders de la escena
