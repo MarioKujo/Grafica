@@ -27,12 +27,14 @@ namespace udit
 
         coordinates.resize(vertexCount * 3, 0.0f);
         texCoords.resize(vertexCount * 2, 0.0f);
+        normals.resize(vertexCount * 3, 0.0f);
         indices.resize(indexCount, 0);
 
         int vertexIndex = 0;
         int texCoordIndex = 0;
+        int normalIndex = 0;
 
-        // Generar posiciones de vértices y coordenadas de textura
+        // Generar posiciones de vértices, coordenadas de textura y normales
         for (int y = 0; y < grid_height; ++y)
         {
             for (int x = 0; x < grid_width; ++x)
@@ -46,6 +48,11 @@ namespace udit
 
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(x) / (grid_width - 1);
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(y) / (grid_height - 1);
+
+                // En un plano, todas las normales son [0, 0, 1]
+                normals[normalIndex++] = 0.0f;
+                normals[normalIndex++] = 0.0f;
+                normals[normalIndex++] = 1.0f;
             }
         }
 

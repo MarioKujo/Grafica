@@ -23,7 +23,7 @@ namespace udit
         // Configuración del VAO
         glBindVertexArray(vao_id);
 
-        // Configuración de VBO para las coordenadas de los vértices
+        // Configuración del VBO para las coordenadas de los vértices
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COORDINATES_VBO]);
         glBufferData(GL_ARRAY_BUFFER, coordinates.size() * sizeof(GLfloat), coordinates.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
@@ -34,6 +34,12 @@ namespace udit
         glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+        // Configuración del VBO para las normales
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[NORMALS_VBO]);
+        glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         // Configuración del EBO para los índices
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
