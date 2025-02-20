@@ -11,8 +11,6 @@
  */
 
 #pragma once
-#include <glad/glad.h>
-#include <vector>
 #include "Mesh.hpp"
 using namespace std;
 
