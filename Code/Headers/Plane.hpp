@@ -13,6 +13,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <vector>
+#include "Mesh.hpp"
 using namespace std;
 
 namespace udit
@@ -24,7 +25,7 @@ namespace udit
      * Esta clase genera un plano de malla utilizando OpenGL. El plano tiene una
      * cuadrícula definida por su ancho y alto, y se utiliza para representar superficies planas.
      */
-    class Plane
+    class Plane : public Mesh
     {
     public:
         /**
@@ -45,25 +46,10 @@ namespace udit
          */
         ~Plane();
 
-        /**
-         * @brief Renderiza el plano.
-         *
-         * Dibuja el plano utilizando los datos de geometría generados con OpenGL.
-         */
-        void render();
-
     private:
-        GLuint vao_id;               ///< Identificador del Vertex Array Object (VAO).
-        GLuint vbo_ids[3];           ///< Identificadores de los Vertex Buffer Objects (VBOs) para las coordenadas, coordenadas de textura e índices.
 
         int grid_width;              ///< Número de columnas en la cuadrícula.
         int grid_height;             ///< Número de filas en la cuadrícula.
-
-        enum { COORDINATES_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT }; ///< Índices para los VBOs y el EBO.
-
-        vector<GLfloat> coordinates; ///< Vectores que contienen las coordenadas de los vértices del plano.
-        vector<GLfloat> texCoords;   ///< Vectores que contienen las coordenadas de textura (UV) para los vértices.
-        vector<GLubyte> indices;     ///< Vectores que contienen los índices para dibujar el plano con triángulos.
 
         /**
          * @brief Genera la geometría del plano.
