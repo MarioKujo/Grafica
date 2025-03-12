@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "ShaderProgram.hpp"
 #include "Cylinder.hpp"
 #include "Heightmap.hpp"
 #include "Cone.hpp"
@@ -29,13 +30,8 @@
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
 #include "Sphere.hpp"
-#include <string>
-#include <iostream>
 #include <cassert>
 #include <SDL.h>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
 
 namespace udit
 {
@@ -56,13 +52,16 @@ namespace udit
     class Scene
     {
     private:
+        // Programa de shaders
+        ShaderProgram shaderProgram;
+
         // Códigos de los shaders
-        static const std::string vertex_shader_code; ///< Código fuente del shader de vértices.
-        static const std::string fragment_shader_code; ///< Código fuente del shader de fragmentos.
-        static const std::string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
-        static const std::string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
-        static const std::string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el heightmap.
-        static const std::string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el heightmap.
+        static const string vertex_shader_code; ///< Código fuente del shader de vértices.
+        static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.
+        static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
+        static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+        static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el heightmap.
+        static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el heightmap.
 
         // Identificadores de las matrices y programas de los shaders
         GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
@@ -97,46 +96,7 @@ namespace udit
         GLuint sphereTextureID; ///< ID de la textura para la esfera.
         GLuint heightmapTextureID; ///< ID de la textura para el heightmap.
 
-        /**
-         * @brief Compila los shaders para la escena.
-         *
-         * Compila los shaders de vértices y fragmentos para la escena 3D.
-         * Los shaders definen cómo se procesan los vértices y los fragmentos (pixeles)
-         * de los objetos 3D renderizados en la escena.
-         *
-         * @return El identificador del programa de shaders compilado.
-         */
-        GLuint compile_shaders();
 
-        /**
-         * @brief Compila los shaders para el skybox.
-         *
-         * Compila los shaders de vértices y fragmentos específicos para el skybox,
-         * que se usa para simular un entorno 3D alrededor de la escena.
-         *
-         * @return El identificador del programa de shaders para el skybox compilado.
-         */
-        GLuint compile_skybox_shaders();
-
-        /**
-         * @brief Muestra los errores de compilación de un shader.
-         *
-         * Si ocurre un error durante la compilación de un shader, este método muestra
-         * los detalles del error para facilitar la depuración.
-         *
-         * @param shader_id El identificador del shader cuya compilación falló.
-         */
-        void show_compilation_error(GLuint shader_id);
-
-        /**
-         * @brief Muestra los errores de enlace de un programa de shaders.
-         *
-         * Si ocurre un error al enlazar los shaders (vértices y fragmentos)
-         * en un solo programa, este método muestra los detalles del error.
-         *
-         * @param program_id El identificador del programa de shaders cuyo enlace falló.
-         */
-        void show_linkage_error(GLuint program_id);
 
     public:
         /**
