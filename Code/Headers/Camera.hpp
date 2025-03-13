@@ -72,6 +72,7 @@ namespace udit
          */
         glm::mat4 get_view_matrix() const;
 
+        glm::vec3 get_position() const;
         /**
          * @brief Procesa el movimiento del teclado para mover la cámara.
          *

@@ -1,6 +1,8 @@
 #pragma once
 #include <glad/glad.h>
 #include <vector>
+#include <cmath>
+#include <numbers>
 using namespace std;
 namespace udit
 {

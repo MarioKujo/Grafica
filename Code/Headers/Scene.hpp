@@ -55,6 +55,13 @@ namespace udit
         // Programa de shaders
         ShaderProgram shaderProgram;
 
+
+        // Propiedades de la luz
+        glm::vec3 lightPos;  // Posición de la luz
+        glm::vec3 lightColor;  // Color blanco para la luz
+        glm::vec3 viewPos;  // Posición de la cámara
+
+
         // Códigos de los shaders
         static const string vertex_shader_code; ///< Código fuente del shader de vértices.
         static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.

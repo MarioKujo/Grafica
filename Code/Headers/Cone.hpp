@@ -12,10 +12,7 @@
  */
 
 #pragma once
-#include <glad/glad.h>
-#include <vector>
-#include <cmath>
-#include <numbers>
+#include "Mesh.hpp"
 
 using namespace std;
 
@@ -30,7 +27,7 @@ namespace udit
      * utilizando OpenGL. El cono se genera a partir de las especificaciones de
      * radio, altura y divisiones.
      */
-    class Cone
+    class Cone : public Mesh
     {
     public:
         /**
@@ -53,35 +50,11 @@ namespace udit
          */
         ~Cone();
 
-        /**
-         * @brief Renderiza el cono en la escena.
-         *
-         * Este método utiliza OpenGL para dibujar el cono en la escena utilizando
-         * los VBOs y VAO previamente generados.
-         */
-        void render();
-
     private:
         int divisions; /**< Número de divisiones que se utilizarán para crear el cono. */
         GLfloat radius; /**< Radio de la base del cono. */
         GLfloat height; /**< Altura del cono. */
 
-        vector<GLfloat> coordinates; /**< Vector que almacena las coordenadas de los vértices del cono. */
-        vector<GLfloat> texCoords; /**< Vector que almacena las coordenadas de textura para cada vértice. */
-        vector<GLubyte> indices; /**< Vector que almacena los índices de los vértices para los elementos del cono. */
-
-        GLuint vao_id; /**< Identificador del VAO (Vertex Array Object) del cono. */
-        GLuint vbo_ids[3]; /**< Identificadores de los VBOs (Vertex Buffer Objects): coordenadas, índices y coordenadas de textura. */
-
-        enum { COORDINATES_VBO, INDICES_EBO, TEXCOORDS_VBO, VBO_COUNT }; /**< Enum que define los índices de los VBOs para coordenadas, índices y coordenadas de textura. */
-
-        /**
-         * @brief Genera la geometría del cono.
-         *
-         * Este método calcula las coordenadas de los vértices, las coordenadas de
-         * textura y los índices necesarios para renderizar el cono, y los almacena
-         * en los vectores correspondientes.
-         */
         void generateGeometry();
     };
 }

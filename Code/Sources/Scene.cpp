@@ -6,32 +6,55 @@
 
 namespace udit
 {
-    // Código fuente del shader de vértices para la escena
     const string Scene::vertex_shader_code =
         "#version 330\n"
         "uniform mat4 model_view_matrix;"
         "uniform mat4 projection_matrix;"
         "layout (location = 0) in vec3 vertex_coordinates;"
         "layout (location = 1) in vec2 vertex_texCoords;"
+        "layout (location = 2) in vec3 vertex_normal;"  // Normal del vértice
         "out vec2 texCoords;"
+        "out vec3 fragNormal;"  // Enviar la normal al fragment shader
+        "out vec3 fragPos;"     // Enviar la posición del vértice al fragment shader
         "void main()"
         "{"
         "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
         "   texCoords = vertex_texCoords;"
+        "   fragNormal = mat3(transpose(inverse(model_view_matrix))) * vertex_normal;" // Transformar la normal
+        "   fragPos = vec3(model_view_matrix * vec4(vertex_coordinates, 1.0));"  // Obtener la posición
         "}";
+
 
     // Código fuente del shader de fragmentos para la escena
     const string Scene::fragment_shader_code =
         "#version 330 core\n"
-        "in  vec2 texCoords;"
+        "in vec2 texCoords;"
+        "in vec3 fragNormal;"
+        "in vec3 fragPos;"
         "out vec4 fragment_color;"
         "uniform sampler2D textureSampler;"
         "uniform float transparency;"
+
+        // Parametros de la luz
+        "uniform vec3 lightPos;"  // Posición de la luz
+        "uniform vec3 lightColor;"  // Color de la luz
+        "uniform vec3 viewPos;"  // Posición de la cámara (observador)
+
         "void main()"
         "{"
         "    vec4 texColor = texture(textureSampler, texCoords);"
-        "    fragment_color = vec4(texColor.rgb, texColor.a * transparency);"
+
+        // Cálculo de la iluminación difusa Lambert
+        "    vec3 norm = normalize(fragNormal);"
+        "    vec3 lightDir = normalize(lightPos - fragPos);"
+        "    float diff = max(dot(norm, lightDir), 0.0);"
+        "    vec3 diffuse = diff * lightColor;"
+
+        // Color final del fragmento
+        "    vec3 result = texColor.rgb * diffuse;"
+        "    fragment_color = vec4(result, texColor.a * transparency);"
         "}";
+
 
     // Código fuente del shader de vértices para el skybox
     const string Scene::skybox_vertex_shader =
@@ -69,6 +92,7 @@ namespace udit
                  "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" }),
         heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 0.5f)
     {
+
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
@@ -79,6 +103,10 @@ namespace udit
 
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
+
+        lightPos = glm::vec3(-1.0f, -1.0f, -1.0f);  // Posición de la luz
+        lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
+        viewPos = glm::vec3(0.0f, 0.0f, 8.0f);  // Posición de la cámara
 
         // Cargar texturas
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
@@ -118,6 +146,10 @@ namespace udit
 
         glUseProgram(program_id);
 
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(glGetUniformLocation(program_id, "lightColor"), 1, glm::value_ptr(lightColor));
+        glUniform3fv(glGetUniformLocation(program_id, "viewPos"), 1, glm::value_ptr(viewPos));
+
         // Renderiza el plano
         glm::mat4 plane_matrix(1);
         plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
@@ -135,6 +167,9 @@ namespace udit
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
         glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
         cylinder.render();
+
+        lightPos = glm::vec3(-10.f, -10.f, -10.f);
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
         // Renderiza el cono
         glm::mat4 cone_matrix(1);

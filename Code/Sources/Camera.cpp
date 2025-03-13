@@ -21,6 +21,11 @@ namespace udit
         return glm::lookAt(position, position + front, up);
     }
 
+    glm::vec3 Camera::get_position() const
+    {
+        return position;
+    }
+
     void Camera::process_keyboard(SDL_Scancode scancode)
 	{
 		switch (scancode)
