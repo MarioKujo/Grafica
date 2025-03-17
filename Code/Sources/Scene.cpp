@@ -38,7 +38,6 @@ namespace udit
         // Parametros de la luz
         "uniform vec3 lightPos;"  // Posición de la luz
         "uniform vec3 lightColor;"  // Color de la luz
-        "uniform vec3 viewPos;"  // Posición de la cámara (observador)
 
         "void main()"
         "{"
@@ -104,7 +103,7 @@ namespace udit
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
-        lightPos = glm::vec3(-1.0f, -1.0f, -1.0f);  // Posición de la luz
+        lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
         lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
         viewPos = glm::vec3(0.0f, 0.0f, 8.0f);  // Posición de la cámara
 
@@ -146,7 +145,9 @@ namespace udit
 
         glUseProgram(program_id);
 
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        lightPos = glm::vec3(10.0f, 10.0f, 10.0f);
+        glm::vec3 lightPos_camera_space = glm::vec3(view_matrix * glm::vec4(lightPos, 1.0));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos_camera_space));
         glUniform3fv(glGetUniformLocation(program_id, "lightColor"), 1, glm::value_ptr(lightColor));
         glUniform3fv(glGetUniformLocation(program_id, "viewPos"), 1, glm::value_ptr(viewPos));
 
@@ -168,8 +169,9 @@ namespace udit
         glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
         cylinder.render();
 
-        lightPos = glm::vec3(-10.f, -10.f, -10.f);
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        lightPos = glm::vec3(-15.f, -45.f, -20.f);
+        lightPos_camera_space = glm::vec3(view_matrix * glm::vec4(lightPos, 1.0));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos_camera_space));
 
         // Renderiza el cono
         glm::mat4 cone_matrix(1);
