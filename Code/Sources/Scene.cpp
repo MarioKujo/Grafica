@@ -184,36 +184,33 @@ namespace udit
         cone.render();
 
         // Renderiza las esferas
-        glm::mat4 sphere1_matrix(1);
-        sphere1_matrix = glm::translate(sphere1_matrix, glm::vec3(0.f, 7.f, -2.f));
-        sphere1_matrix = glm::rotate(sphere1_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+        glm::mat4 sphere_matrix(1);
+        sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, 7.f, -2.f));
+        sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
 
         glm::vec3 lightOriginalPos = glm::vec3(300.0f, 500.0f, -300.0f);
-        glm::vec3 rotatedLightPos = glm::vec3(sphere1_matrix * glm::vec4(lightOriginalPos, 1.0f));
+        glm::vec3 rotatedLightPos = glm::vec3(sphere_matrix * glm::vec4(lightOriginalPos, 1.0f));
 
         lightPos = glm::vec3(view_matrix * glm::vec4(rotatedLightPos, 1.0f));
         glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
-        glm::mat4 sphere1_view_matrix = view_matrix * sphere1_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere1_view_matrix));
+        glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
         glBindTexture(GL_TEXTURE_2D, sphereTextureID);
         sphere1.render();
 
+        glDepthMask(GL_FALSE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLint transparency = glGetUniformLocation(program_id, "transparency");
         glUniform1f(transparency, 0.5f);
 
-        glm::mat4 sphere2_matrix(1);
-        sphere2_matrix = glm::translate(sphere2_matrix, glm::vec3(0.f, 7.f, -2.f));
-        sphere2_matrix = glm::rotate(sphere2_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
-        glm::mat4 sphere2_view_matrix = view_matrix * sphere2_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere2_view_matrix));
-        glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
         sphere2.render();
 
         glDisable(GL_BLEND);
+        glDepthMask(GL_TRUE);
 
         // Renderiza el mapa de alturas
         glm::mat4 heightmap_matrix(1);
