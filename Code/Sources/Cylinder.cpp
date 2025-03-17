@@ -8,29 +8,7 @@ namespace udit
         : stack_count(stack), slice_count(slice), radius(r), height(h)
     {
         generateGeometry();
-
-        glGenBuffers(VBO_COUNT, vbo_ids);
-        glGenVertexArrays(1, &vao_id);
-
-        glBindVertexArray(vao_id);
-
-        // Crea y carga el VBO de coordenadas de vértices
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COORDINATES_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, coordinates.size() * sizeof(GLfloat), coordinates.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-        // Crea y carga el VBO de coordenadas de textura
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[TEXCOORDS_VBO]);
-        glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(GLfloat), texCoords.data(), GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-        // Crea y carga el EBO de índices
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_ids[INDICES_EBO]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLubyte), indices.data(), GL_STATIC_DRAW);
-
-        glBindVertexArray(0);
+        generateBuffers();
     }
 
     Cylinder::~Cylinder()
@@ -46,10 +24,12 @@ namespace udit
 
         coordinates.resize(vertexCount * 3);
         texCoords.resize(vertexCount * 2);
+        normals.resize(vertexCount * 3);
         indices.resize(indexCount);
 
         int vertexIndex = 0;
         int texCoordIndex = 0;
+        int normalIndex = 0;
 
         for (int stack = 0; stack < stack_count; ++stack)
         {
@@ -66,6 +46,10 @@ namespace udit
 
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(stack) / stack_count;
                 texCoords[texCoordIndex++] = static_cast<GLfloat>(slice) / slice_count;
+
+                normals[normalIndex++] = x / radius;
+                normals[normalIndex++] = 0.0f;
+                normals[normalIndex++] = z / radius;
             }
         }
 
@@ -73,15 +57,27 @@ namespace udit
         coordinates[vertexIndex++] = 0.0f;
         coordinates[vertexIndex++] = -height / 2;
         coordinates[vertexIndex++] = 0.0f;
+
         texCoords[texCoordIndex++] = 0.5f;
         texCoords[texCoordIndex++] = 0.0f;
+
+        normals[normalIndex++] = 0.0f;
+        normals[normalIndex++] = -1.0f;
+        normals[normalIndex++] = 0.0f;
+
         int bottomCenterIndex = (vertexIndex / 3) - 1;
 
         coordinates[vertexIndex++] = 0.0f;
         coordinates[vertexIndex++] = height / 2;
         coordinates[vertexIndex++] = 0.0f;
+
         texCoords[texCoordIndex++] = 0.5f;
         texCoords[texCoordIndex++] = 1.0f;
+
+        normals[normalIndex++] = 0.0f;
+        normals[normalIndex++] = 1.0f;
+        normals[normalIndex++] = 0.0f;
+
         int topCenterIndex = (vertexIndex / 3) - 1;
 
         int index = 0;
@@ -124,15 +120,5 @@ namespace udit
             indices[index++] = offset + nextSlice;
             indices[index++] = offset + slice;
         }
-    }
-
-    void Cylinder::render()
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glEnable(GL_CULL_FACE);
-
-        glBindVertexArray(vao_id);
-        glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_BYTE, 0);
-        glBindVertexArray(0);
     }
 }

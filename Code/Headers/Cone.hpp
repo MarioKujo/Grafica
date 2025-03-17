@@ -14,8 +14,6 @@
 #pragma once
 #include "Mesh.hpp"
 
-using namespace std;
-
 namespace udit
 {
     /**

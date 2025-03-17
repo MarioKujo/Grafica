@@ -145,9 +145,8 @@ namespace udit
 
         glUseProgram(program_id);
 
-        lightPos = glm::vec3(10.0f, 10.0f, 10.0f);
-        glm::vec3 lightPos_camera_space = glm::vec3(view_matrix * glm::vec4(lightPos, 1.0));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos_camera_space));
+        lightPos = glm::vec3(view_matrix * glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
         glUniform3fv(glGetUniformLocation(program_id, "lightColor"), 1, glm::value_ptr(lightColor));
         glUniform3fv(glGetUniformLocation(program_id, "viewPos"), 1, glm::value_ptr(viewPos));
 
@@ -160,6 +159,9 @@ namespace udit
         glBindTexture(GL_TEXTURE_2D, planeTextureID);
         plane.render();
 
+        lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+
         // Renderiza el cilindro
         glm::mat4 cylinder_matrix(1);
         cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(-4.f, 1.1f, -2.f));
@@ -169,9 +171,8 @@ namespace udit
         glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
         cylinder.render();
 
-        lightPos = glm::vec3(-15.f, -45.f, -20.f);
-        lightPos_camera_space = glm::vec3(view_matrix * glm::vec4(lightPos, 1.0));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos_camera_space));
+        lightPos = glm::vec3(view_matrix * glm::vec4(-15.f, -45.f, -20.f, 1.0));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
         // Renderiza el cono
         glm::mat4 cone_matrix(1);

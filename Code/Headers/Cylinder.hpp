@@ -12,13 +12,7 @@
  */
 
 #pragma once
-#include <glad/glad.h>
-#include <numbers>
-#include <cmath>
-#include <cstdlib>
-#include <vector>
-
-using namespace std;
+#include "Mesh.hpp"
 
 namespace udit
 {
@@ -29,7 +23,7 @@ namespace udit
      * La clase se encarga de generar la geometría de un cilindro, con sus vértices,
      * coordenadas de textura e índices, y de renderizarlo utilizando OpenGL.
      */
-    class Cylinder
+    class Cylinder: public Mesh
     {
     public:
         /**
@@ -54,27 +48,11 @@ namespace udit
          */
         ~Cylinder();
 
-        /**
-         * @brief Renderiza el cilindro en la pantalla.
-         *
-         * Este método utiliza los buffers de OpenGL para dibujar el cilindro en la pantalla.
-         */
-        void render();
-
     private:
         int stack_count; /**< Número de divisiones verticales del cilindro. */
         int slice_count; /**< Número de divisiones alrededor del eje del cilindro. */
         GLfloat radius; /**< Radio de la base del cilindro. */
         GLfloat height; /**< Altura del cilindro. */
-
-        vector<GLfloat> coordinates; /**< Vértices del cilindro (coordenadas 3D). */
-        vector<GLfloat> texCoords; /**< Coordenadas de textura para aplicar sobre el cilindro. */
-        vector<GLubyte> indices; /**< Índices que definen cómo conectar los vértices para formar caras. */
-
-        GLuint vao_id; /**< Identificador del Vertex Array Object (VAO) de OpenGL. */
-        GLuint vbo_ids[4]; /**< Identificadores de los Vertex Buffer Objects (VBOs) para coordenadas, coordenadas de textura, índices y vértices adicionales. */
-
-        enum { COORDINATES_VBO, TEXCOORDS_VBO, INDICES_EBO, VBO_COUNT }; /**< Enum que define los índices de los VBOs utilizados. */
 
         /**
          * @brief Genera la geometría del cilindro.
