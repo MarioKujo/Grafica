@@ -12,7 +12,6 @@ namespace udit
 		Mesh();
 		void render();
 		void generateBuffers();
-		void deleteBuffers();
 	protected:
 
 		enum { COORDINATES_VBO, TEXCOORDS_VBO, NORMALS_VBO, INDICES_EBO, VBO_COUNT }; ///< Índices para los VBOs y el EBO.

@@ -15,7 +15,8 @@ namespace udit
     // Destructor: Libera los recursos de OpenGL utilizados para el plano.
     Plane::~Plane()
     {
-        deleteBuffers();
+        glDeleteVertexArrays(1, &vao_id);
+        glDeleteBuffers(VBO_COUNT, vbo_ids);
     }
 
     // Genera la geometría del plano, incluyendo vértices, coordenadas de textura e índices.
