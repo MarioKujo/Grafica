@@ -13,8 +13,7 @@ namespace udit
 
 	Cone::~Cone()
 	{
-		glDeleteVertexArrays(1, &vao_id);
-		glDeleteBuffers(VBO_COUNT, vbo_ids);
+		deleteBuffers();
 	}
 
 	void Cone::generateGeometry()
