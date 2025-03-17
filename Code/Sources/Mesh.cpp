@@ -47,4 +47,9 @@ namespace udit
 
         glBindVertexArray(0);
     }
+    void Mesh::deleteBuffers()
+    {
+        glDeleteVertexArrays(1, &vao_id);
+        glDeleteBuffers(VBO_COUNT, vbo_ids);
+    }
 }

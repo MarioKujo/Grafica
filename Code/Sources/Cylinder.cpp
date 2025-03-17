@@ -13,8 +13,7 @@ namespace udit
 
     Cylinder::~Cylinder()
     {
-        glDeleteVertexArrays(1, &vao_id);
-        glDeleteBuffers(VBO_COUNT, vbo_ids);
+        deleteBuffers();
     }
 
     void Cylinder::generateGeometry()
