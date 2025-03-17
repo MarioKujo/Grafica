@@ -102,11 +102,6 @@ namespace udit
         {
             switch (event.type)
             {
-                case SDL_KEYDOWN:
-                {
-                    camera.process_keyboard(event.key.keysym.scancode);
-                    break;
-                }
                 case SDL_MOUSEMOTION:
                 {
                     camera.process_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
@@ -119,6 +114,10 @@ namespace udit
                 }
             }
         }
+
+        // Obtener el estado del teclado
+        const Uint8* state = SDL_GetKeyboardState(NULL);
+        camera.process_keyboard(state);
     }
     Camera Window::get_camera()
     {

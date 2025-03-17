@@ -82,7 +82,7 @@ namespace udit
          * @param state Puntero a un array que representa el estado de las teclas.
          * @param delta_time Tiempo transcurrido entre fotogramas.
          */
-        void process_keyboard(SDL_Scancode scancode);
+        void process_keyboard(const Uint8* state);
 
         /**
          * @brief Inicia el control de la cámara mediante entradas de ratón.

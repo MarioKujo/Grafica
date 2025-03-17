@@ -26,31 +26,16 @@ namespace udit
         return position;
     }
 
-    void Camera::process_keyboard(SDL_Scancode scancode)
+    void Camera::process_keyboard(const Uint8* state)
 	{
-		switch (scancode)
-		{
-		    case SDL_SCANCODE_W:
-		    {
-			    position += front * movement_speed;
-			    break;
-		    }
-		    case SDL_SCANCODE_S:
-		    {
-			    position -= front * movement_speed;
-			    break;
-		    }
-		    case SDL_SCANCODE_A:
-		    {
-			    position -= right * movement_speed;
-			    break;
-		    }
-		    case SDL_SCANCODE_D:
-		    {
-			    position += right * movement_speed;
-			    break;
-		    }
-		}
+        if (state[SDL_SCANCODE_W])
+            position += front * movement_speed;
+        if (state[SDL_SCANCODE_S])
+            position -= front * movement_speed;
+        if (state[SDL_SCANCODE_A])
+            position -= right * movement_speed;
+        if (state[SDL_SCANCODE_D])
+            position += right * movement_speed;
     }
 
     void Camera::start_camera_control()
