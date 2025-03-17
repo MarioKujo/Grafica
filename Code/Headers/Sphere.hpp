@@ -9,10 +9,7 @@
  */
 
 #pragma once
-#include <glad/glad.h>
-#include <vector>
-#include <cmath>
-#include <numbers>
+#include "Mesh.hpp"
 
 using namespace std;
 
@@ -27,7 +24,7 @@ namespace udit
      * de textura y un índice para representar la geometría de la esfera. Esta clase permite
      * renderizar la esfera utilizando OpenGL.
      */
-    class Sphere
+    class Sphere : public Mesh
     {
     public:
         /**
@@ -50,27 +47,10 @@ namespace udit
          */
         ~Sphere();
 
-        /**
-         * @brief Renderiza la esfera en la escena.
-         *
-         * Este método dibuja la esfera utilizando los datos generados (vértices, índices y
-         * coordenadas de textura) y los buffers correspondientes.
-         */
-        void render();
-
     private:
         int latitudeDivisions; ///< Número de divisiones latitudinales de la esfera.
         int longitudeDivisions; ///< Número de divisiones longitudinales de la esfera.
         GLfloat radius; ///< Radio de la esfera.
-
-        vector<GLfloat> coordinates; ///< Vértices de la esfera.
-        vector<GLfloat> texCoords; ///< Coordenadas de textura de la esfera.
-        vector<GLubyte> indices; ///< Índices para los elementos del cubo.
-
-        GLuint vao_id; ///< Identificador del Vertex Array Object (VAO).
-        GLuint vbo_ids[3]; ///< Identificadores de los Vertex Buffer Objects (VBO).
-
-        enum { COORDINATES_VBO, INDICES_EBO, TEXCOORDS_VBO, VBO_COUNT }; ///< Enum para identificar los VBOs.
 
         /**
          * @brief Genera la geometría de la esfera.

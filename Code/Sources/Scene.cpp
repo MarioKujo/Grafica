@@ -171,7 +171,7 @@ namespace udit
         glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
         cylinder.render();
 
-        lightPos = glm::vec3(view_matrix * glm::vec4(-15.f, -45.f, -20.f, 1.0));
+        lightPos = glm::vec3(view_matrix * glm::vec4(-15.f, -45.f, -20.f, 1.0f));
         glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
         // Renderiza el cono
@@ -182,6 +182,10 @@ namespace udit
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
         glBindTexture(GL_TEXTURE_2D, coneTextureID);
         cone.render();
+
+
+        lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
+        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
         // Renderiza las esferas
         glm::mat4 sphere1_matrix(1);
