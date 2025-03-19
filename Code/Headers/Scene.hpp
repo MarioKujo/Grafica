@@ -75,6 +75,7 @@ namespace udit
         GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
         GLuint program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
+        GLuint heightmap_program_id; ///< ID del programa de shaders para el heightmap.
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
