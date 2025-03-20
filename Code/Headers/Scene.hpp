@@ -66,12 +66,15 @@ namespace udit
         static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.
         static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+        static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
+        static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
 
         // Identificadores de las matrices y programas de los shaders
         GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
         GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
         GLuint program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
+        GLuint heightmap_program_id; ///< ID del programa de shaders para el skybox.
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
@@ -97,6 +100,7 @@ namespace udit
         GLuint coneTextureID; ///< ID de la textura para el cono.
         GLuint skyboxTextureID; ///< ID de la textura para el skybox.
         GLuint sphereTextureID; ///< ID de la textura para la esfera.
+        GLuint heightmapID; ///< ID de la textura para el heightmap.
 
 
 
