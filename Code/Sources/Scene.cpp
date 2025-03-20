@@ -88,8 +88,7 @@ namespace udit
         sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
         skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                  "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
-                 "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" }),
-        heightmap("../Textures/heightmap.png", 10.0f, 10.0f, 0.5f)
+                 "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" })
     {
 
         glEnable(GL_CULL_FACE);
@@ -112,7 +111,6 @@ namespace udit
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
-        heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
         skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                                                      "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
                                                      "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" });
@@ -211,16 +209,6 @@ namespace udit
 
         glDisable(GL_BLEND);
         glDepthMask(GL_TRUE);
-
-        // Renderiza el mapa de alturas
-        glm::mat4 heightmap_matrix(1);
-        heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.0f, -45.0f, 0.0f));
-        heightmap_matrix = glm::scale(heightmap_matrix, glm::vec3(100.0f, 100.0f, 100.0f));
-        glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
-        glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-        glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
-        heightmap.render();
     }
 
     // Ajusta el tamaño de la ventana y la proyección

@@ -23,7 +23,6 @@
 
 #include "ShaderProgram.hpp"
 #include "Cylinder.hpp"
-#include "Heightmap.hpp"
 #include "Cone.hpp"
 #include "Plane.hpp"
 #include "Camera.hpp"
@@ -67,15 +66,12 @@ namespace udit
         static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.
         static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
-        static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el heightmap.
-        static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el heightmap.
 
         // Identificadores de las matrices y programas de los shaders
         GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
         GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
         GLuint program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
-        GLuint heightmap_program_id; ///< ID del programa de shaders para el heightmap.
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
@@ -84,7 +80,6 @@ namespace udit
         Cone cone; ///< Objeto cono.
         Cylinder cylinder; ///< Objeto cilindro.
         Plane plane; ///< Objeto plano.
-        Heightmap heightmap; ///< Objeto heightmap para representar terrenos.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -102,7 +97,6 @@ namespace udit
         GLuint coneTextureID; ///< ID de la textura para el cono.
         GLuint skyboxTextureID; ///< ID de la textura para el skybox.
         GLuint sphereTextureID; ///< ID de la textura para la esfera.
-        GLuint heightmapTextureID; ///< ID de la textura para el heightmap.
 
 
 
