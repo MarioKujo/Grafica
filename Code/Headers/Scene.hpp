@@ -83,6 +83,7 @@ namespace udit
         Cone cone; ///< Objeto cono.
         Cylinder cylinder; ///< Objeto cilindro.
         Plane plane; ///< Objeto plano.
+        Plane heightmap; ///< Objeto heightmap.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -101,6 +102,7 @@ namespace udit
         GLuint skyboxTextureID; ///< ID de la textura para el skybox.
         GLuint sphereTextureID; ///< ID de la textura para la esfera.
         GLuint heightmapID; ///< ID de la textura para el heightmap.
+        GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
 
 
 

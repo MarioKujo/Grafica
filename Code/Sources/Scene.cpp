@@ -80,11 +80,33 @@ namespace udit
         "   FragColor = texture(skybox, TexCoords);"
         "}";
 
+    const string Scene::heightmap_vertex_shader =
+        "#version 330 core\n"
+        "uniform mat4 model_view_matrix;"
+        "uniform mat4 projection_matrix;"
+        "uniform sampler2D heightmap;"  // Nueva textura de altura
+        "uniform float height_scale;"   // Escala para la altura del heightmap
+        "layout (location = 0) in vec3 vertex_coordinates;"
+        "layout (location = 1) in vec2 vertex_texCoords;"
+        "layout (location = 2) in vec3 vertex_normal;"
+        "out vec2 texCoords;"
+        "out vec3 fragNormal;"
+        "out vec3 fragPos;"
+        "void main()"
+        "{"
+        "   texCoords = vertex_texCoords;"
+        "   float height = texture(heightmap, vertex_texCoords).r;"  // Obtener altura de la textura
+        "   vec3 displaced_position = vertex_coordinates + vertex_normal * height * height_scale;" // Desplazamiento
+        "   gl_Position = projection_matrix * model_view_matrix * vec4(displaced_position, 1.0);"
+        "   fragNormal = mat3(transpose(inverse(model_view_matrix))) * vertex_normal;"
+        "   fragPos = vec3(model_view_matrix * vec4(displaced_position, 1.0));"
+        "}";
+
     // Constructor de la escena, inicializa objetos 3D, cámara, shaders y texturas
     Scene::Scene(unsigned width, unsigned height)
         : angle(0),
         camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-        plane(7, 5), cylinder(10, 10, 2, 5), cone(10, 2, 5),
+        plane(7, 5), heightmap(10, 10), cylinder(10, 10, 2, 5), cone(10, 2, 5),
         sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
         skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                  "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
@@ -98,6 +120,7 @@ namespace udit
         program_id = shaderProgram.compile_shaders(vertex_shader_code, fragment_shader_code);
         glUseProgram(program_id);
         skybox_program_id = shaderProgram.compile_shaders(skybox_vertex_shader, skybox_fragment_shader);
+        heightmap_program_id = shaderProgram.compile_shaders(heightmap_vertex_shader, fragment_shader_code);
 
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
@@ -111,6 +134,8 @@ namespace udit
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
         sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
+        heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
+        heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
         skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                                                      "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
                                                      "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" });
@@ -209,6 +234,40 @@ namespace udit
 
         glDisable(GL_BLEND);
         glDepthMask(GL_TRUE);
+
+        glUseProgram(heightmap_program_id);
+
+        glm::mat4 heightmap_matrix(1);
+        glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
+
+        GLuint model_view_matrix_id = glGetUniformLocation(heightmap_program_id, "model_view_matrix");
+        GLuint projection_matrix_id = glGetUniformLocation(heightmap_program_id, "projection_matrix");
+
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
+        glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
+        glUniform1i(glGetUniformLocation(heightmap_program_id, "textureSampler"), 0); // sampler0
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, heightmapID);
+        glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
+
+        float height_scale = 2.0f;
+        glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
+
+        glm::vec3 lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+
+        glm::vec3 lightColor = glm::vec3(1.0f); // blanco
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
+
+        glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f); // sin transparencia
+
+        // Renderiza el plano (terreno)
+        heightmap.render();
+
     }
 
     // Ajusta el tamaño de la ventana y la proyección
