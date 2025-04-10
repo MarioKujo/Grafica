@@ -106,7 +106,7 @@ namespace udit
     Scene::Scene(unsigned width, unsigned height)
         : angle(0),
         camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-        plane(7, 5), heightmap(10, 10), cylinder(10, 10, 2, 5), cone(10, 2, 5),
+        plane(7, 5), heightmap(15, 15), cylinder(10, 10, 2, 5), cone(10, 2, 5),
         sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
         skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                  "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
@@ -125,6 +125,15 @@ namespace udit
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
+        skybox_model_view_matrix_id = glGetUniformLocation(skybox_program_id, "view");
+        skybox_projection_matrix_id = glGetUniformLocation(skybox_program_id, "projection");
+
+        heightmap_model_view_matrix_id = glGetUniformLocation(heightmap_program_id, "model_view_matrix");
+        heightmap_projection_matrix_id = glGetUniformLocation(heightmap_program_id, "projection_matrix");
+
+        lightPos_id = glGetUniformLocation(program_id, "lightPos");
+        lightColor_id = glGetUniformLocation(program_id, "lightColor");
+        viewPos_id = glGetUniformLocation(program_id, "viewPos");
         lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
         lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
         viewPos = glm::vec3(0.0f, 0.0f, 8.0f);  // Posición de la cámara
@@ -158,10 +167,9 @@ namespace udit
         glUseProgram(skybox_program_id);
 
         glm::mat4 view_matrix = camera.get_view_matrix();
-        glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
 
-        glUniformMatrix4fv(glGetUniformLocation(skybox_program_id, "view"), 1, GL_FALSE, glm::value_ptr(view_matrix));
-        glUniformMatrix4fv(glGetUniformLocation(skybox_program_id, "projection"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
+        glUniformMatrix4fv(skybox_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(view_matrix));
+        glUniformMatrix4fv(skybox_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
         skybox.render();
@@ -169,9 +177,9 @@ namespace udit
         glUseProgram(program_id);
 
         lightPos = glm::vec3(view_matrix * glm::vec4(10.0f, 10.0f, 10.0f, 1.0f));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
-        glUniform3fv(glGetUniformLocation(program_id, "lightColor"), 1, glm::value_ptr(lightColor));
-        glUniform3fv(glGetUniformLocation(program_id, "viewPos"), 1, glm::value_ptr(viewPos));
+        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));
+        glUniform3fv(lightColor_id, 1, glm::value_ptr(lightColor));
+        glUniform3fv(viewPos_id, 1, glm::value_ptr(viewPos));
 
         // Renderiza el plano
         glm::mat4 plane_matrix(1);
@@ -183,7 +191,7 @@ namespace udit
         plane.render();
 
         lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));
 
         // Renderiza el cilindro
         glm::mat4 cylinder_matrix(1);
@@ -195,7 +203,7 @@ namespace udit
         cylinder.render();
 
         lightPos = glm::vec3(view_matrix * glm::vec4(-15.f, -45.f, -20.f, 1.0f));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));
 
         // Renderiza el cono
         glm::mat4 cone_matrix(1);
@@ -215,7 +223,7 @@ namespace udit
         glm::vec3 rotatedLightPos = glm::vec3(sphere_matrix * glm::vec4(lightOriginalPos, 1.0f));
 
         lightPos = glm::vec3(view_matrix * glm::vec4(rotatedLightPos, 1.0f));
-        glUniform3fv(glGetUniformLocation(program_id, "lightPos"), 1, glm::value_ptr(lightPos));
+        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));
 
         glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
@@ -238,29 +246,27 @@ namespace udit
         glUseProgram(heightmap_program_id);
 
         glm::mat4 heightmap_matrix(1);
+        heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.f, -20.f, 0.f));
+        heightmap_matrix = glm::rotate(heightmap_matrix, glm::radians(90.f), glm::vec3(-1.f, 0.f, 0.f));
         glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
 
-        GLuint model_view_matrix_id = glGetUniformLocation(heightmap_program_id, "model_view_matrix");
-        GLuint projection_matrix_id = glGetUniformLocation(heightmap_program_id, "projection_matrix");
-
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
-        glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+        glUniformMatrix4fv(heightmap_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
+        glUniformMatrix4fv(heightmap_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
         glUniform1i(glGetUniformLocation(heightmap_program_id, "textureSampler"), 0); // sampler0
+        glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
 
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, heightmapID);
         glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
+        glBindTexture(GL_TEXTURE_2D, heightmapID);
 
-        float height_scale = 2.0f;
+        float height_scale = 10.0f;
         glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
 
-        glm::vec3 lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
+        lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
         glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightPos"), 1, glm::value_ptr(lightPos));
 
-        glm::vec3 lightColor = glm::vec3(1.0f); // blanco
         glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
 
         glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f); // sin transparencia
@@ -273,7 +279,7 @@ namespace udit
     // Ajusta el tamaño de la ventana y la proyección
     void Scene::resize(unsigned width, unsigned height)
     {
-        glm::mat4 projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
+        projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
         glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
         glViewport(0, 0, width, height);
     }

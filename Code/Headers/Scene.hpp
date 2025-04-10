@@ -69,9 +69,22 @@ namespace udit
         static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
 
+        glm::mat4 projection_matrix;
+
         // Identificadores de las matrices y programas de los shaders
         GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
         GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
+
+        GLint skybox_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders del skybox.
+        GLint skybox_projection_matrix_id; ///< ID de la matriz de proyección para los shaders del skybox.
+
+        GLint heightmap_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders del heightmap.
+        GLint heightmap_projection_matrix_id; ///< ID de la matriz de proyección para los shaders del heightmap.
+
+        GLint lightPos_id; ///< ID de la posición de la luz.
+        GLint lightColor_id; ///< ID del color de la luz.
+        GLint viewPos_id; ///< ID de la posición de la cámara.
+
         GLuint program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
         GLuint heightmap_program_id; ///< ID del programa de shaders para el skybox.
