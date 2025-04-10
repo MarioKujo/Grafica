@@ -112,16 +112,25 @@ namespace udit
                  "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
                  "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" })
     {
-
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
 
+        initializeShaders();
+        initializeUniformLocations();
+        initializeLightSettings();
+        loadTextures();
+        resize(width, height);
+    }
+
+    void Scene::initializeShaders() {
         program_id = shaderProgram.compile_shaders(vertex_shader_code, fragment_shader_code);
         glUseProgram(program_id);
         skybox_program_id = shaderProgram.compile_shaders(skybox_vertex_shader, skybox_fragment_shader);
         heightmap_program_id = shaderProgram.compile_shaders(heightmap_vertex_shader, fragment_shader_code);
+    }
 
+    void Scene::initializeUniformLocations() {
         model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
         projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
@@ -134,11 +143,15 @@ namespace udit
         lightPos_id = glGetUniformLocation(program_id, "lightPos");
         lightColor_id = glGetUniformLocation(program_id, "lightColor");
         viewPos_id = glGetUniformLocation(program_id, "viewPos");
+    }
+
+    void Scene::initializeLightSettings() {
         lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
         lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
-        viewPos = glm::vec3(0.0f, 0.0f, 8.0f);  // Posición de la cámara
+        viewPos = glm::vec3(0.0f, 0.0f, 8.0f);    // Posición de la cámara
+    }
 
-        // Cargar texturas
+    void Scene::loadTextures() {
         planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
         cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
         coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
@@ -149,9 +162,6 @@ namespace udit
                                                      "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
                                                      "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" });
         skybox.set_texture(skyboxTextureID);
-
-        glUniform1i(glGetUniformLocation(program_id, "textureSampler"), 0);
-        resize(width, height);
     }
 
     // Actualiza la escena (cámara y rotación de objetos)

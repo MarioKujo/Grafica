@@ -131,6 +131,14 @@ namespace udit
          */
         Scene(unsigned width, unsigned height);
 
+        void initializeShaders();
+
+        void initializeUniformLocations();
+
+        void initializeLightSettings();
+
+        void loadTextures();
+
         /**
          * @brief Actualiza la escena.
          *
@@ -148,6 +156,22 @@ namespace udit
          * aplicando las transformaciones y shaders correspondientes.
          */
         void render();
+
+        void renderSkybox();
+
+        void renderObjects();
+
+        void renderPlane();
+
+        void renderCylinder();
+
+        void renderCone();
+
+        void renderSpheres();
+
+        void renderObject(Mesh& mesh, GLuint textureID, glm::mat4& modelMatrix);
+
+        void renderHeightmap();
 
         /**
          * @brief Cambia el tamaño de la ventana de la escena.
