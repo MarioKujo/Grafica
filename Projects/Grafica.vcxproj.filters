@@ -30,9 +30,6 @@
     <ClInclude Include="..\Code\Headers\TextureLoader.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Headers\Heightmap.hpp">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\Headers\Skybox.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -78,9 +75,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\Sphere.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Sources\Heightmap.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\Window.cpp">
