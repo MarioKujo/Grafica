@@ -157,6 +157,20 @@ namespace udit
          */
         void render();
 
+        void renderHeightmap(glm::mat4& view_matrix);
+
+        void renderSpheres(glm::mat4& view_matrix);
+
+        void renderCone(glm::mat4& view_matrix);
+
+        void renderCylinder(glm::mat4& view_matrix);
+
+        void renderPlane(glm::mat4& view_matrix);
+
+        void lightSetup(glm::mat4& view_matrix);
+
+        void renderSkybox(glm::mat4& view_matrix);
+
         void renderSkybox();
 
         void renderObjects();

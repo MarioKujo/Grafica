@@ -174,91 +174,29 @@ namespace udit
     void Scene::render()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUseProgram(skybox_program_id);
-
         glm::mat4 view_matrix = camera.get_view_matrix();
-
-        glUniformMatrix4fv(skybox_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(view_matrix));
-        glUniformMatrix4fv(skybox_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-
-        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
-        skybox.render();
+        renderSkybox(view_matrix);
 
         glUseProgram(program_id);
 
-        glm::vec3 lightDirWorld = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f)); // Ejemplo: dirección desde arriba en diagonal
-        glm::vec3 lightDirView = glm::mat3(view_matrix) * lightDirWorld; // Solo rotación
-        glUniform3fv(glGetUniformLocation(program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
-        glUniform3fv(lightColor_id, 1, glm::value_ptr(lightColor));
-        glUniform3fv(viewPos_id, 1, glm::value_ptr(viewPos));
+        lightSetup(view_matrix);
 
-        // Renderiza el plano
-        glm::mat4 plane_matrix(1);
-        plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
-        plane_matrix = glm::rotate(plane_matrix, glm::radians(-75.f), glm::vec3(1.f, 0.f, 0.f));
-        glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
-        glBindTexture(GL_TEXTURE_2D, planeTextureID);
-        plane.render();
+        renderPlane(view_matrix);
 
-        /*lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
-        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));*/
+        renderCylinder(view_matrix);
 
-        // Renderiza el cilindro
-        glm::mat4 cylinder_matrix(1);
-        cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(-4.f, 1.1f, -2.f));
-        cylinder_matrix = glm::rotate(cylinder_matrix, glm::radians(15.f), glm::vec3(1.f, 0.f, 0.f));
-        glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
-        glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
-        cylinder.render();
-
-        /*lightPos = glm::vec3(view_matrix * glm::vec4(-15.f, -45.f, -20.f, 1.0f));
-        glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));*/
-
-        // Renderiza el cono
-        glm::mat4 cone_matrix(1);
-        cone_matrix = glm::translate(cone_matrix, glm::vec3(4.f, -1.45f, -2.f));
-        cone_matrix = glm::rotate(cone_matrix, glm::radians(15.f), glm::vec3(1.f, 0.f, 0.f));
-        glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
-        glBindTexture(GL_TEXTURE_2D, coneTextureID);
-        cone.render();
+        renderCone(view_matrix);
 
         // Renderiza las esferas
-        glm::mat4 sphere_matrix(1);
-        sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, 7.f, -2.f));
-        sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+        renderSpheres(view_matrix);
 
-        //glm::vec3 lightOriginalPos = glm::vec3(300.0f, 500.0f, -300.0f);
-        //glm::vec3 rotatedLightPos = glm::vec3(sphere_matrix * glm::vec4(lightOriginalPos, 1.0f));
+        renderHeightmap(view_matrix);
 
-        //lightPos = glm::vec3(view_matrix * glm::vec4(rotatedLightPos, 1.0f));
-        //glUniform3fv(lightPos_id, 1, glm::value_ptr(lightPos));
+    }
 
-        glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-        glBindTexture(GL_TEXTURE_2D, sphereTextureID);
-        sphere1.render();
-
-        glDepthMask(GL_FALSE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        GLint transparency = glGetUniformLocation(program_id, "transparency");
-        glUniform1f(transparency, 0.5f);
-
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-        sphere2.render();
-
-        glDisable(GL_BLEND);
-        glDepthMask(GL_TRUE);
-
+    void Scene::renderHeightmap(glm::mat4& view_matrix)
+    {
         glUseProgram(heightmap_program_id);
-
-        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
-        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
-        glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);
 
         glm::mat4 heightmap_matrix(1);
         heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(0.f, -20.f, 0.f));
@@ -278,17 +216,96 @@ namespace udit
 
         float height_scale = 10.0f;
         glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
-
-        //lightPos = glm::vec3(view_matrix * glm::vec4(0.f, 10.f, 10.f, 1.0f));
-        //glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightPos"), 1, glm::value_ptr(lightPos));
-
-        //glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
-
-        //glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f); // sin transparencia
-
         // Renderiza el plano (terreno)
         heightmap.render();
+    }
 
+    void Scene::renderSpheres(glm::mat4& view_matrix)
+    {
+        glm::mat4 sphere_matrix(1);
+        sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, 7.f, -2.f));
+        sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+
+        glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+        sphere1.render();
+
+        glDepthMask(GL_FALSE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        GLint transparency = glGetUniformLocation(program_id, "transparency");
+        glUniform1f(transparency, 0.5f);
+
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+        sphere2.render();
+
+        glDisable(GL_BLEND);
+        glDepthMask(GL_TRUE);
+    }
+
+    void Scene::renderCone(glm::mat4& view_matrix)
+    {
+        // Renderiza el cono
+        glm::mat4 cone_matrix(1);
+        cone_matrix = glm::translate(cone_matrix, glm::vec3(4.f, -1.45f, -2.f));
+        cone_matrix = glm::rotate(cone_matrix, glm::radians(15.f), glm::vec3(1.f, 0.f, 0.f));
+        glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, coneTextureID);
+        cone.render();
+    }
+
+    void Scene::renderCylinder(glm::mat4& view_matrix)
+    {
+        // Renderiza el cilindro
+        glm::mat4 cylinder_matrix(1);
+        cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(-4.f, 1.1f, -2.f));
+        cylinder_matrix = glm::rotate(cylinder_matrix, glm::radians(15.f), glm::vec3(1.f, 0.f, 0.f));
+        glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
+        cylinder.render();
+    }
+
+    void Scene::renderPlane(glm::mat4& view_matrix)
+    {
+        // Renderiza el plano
+        glm::mat4 plane_matrix(1);
+        plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
+        plane_matrix = glm::rotate(plane_matrix, glm::radians(-75.f), glm::vec3(1.f, 0.f, 0.f));
+        glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, planeTextureID);
+        plane.render();
+    }
+
+    void Scene::lightSetup(glm::mat4& view_matrix)
+    {
+        glm::vec3 lightDirWorld = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
+        glm::vec3 lightDirView = glm::mat3(view_matrix) * lightDirWorld;
+
+        glUseProgram(heightmap_program_id);
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
+        glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);
+
+        glUseProgram(program_id);
+        glUniform3fv(glGetUniformLocation(program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
+        glUniform3fv(lightColor_id, 1, glm::value_ptr(lightColor));
+        glUniform3fv(viewPos_id, 1, glm::value_ptr(viewPos));
+    }
+
+    void Scene::renderSkybox(glm::mat4& view_matrix)
+    {
+        glUseProgram(skybox_program_id);
+
+        glUniformMatrix4fv(skybox_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(view_matrix));
+        glUniformMatrix4fv(skybox_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
+        skybox.render();
     }
 
     // Ajusta el tamaño de la ventana y la proyección
