@@ -87,13 +87,14 @@ namespace udit
 			indices[index++] = next;
 
 			// Calcular la normal para la cara lateral
-			GLfloat x1 = coordinates[3 * i] - coordinates[3 * apexIndex];
-			GLfloat y1 = coordinates[3 * i + 1] - coordinates[3 * apexIndex + 1];
-			GLfloat z1 = coordinates[3 * i + 2] - coordinates[3 * apexIndex + 2];
+			GLfloat x1 = coordinates[3 * next] - coordinates[3 * apexIndex];
+			GLfloat y1 = coordinates[3 * next + 1] - coordinates[3 * apexIndex + 1];
+			GLfloat z1 = coordinates[3 * next + 2] - coordinates[3 * apexIndex + 2];
 
-			GLfloat x2 = coordinates[3 * next] - coordinates[3 * apexIndex];
-			GLfloat y2 = coordinates[3 * next + 1] - coordinates[3 * apexIndex + 1];
-			GLfloat z2 = coordinates[3 * next + 2] - coordinates[3 * apexIndex + 2];
+			GLfloat x2 = coordinates[3 * i] - coordinates[3 * apexIndex];
+			GLfloat y2 = coordinates[3 * i + 1] - coordinates[3 * apexIndex + 1];
+			GLfloat z2 = coordinates[3 * i + 2] - coordinates[3 * apexIndex + 2];
+
 
 			// Producto cruzado para obtener la normal
 			GLfloat nx = y1 * z2 - z1 * y2;
