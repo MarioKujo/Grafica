@@ -165,27 +165,15 @@ namespace udit
 
         void renderCylinder(glm::mat4& view_matrix);
 
+        void renderCylinders(glm::mat4& view_matrix);
+
+        void placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix);
+
         void renderPlane(glm::mat4& view_matrix);
 
         void lightSetup(glm::mat4& view_matrix);
 
         void renderSkybox(glm::mat4& view_matrix);
-
-        void renderSkybox();
-
-        void renderObjects();
-
-        void renderPlane();
-
-        void renderCylinder();
-
-        void renderCone();
-
-        void renderSpheres();
-
-        void renderObject(Mesh& mesh, GLuint textureID, glm::mat4& modelMatrix);
-
-        void renderHeightmap();
 
         /**
          * @brief Cambia el tamaño de la ventana de la escena.

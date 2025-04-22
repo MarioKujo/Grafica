@@ -106,7 +106,7 @@ namespace udit
     Scene::Scene(unsigned width, unsigned height)
         : angle(0),
         camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-        plane(7, 5, 14, 10), heightmap(10, 10, 100, 100), cylinder(10, 10, 2, 5), cone(10, 2, 5),
+        plane(7, 5, 14, 10), heightmap(15, 15, 100, 100), cylinder(10, 10, 1, 5), cone(10, 2, 5),
         sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
         skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
                  "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
@@ -184,6 +184,8 @@ namespace udit
         renderPlane(view_matrix);
 
         renderCylinder(view_matrix);
+
+        renderCylinders(view_matrix);
 
         renderCone(view_matrix);
 
@@ -266,6 +268,24 @@ namespace udit
         cylinder.render();
     }
 
+    void Scene::renderCylinders(glm::mat4& view_matrix)
+    {
+        for (int i = 0; i < 8; ++i) {
+            float angle = i * (2 * M_PI / 8);
+            float x = cos(angle) * 3.5f;
+            float z = sin(angle) * 3.5f;
+            placeCylinderAt(x, 0, z, view_matrix);
+        }
+    }
+    void Scene::placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix)
+    {
+        glm::mat4 cylinder_matrix(1);
+        cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(x, y, z));
+        glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
+        glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
+        cylinder.render();
+    }
     void Scene::renderPlane(glm::mat4& view_matrix)
     {
         // Renderiza el plano
