@@ -35,7 +35,7 @@ namespace udit
          * @param width El ancho del plano, define la cantidad de columnas de la cuadrícula.
          * @param height La altura del plano, define la cantidad de filas de la cuadrícula.
          */
-        Plane(int width, int height);
+        Plane(int subdivisionsX, int subdivisionsY, float width, float height);
 
         /**
          * @brief Destructor de la clase Plane.
@@ -46,9 +46,9 @@ namespace udit
 
     private:
 
-        int grid_width;              ///< Número de columnas en la cuadrícula.
-        int grid_height;             ///< Número de filas en la cuadrícula.
-
+        float grid_width;              ///< Número de columnas en la cuadrícula.
+        float grid_height;             ///< Número de filas en la cuadrícula.
+        int subdivX, subdivY;
         /**
          * @brief Genera la geometría del plano.
          *
