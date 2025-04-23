@@ -18,8 +18,8 @@ namespace udit
 
 	void Cone::generateGeometry()
 	{
-		const int vertexCount = divisions + 2;  // Vértices: base + ápice
-		const int indexCount = divisions * 6;   // Índices para triángulos
+		const int vertexCount = (divisions + 2) * 2;  // Vértices: base + ápice
+		const int indexCount = divisions * 12;   // Índices para triángulos
 
 		coordinates.resize(vertexCount * 3);  // 3 coordenadas por vértice
 		texCoords.resize(vertexCount * 2);   // 2 coordenadas de textura por vértice
@@ -82,6 +82,34 @@ namespace udit
 		normals[apexIndex * 3 + 1] = 1.0f;
 		normals[apexIndex * 3 + 2] = 0.0f;
 
+		// ====== VÉRTICES PARA LAS CARAS LATERALES ======
+		int lateralIndexStart = vertexIndex / 3;
+
+		for (int i = 0; i < divisions; ++i)
+		{
+			GLfloat angle = static_cast<GLfloat>(2.0f * std::numbers::pi * i / divisions);
+			GLfloat x = radius * cos(angle);
+			GLfloat z = radius * sin(angle);
+
+			coordinates[vertexIndex++] = x;
+			coordinates[vertexIndex++] = 0.0f;
+			coordinates[vertexIndex++] = z;
+
+			texCoords.push_back(static_cast<GLfloat>(i) / divisions); // u
+			texCoords.push_back(1.0f); // v (abajo)
+
+			// Aproximación simple para normal lateral
+			GLfloat nx = x;
+			GLfloat ny = radius / height;
+			GLfloat nz = z;
+			GLfloat len = sqrt(nx * nx + ny * ny + nz * nz);
+
+			normals.push_back(nx / len);
+			normals.push_back(ny / len);
+			normals.push_back(nz / len);
+		}
+
+
 		// Generar índices para las caras laterales
 		int index = 0;
 		for (int i = 0; i < divisions; ++i)
@@ -89,9 +117,9 @@ namespace udit
 			int next = (i + 1) % divisions;
 
 			// Índices para las caras laterales
-			indices[index++] = i;
+			indices[index++] = lateralIndexStart + i;
 			indices[index++] = apexIndex;
-			indices[index++] = next;
+			indices[index++] = lateralIndexStart + next;
 
 			// Calcular la normal para la cara lateral
 			GLfloat x1 = coordinates[3 * next] - coordinates[3 * apexIndex];
