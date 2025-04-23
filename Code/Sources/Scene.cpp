@@ -31,31 +31,32 @@ namespace udit
     // Código fuente del shader de fragmentos para la escena
     const string Scene::fragment_shader_code =
         "#version 330 core\n"
-        "in vec2 texCoords;"
-        "in vec3 fragNormal;"
-        "in vec3 fragPos;"
-        "out vec4 fragment_color;"
-        "uniform sampler2D textureSampler;"
-        "uniform float transparency;"
+        "in vec2 texCoords;\n"
+        "in vec3 fragNormal;\n"
+        "in vec3 fragPos;\n"
+        "out vec4 fragment_color;\n"
+        "uniform sampler2D textureSampler;\n"
+        "uniform float transparency;\n"
 
-        // Parametros de la luz
-        "uniform vec3 lightDirection;"
-        "uniform vec3 lightColor;"  // Color de la luz
+        "#define NUM_LIGHTS 3\n"
+        "uniform vec3 lightDirections[NUM_LIGHTS];\n"
+        "uniform vec3 lightColors[NUM_LIGHTS];\n"
 
-        "void main()"
-        "{"
-        "    vec4 texColor = texture(textureSampler, texCoords);"
+        "void main()\n"
+        "{\n"
+        "    vec4 texColor = texture(textureSampler, texCoords);\n"
+        "    vec3 norm = normalize(fragNormal);\n"
+        "    vec3 totalDiffuse = vec3(0.0);\n"
+        "    for (int i = 0; i < NUM_LIGHTS; ++i)\n"
+        "    {\n"
+        "        vec3 lightDir = normalize(-lightDirections[i]);\n"
+        "        float diff = max(dot(norm, lightDir), 0.0);\n"
+        "        totalDiffuse += diff * lightColors[i];\n"
+        "    }\n"
+        "    vec3 result = texColor.rgb * totalDiffuse;\n"
+        "    fragment_color = vec4(result, texColor.a * transparency);\n"
+        "}\n";
 
-        // Cálculo de la iluminación difusa Lambert
-        "    vec3 norm = normalize(fragNormal);"
-        "    vec3 lightDir = normalize(-lightDirection);"
-        "    float diff = max(dot(norm, lightDir), 0.0);"
-        "    vec3 diffuse = diff * lightColor;"
-
-        // Color final del fragmento
-        "    vec3 result = texColor.rgb * diffuse;"
-        "    fragment_color = vec4(result, texColor.a * transparency);"
-        "}";
 #pragma endregion
 
 #pragma region skybox vertex shader
@@ -218,18 +219,33 @@ namespace udit
 
     void Scene::lightSetup(glm::mat4& view_matrix)
     {
-        glm::vec3 lightDirWorld = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
-        glm::vec3 lightDirView = glm::mat3(view_matrix) * lightDirWorld;
+        // Definimos múltiples luces en coordenadas del mundo
+        vector<glm::vec3> lightDirsWorld = {
+            glm::normalize(glm::vec3(-1.f, -1.f, -1.f)),
+            glm::normalize(glm::vec3(1.f, 1.f, 1.f))
+        };
+
+        vector<glm::vec3> lightColors = {
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f)
+        };
+
+        // Transformar direcciones al sistema de vista
+        vector<glm::vec3> lightDirsView;
+        for (const auto& dir : lightDirsWorld) {
+            lightDirsView.push_back(glm::mat3(view_matrix) * dir);
+        }
 
         glUseProgram(heightmap_program_id);
-        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
-        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColor"), 1, glm::value_ptr(lightColor));
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
+        glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColors"), lightColors.size(), glm::value_ptr(lightColors[0]));
         glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);
 
         glUseProgram(program_id);
-        glUniform3fv(glGetUniformLocation(program_id, "lightDirection"), 1, glm::value_ptr(lightDirView));
-        glUniform3fv(lightColor_id, 1, glm::value_ptr(lightColor));
+        glUniform3fv(glGetUniformLocation(program_id, "lightDirections"), lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
+        glUniform3fv(glGetUniformLocation(program_id, "lightColors"), lightColors.size(), glm::value_ptr(lightColors[0]));
         glUniform3fv(viewPos_id, 1, glm::value_ptr(viewPos));
+
     }
 
     void Scene::renderPlane(glm::mat4& view_matrix)
