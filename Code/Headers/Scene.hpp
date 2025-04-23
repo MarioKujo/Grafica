@@ -163,8 +163,6 @@ namespace udit
 
         void renderCone(glm::mat4& view_matrix);
 
-        void renderCylinder(glm::mat4& view_matrix);
-
         void renderCylinders(glm::mat4& view_matrix);
 
         void placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix);

@@ -38,7 +38,14 @@ namespace udit
 
 			// Coordenadas de textura
 			int texIndex = (vertexIndex / 3 - 1) * 2;
-			texCoords[texIndex] = static_cast<GLfloat>(i) / divisions;
+			if (i == divisions - 1)
+			{
+				texCoords[texIndex] = 1.0f - 1.0f / divisions;
+			}
+			else
+			{
+				texCoords[texIndex] = static_cast<GLfloat>(i) / divisions;
+			}
 			texCoords[texIndex + 1] = 1.0f;
 
 			// Normal para la base (todas son (0, -1, 0))
