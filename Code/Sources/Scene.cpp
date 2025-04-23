@@ -24,7 +24,6 @@ namespace udit
         "   fragPos = vec3(model_view_matrix * vec4(vertex_coordinates, 1.0));"  // Obtener la posición
         "}";
 
-
     // Código fuente del shader de fragmentos para la escena
     const string Scene::fragment_shader_code =
         "#version 330 core\n"
@@ -53,7 +52,6 @@ namespace udit
         "    vec3 result = texColor.rgb * diffuse;"
         "    fragment_color = vec4(result, texColor.a * transparency);"
         "}";
-
 
     // Código fuente del shader de vértices para el skybox
     const string Scene::skybox_vertex_shader =
@@ -183,8 +181,6 @@ namespace udit
 
         renderPlane(view_matrix);
 
-        renderCylinder(view_matrix);
-
         renderCylinders(view_matrix);
 
         renderCone(view_matrix);
@@ -271,10 +267,10 @@ namespace udit
     void Scene::renderCylinders(glm::mat4& view_matrix)
     {
         for (int i = 0; i < 8; ++i) {
-            float angle = i * (2 * M_PI / 8);
+            float angle = (float)(i * (2 * M_PI / 8));
             float x = cos(angle) * 3.5f;
             float z = sin(angle) * 3.5f;
-            placeCylinderAt(x, 0, z, view_matrix);
+            placeCylinderAt(x, -11.5f, z, view_matrix);
         }
     }
     void Scene::placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix)
@@ -290,7 +286,7 @@ namespace udit
     {
         // Renderiza el plano
         glm::mat4 plane_matrix(1);
-        plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -2.f, 0.f));
+        plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -14.1f, 0.f));
         glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
         glBindTexture(GL_TEXTURE_2D, planeTextureID);

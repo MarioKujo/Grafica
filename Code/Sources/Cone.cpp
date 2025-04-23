@@ -70,7 +70,7 @@ namespace udit
 		texCoords[apexIndex * 2] = 0.5f;
 		texCoords[apexIndex * 2 + 1] = 0.0f;
 
-		// Normal para el ápice (por ahora podemos usar un vector nulo)
+		// Normal para el ápice
 		normals[apexIndex * 3] = 0.0f;
 		normals[apexIndex * 3 + 1] = 1.0f;
 		normals[apexIndex * 3 + 2] = 0.0f;
