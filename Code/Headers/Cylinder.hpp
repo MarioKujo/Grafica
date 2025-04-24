@@ -13,6 +13,7 @@
 
 #pragma once
 #include "Mesh.hpp"
+#include <glm.hpp>
 
 namespace udit
 {
@@ -48,11 +49,17 @@ namespace udit
          */
         ~Cylinder();
 
+        glm::vec3 calculateVertex(int stack, int slice);
+
+        glm::vec2 calculateTexCoord(int stack, int slice);
+
     private:
         int stack_count; /**< Número de divisiones verticales del cilindro. */
         int slice_count; /**< Número de divisiones alrededor del eje del cilindro. */
         GLfloat radius; /**< Radio de la base del cilindro. */
         GLfloat height; /**< Altura del cilindro. */
+
+        glm::vec3 calculateNormal(GLfloat x, GLfloat z);
 
         /**
          * @brief Genera la geometría del cilindro.
@@ -62,5 +69,9 @@ namespace udit
          * especificados.
          */
         void generateGeometry();
+        void addTopAndBottomVertices(int& vertexIndex, int& texCoordIndex, int& normalIndex);
+        void generateIndices();
+        void generateSideIndices(int& index);
+        void generateBaseIndices(int& index, int bottomCenterIndex, int topCenterIndex);
     };
 }

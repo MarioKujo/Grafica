@@ -72,6 +72,7 @@ namespace udit
     {
         // Configuración para renderizar el skybox detrás de otros objetos
         glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_FALSE);
 
         // Renderizado del skybox
         glBindVertexArray(vao_id);
@@ -84,6 +85,7 @@ namespace udit
         glBindVertexArray(0);
 
         // Restablece la función de depth testing
+        glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS);
     }
 }

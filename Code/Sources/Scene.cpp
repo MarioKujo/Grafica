@@ -225,8 +225,8 @@ namespace udit
 		};
 
 		vector<glm::vec3> lightColors = {
-			glm::vec3(1.0f, 1.0f, 1.0f),
-			glm::vec3(1.0f, 1.0f, 1.0f)
+			glm::vec3(0.5f, 0.5f, 1.0f),
+			glm::vec3(0.5f, 0.5f, 1.0f)
 		};
 
 		// Transformar direcciones al sistema de vista
