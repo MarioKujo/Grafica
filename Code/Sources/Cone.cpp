@@ -18,69 +18,27 @@ namespace udit
 
 	void Cone::generateGeometry()
 	{
-		const int vertexCount = (divisions + 2) * 2;  // Vértices: base + ápice
+		const int baseAndApexVertexCount = (divisions + 2); // base + ápice
+		const int lateralVertexCount = divisions;          // laterales
+		const int totalVertexCount = baseAndApexVertexCount + lateralVertexCount;
 		const int indexCount = divisions * 12;   // Índices para triángulos
 
-		coordinates.resize(vertexCount * 3);  // 3 coordenadas por vértice
-		texCoords.resize(vertexCount * 2);   // 2 coordenadas de textura por vértice
-		normals.resize(vertexCount * 3);      // 3 componentes por normal (x, y, z)
+		coordinates.resize(totalVertexCount * 3);  // 3 coordenadas por vértice
+		texCoords.resize(totalVertexCount * 8);   // 2 coordenadas de textura por vértice
+		normals.resize(totalVertexCount * 9);      // 3 componentes por normal (x, y, z)
 		indices.resize(indexCount);          // Índices para triángulos
 
 		int vertexIndex = 0;
 
-		// Generar vértices de la base
-		for (int i = 0; i < divisions; ++i)
-		{
-			GLfloat angle = static_cast<GLfloat>(2.0f * std::numbers::pi * i / divisions);
-			coordinates[vertexIndex++] = radius * cos(angle);
-			coordinates[vertexIndex++] = 0.0f;
-			coordinates[vertexIndex++] = radius * sin(angle);
-
-			// Coordenadas de textura
-			int texIndex = (vertexIndex / 3 - 1) * 2;
-			if (i == divisions - 1)
-			{
-				texCoords[texIndex] = 1.0f - 1.0f / divisions;
-			}
-			else
-			{
-				texCoords[texIndex] = static_cast<GLfloat>(i) / divisions;
-			}
-			texCoords[texIndex + 1] = 1.0f;
-
-			// Normal para la base (todas son (0, -1, 0))
-			normals[vertexIndex - 3] = 0.0f;
-			normals[vertexIndex - 2] = -1.0f;  // Normal hacia abajo
-			normals[vertexIndex - 1] = 0.0f;
-		}
+		generateBaseVertices(vertexIndex);
 
 		// Coordenadas del centro de la base
 		int baseCenterIndex = vertexIndex / 3;
-		coordinates[vertexIndex++] = 0.0f;
-		coordinates[vertexIndex++] = 0.0f;
-		coordinates[vertexIndex++] = 0.0f;
-
-		texCoords[baseCenterIndex * 2] = 0.5f;
-		texCoords[baseCenterIndex * 2 + 1] = 0.5f;
-
-		// Normal para el centro de la base (también (0, -1, 0))
-		normals[baseCenterIndex * 3] = 0.0f;
-		normals[baseCenterIndex * 3 + 1] = -1.0f;
-		normals[baseCenterIndex * 3 + 2] = 0.0f;
+		generateBaseCenterVertex(vertexIndex, baseCenterIndex);
 
 		// Coordenadas del ápice
 		int apexIndex = vertexIndex / 3;
-		coordinates[vertexIndex++] = 0.0f;
-		coordinates[vertexIndex++] = height;
-		coordinates[vertexIndex++] = 0.0f;
-
-		texCoords[apexIndex * 2] = 0.5f;
-		texCoords[apexIndex * 2 + 1] = 0.0f;
-
-		// Normal para el ápice
-		normals[apexIndex * 3] = 0.0f;
-		normals[apexIndex * 3 + 1] = 1.0f;
-		normals[apexIndex * 3 + 2] = 0.0f;
+		generateApexVertex(vertexIndex, apexIndex);
 
 		// ====== VÉRTICES PARA LAS CARAS LATERALES ======
 		int lateralIndexStart = vertexIndex / 3;
@@ -95,8 +53,8 @@ namespace udit
 			coordinates[vertexIndex++] = 0.0f;
 			coordinates[vertexIndex++] = z;
 
-			texCoords.push_back(static_cast<GLfloat>(i) / divisions); // u
-			texCoords.push_back(1.0f); // v (abajo)
+			texCoords[vertexIndex * 2 - 2] = static_cast<GLfloat>(i) / divisions; // u
+			texCoords[vertexIndex * 2 - 1] = 1.0f; // v (abajo)
 
 			// Aproximación simple para normal lateral
 			GLfloat nx = x;
@@ -104,9 +62,9 @@ namespace udit
 			GLfloat nz = z;
 			GLfloat len = sqrt(nx * nx + ny * ny + nz * nz);
 
-			normals.push_back(nx / len);
-			normals.push_back(ny / len);
-			normals.push_back(nz / len);
+			normals[vertexIndex * 3 - 3] = nx / len;
+			normals[vertexIndex * 3 - 2] = ny / len;
+			normals[vertexIndex * 3 - 1] = nz / len;
 		}
 
 
@@ -163,6 +121,62 @@ namespace udit
 			indices[index++] = baseCenterIndex;
 			indices[index++] = i;
 			indices[index++] = next;
+		}
+	}
+	void Cone::generateApexVertex(int& vertexIndex, int apexIndex)
+	{
+		coordinates[vertexIndex++] = 0.0f;
+		coordinates[vertexIndex++] = height;
+		coordinates[vertexIndex++] = 0.0f;
+
+		texCoords[apexIndex * 2] = 0.5f;
+		texCoords[apexIndex * 2 + 1] = 0.0f;
+
+		// Normal para el ápice
+		normals[apexIndex * 3] = 0.0f;
+		normals[apexIndex * 3 + 1] = 1.0f;
+		normals[apexIndex * 3 + 2] = 0.0f;
+	}
+	void Cone::generateBaseCenterVertex(int& vertexIndex, int baseCenterIndex)
+	{
+		coordinates[vertexIndex++] = 0.0f;
+		coordinates[vertexIndex++] = 0.0f;
+		coordinates[vertexIndex++] = 0.0f;
+
+		texCoords[baseCenterIndex * 2] = 0.5f;
+		texCoords[baseCenterIndex * 2 + 1] = 0.5f;
+
+		// Normal para el centro de la base (también (0, -1, 0))
+		normals[baseCenterIndex * 3] = 0.0f;
+		normals[baseCenterIndex * 3 + 1] = -1.0f;
+		normals[baseCenterIndex * 3 + 2] = 0.0f;
+	}
+	void Cone::generateBaseVertices(int& vertexIndex)
+	{
+		// Generar vértices de la base
+		for (int i = 0; i < divisions; ++i)
+		{
+			GLfloat angle = static_cast<GLfloat>(2.0f * std::numbers::pi * i / divisions);
+			coordinates[vertexIndex++] = radius * cos(angle);
+			coordinates[vertexIndex++] = 0.0f;
+			coordinates[vertexIndex++] = radius * sin(angle);
+
+			// Coordenadas de textura
+			int texIndex = (vertexIndex / 3 - 1) * 2;
+			if (i == divisions - 1)
+			{
+				texCoords[texIndex] = 1.0f - 1.0f / divisions;
+			}
+			else
+			{
+				texCoords[texIndex] = static_cast<GLfloat>(i) / divisions;
+			}
+			texCoords[texIndex + 1] = 1.0f;
+
+			// Normal para la base (todas son (0, -1, 0))
+			normals[vertexIndex - 3] = 0.0f;
+			normals[vertexIndex - 2] = -1.0f;  // Normal hacia abajo
+			normals[vertexIndex - 1] = 0.0f;
 		}
 	}
 }

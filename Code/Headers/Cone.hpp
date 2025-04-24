@@ -54,5 +54,8 @@ namespace udit
         GLfloat height; /**< Altura del cono. */
 
         void generateGeometry();
+        void generateApexVertex(int& vertexIndex, int apexIndex);
+        void generateBaseCenterVertex(int& vertexIndex, int baseCenterIndex);
+        void generateBaseVertices(int& vertexIndex);
     };
 }
