@@ -171,8 +171,8 @@ namespace udit
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
-			"../Textures/skybox-2-right-1.png", "../Textures/skybox-2-left.png", "../Textures/skybox-2-up.png",
-			"../Textures/skybox-2-down.png", "../Textures/skybox-2-right-2.png", "../Textures/skybox-2-center.png" });
+			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
+			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
 		skybox.set_texture(skyboxTextureID);
 	}
 
