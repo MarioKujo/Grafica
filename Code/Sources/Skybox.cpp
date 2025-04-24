@@ -4,8 +4,7 @@
 
 namespace udit
 {
-    Skybox::Skybox(const std::vector<std::string>& faces)
-        : faces(faces)
+    Skybox::Skybox()
     {
         setup_buffers();
     }

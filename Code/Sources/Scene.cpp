@@ -120,9 +120,7 @@ namespace udit
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(7, 5, 35, 35), heightmap(15, 15, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 20),
 		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
-		skybox({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
-				 "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
-				 "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" })
+		skybox()
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
@@ -172,9 +170,9 @@ namespace udit
 		sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
-		skyboxTextureID = textureLoader.loadCubemap({ "../Textures/sky-cube-map-0.png", "../Textures/sky-cube-map-1.png",
-													 "../Textures/sky-cube-map-2.png", "../Textures/sky-cube-map-3.png",
-													 "../Textures/sky-cube-map-4.png", "../Textures/sky-cube-map-5.png" });
+		skyboxTextureID = textureLoader.loadCubemap({
+			"../Textures/skybox-2-right-1.png", "../Textures/skybox-2-left.png", "../Textures/skybox-2-up.png",
+			"../Textures/skybox-2-down.png", "../Textures/skybox-2-right-2.png", "../Textures/skybox-2-center.png" });
 		skybox.set_texture(skyboxTextureID);
 	}
 

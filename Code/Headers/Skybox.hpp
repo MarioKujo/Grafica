@@ -40,7 +40,7 @@ namespace udit
            *
            * @param faces Rutas de las texturas para las caras del cubo.
            */
-          Skybox(const std::vector<std::string>& faces);
+          Skybox();
 
           /**
            * @brief Destructor de la clase Skybox.
@@ -80,7 +80,6 @@ namespace udit
           GLuint vao_id;      ///< Identificador del VAO (Vertex Array Object) del skybox.
           GLuint vbo_id;      ///< Identificador del VBO (Vertex Buffer Object) del skybox.
           GLuint texture_id;  ///< Identificador de la textura del skybox.
-          std::vector<std::string> faces; ///< Rutas de las texturas de las seis caras del skybox.
 
           /**
            * @brief Configura los buffers necesarios para renderizar el skybox.
