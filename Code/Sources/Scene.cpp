@@ -3,7 +3,6 @@
 #pragma once
 
 #include "../Headers/Scene.hpp"
-
 namespace udit
 {
 #pragma region Shaders
@@ -119,7 +118,7 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(7, 5, 35, 35), heightmap(15, 15, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 20),
-		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
+		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -170,6 +169,7 @@ namespace udit
 		sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
+		tableTextureID = textureLoader.loadTexture("../Textures/table_final_map.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -193,16 +193,34 @@ namespace udit
 
 		lightSetup(view_matrix);
 
-		renderPlane(view_matrix);
+		renderAssimpModels(view_matrix);
 
-		renderCylinders(view_matrix);
+		//renderPlane(view_matrix);
 
-		renderCone(view_matrix);
+		//renderCylinders(view_matrix);
 
-		renderSpheres(view_matrix);
+		//renderCone(view_matrix);
 
-		renderHeightmap(view_matrix);
+		//renderSpheres(view_matrix);
 
+		//renderHeightmap(view_matrix);
+
+	}
+
+	void Scene::renderAssimpModels(glm::mat4& view_matrix)
+	{
+
+		glm::mat4 model_matrix(1.0f);
+		model_matrix = glm::translate(model_matrix, glm::vec3(-15.f, -10.f, -40.f)); // Cambia posición si quieres
+		model_matrix = glm::scale(model_matrix, glm::vec3(10.f)); // Escala opcional
+
+		glm::mat4 model_view_matrix = view_matrix * model_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, tableTextureID);
+
+		table.render();
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)

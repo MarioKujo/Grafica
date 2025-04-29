@@ -5,13 +5,13 @@
 namespace udit
 {
     Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-        : position(position), up(up), yaw(yaw), pitch(pitch), movement_speed(2.5f), mouse_sensitivity(0.1f)
+        : position(position), up(up), yaw(yaw), pitch(pitch), movement_speed(1.f), mouse_sensitivity(0.1f)
     {
         start_camera_control();
         update_camera_vectors(); // Calcula los vectores iniciales de la cámara.
     }
 
-    Camera::Camera(): position(glm::vec3(0.f, 0.f, 0.f)), up(glm::vec3(0.f, 0.f, 0.f)), yaw (-90.f), pitch(0.f)
+    Camera::Camera(): position(glm::vec3(0.f, 0.f, 0.f)), up(glm::vec3(0.f, 0.f, 0.f)), yaw (-90.f), pitch(0.f), front(glm::vec3(0.f, 0.f, 0.f)), mouse_sensitivity(0.f), movement_speed(0.f), right(glm::vec3(0.f, 0.f, 0.f)), world_up(glm::vec3(0, 0, 0))
     {
     }
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Code\Headers\AssimpMesh.hpp" />
     <ClInclude Include="..\Code\Headers\Camera.hpp" />
     <ClInclude Include="..\Code\Headers\Cone.hpp" />
     <ClInclude Include="..\Code\Headers\Cylinder.hpp" />
@@ -25,6 +26,7 @@
     <ClInclude Include="..\Code\Headers\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Code\Sources\AssimpMesh.cpp" />
     <ClCompile Include="..\Code\Sources\Camera.cpp" />
     <ClCompile Include="..\Code\Sources\Cone.cpp" />
     <ClCompile Include="..\Code\Sources\Cylinder.cpp" />
@@ -86,7 +88,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../Libraries/sdl/lib/windows/visual-studio-2022/static-x64;../Libraries/glad/lib/windows/visual-studio-2022/static-x64;../Libraries/assimp/lib/windows/visual-studio-2022/static-x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-staticd.lib;SDL2maind.lib;gladd.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-staticd.lib;SDL2maind.lib;gladd.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -11,7 +11,7 @@ namespace udit
     public:
         AssimpMesh(const std::string& filepath);
     private:
-        void loadModel(const std::string& path);
         void processMesh(aiMesh* mesh);
+        void loadModel(const std::string& path);
     };
 }

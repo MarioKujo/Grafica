@@ -22,6 +22,7 @@
 #pragma once
 
 #include "ShaderProgram.hpp"
+#include "AssimpMesh.hpp"
 #include "Cylinder.hpp"
 #include "Cone.hpp"
 #include "Plane.hpp"
@@ -97,6 +98,7 @@ namespace udit
         Cylinder cylinder; ///< Objeto cilindro.
         Plane plane; ///< Objeto plano.
         Plane heightmap; ///< Objeto heightmap.
+        AssimpMesh table;
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -116,6 +118,7 @@ namespace udit
         GLuint sphereTextureID; ///< ID de la textura para la esfera.
         GLuint heightmapID; ///< ID de la textura para el heightmap.
         GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
+        GLuint tableTextureID; ///< ID de la textura decorativa para la mesa.
 
 
 
@@ -156,6 +159,8 @@ namespace udit
          * aplicando las transformaciones y shaders correspondientes.
          */
         void render();
+
+        void renderAssimpModels(glm::mat4& view_matrix);
 
         void renderHeightmap(glm::mat4& view_matrix);
 

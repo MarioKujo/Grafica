@@ -45,6 +45,9 @@
     <ClInclude Include="..\Code\Headers\Mesh.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Code\Headers\AssimpMesh.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Sources\main.cpp">
@@ -84,6 +87,9 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\ShaderProgram.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Sources\AssimpMesh.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
