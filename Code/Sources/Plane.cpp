@@ -9,6 +9,7 @@ namespace udit
     // Constructor: Inicializa un plano con la cuadrícula especificada y genera la geometría.
     Plane::Plane(int subdivisionsX, int subdivisionsY, float width, float height) : subdivX(subdivisionsX), subdivY(subdivisionsY), grid_width(width), grid_height(height), Mesh()
     {
+        generateBuffers();
         generateGeometry();
     }
 
