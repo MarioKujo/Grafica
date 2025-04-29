@@ -118,7 +118,7 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(7, 5, 35, 35), heightmap(15, 15, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 20),
-		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"),
+		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"), vase("../Objects/vase.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -169,7 +169,8 @@ namespace udit
 		sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
-		tableTextureID = textureLoader.loadTexture("../Textures/table_final_map.jpg");
+		tableTextureID = textureLoader.loadTexture("../Textures/table_texture.jpg");
+		vaseTextureID = textureLoader.loadTexture("../Textures/vase_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -193,8 +194,9 @@ namespace udit
 
 		lightSetup(view_matrix);
 
-		renderAssimpModels(view_matrix);
+		renderTable(view_matrix);
 
+		renderVase(view_matrix);
 		//renderPlane(view_matrix);
 
 		//renderCylinders(view_matrix);
@@ -207,20 +209,33 @@ namespace udit
 
 	}
 
-	void Scene::renderAssimpModels(glm::mat4& view_matrix)
+	void Scene::renderTable(glm::mat4& view_matrix)
 	{
+		glm::mat4 table_matrix(1.0f);
+		table_matrix = glm::translate(table_matrix, glm::vec3(-15.f, -10.f, -40.f));
+		table_matrix = glm::scale(table_matrix, glm::vec3(10.f));
 
-		glm::mat4 model_matrix(1.0f);
-		model_matrix = glm::translate(model_matrix, glm::vec3(-15.f, -10.f, -40.f)); // Cambia posición si quieres
-		model_matrix = glm::scale(model_matrix, glm::vec3(10.f)); // Escala opcional
+		glm::mat4 table_view_matrix = view_matrix * table_matrix;
 
-		glm::mat4 model_view_matrix = view_matrix * model_matrix;
-
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(table_view_matrix));
 		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
 		glBindTexture(GL_TEXTURE_2D, tableTextureID);
 
 		table.render();
+	}
+	void Scene::renderVase(glm::mat4& view_matrix)
+	{
+		glm::mat4 vase_matrix(1.0f);
+		vase_matrix = glm::translate(vase_matrix, glm::vec3(0.f, -250.f, 0.f));
+		vase_matrix = glm::scale(vase_matrix, glm::vec3(100.f));
+
+		glm::mat4 vase_view_matrix = view_matrix * vase_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(vase_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, vaseTextureID);
+
+		vase.render();
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -243,8 +258,8 @@ namespace udit
 		};
 
 		vector<glm::vec3> lightColors = {
-			glm::vec3(0.5f, 0.5f, 1.0f),
-			glm::vec3(0.5f, 0.5f, 1.0f)
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			glm::vec3(1.0f, 1.0f, 1.0f)
 		};
 
 		// Transformar direcciones al sistema de vista
@@ -255,7 +270,7 @@ namespace udit
 
 		vector<float> lightIntensities = {
 			1.0f,
-			0.3f
+			1.0f
 		};
 		glUseProgram(heightmap_program_id);
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));

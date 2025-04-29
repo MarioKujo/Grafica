@@ -98,7 +98,8 @@ namespace udit
         Cylinder cylinder; ///< Objeto cilindro.
         Plane plane; ///< Objeto plano.
         Plane heightmap; ///< Objeto heightmap.
-        AssimpMesh table;
+        AssimpMesh table; ///< Objeto mesa.
+        AssimpMesh vase; ///< Objeto vasija.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -119,6 +120,7 @@ namespace udit
         GLuint heightmapID; ///< ID de la textura para el heightmap.
         GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
         GLuint tableTextureID; ///< ID de la textura decorativa para la mesa.
+        GLuint vaseTextureID; ///< ID de la textura decorativa para la vasija.
 
 
 
@@ -160,7 +162,9 @@ namespace udit
          */
         void render();
 
-        void renderAssimpModels(glm::mat4& view_matrix);
+        void renderTable(glm::mat4& view_matrix);
+
+        void renderVase(glm::mat4& view_matrix);
 
         void renderHeightmap(glm::mat4& view_matrix);
 
