@@ -100,7 +100,7 @@ StyleCopReport.xml
 
 
 #Exceptions
-!table.obj
+!Objects/*.obj
 
 # Chutzpah Test files
 _Chutzpah*
