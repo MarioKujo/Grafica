@@ -226,8 +226,8 @@ namespace udit
 	void Scene::renderVase(glm::mat4& view_matrix)
 	{
 		glm::mat4 vase_matrix(1.0f);
-		vase_matrix = glm::translate(vase_matrix, glm::vec3(-15.f, -4.f, -40.f));
-		vase_matrix = glm::scale(vase_matrix, glm::vec3(1.5f));
+		vase_matrix = glm::translate(vase_matrix, glm::vec3(-15.f, -4.05f, -40.f));
+		vase_matrix = glm::scale(vase_matrix, glm::vec3(0.1f));
 
 		glm::mat4 vase_view_matrix = view_matrix * vase_matrix;
 
