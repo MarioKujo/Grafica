@@ -208,7 +208,7 @@ namespace udit
 
 		//renderCylinders(view_matrix);
 
-		//renderCone(view_matrix);
+		renderCone(view_matrix);
 
 		//renderSpheres(view_matrix);
 	}
