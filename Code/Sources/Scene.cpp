@@ -146,7 +146,7 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		heightmap(100, 100, 100, 100), cone(10, 20, 40), ufo("../Objects/UFO.obj"),
+		heightmap(100, 100, 100, 100), cone(10, 20, 50), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -196,6 +196,7 @@ namespace udit
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		ufoTextureID = textureLoader.loadTexture("../Textures/UFO_texture.jpg");
+		cowTextureID = textureLoader.loadTexture("../Textures/cow_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -219,11 +220,17 @@ namespace udit
 
 		lightSetup(view_matrix);
 
-		renderUFO(view_matrix);
+		// Oscilación en Y (flotar hacia arriba y abajo)
+		float float_height = 2.0f; // amplitud de flotación
+		float y_offset = sin(angle) * float_height;
+
+		renderUFO(view_matrix, y_offset);
+
+		renderCow(view_matrix, y_offset);
 
 		renderHeightmap(view_matrix);
 
-		renderCone(view_matrix);
+		renderCone(view_matrix, y_offset);
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -274,11 +281,11 @@ namespace udit
 
 	}
 
-	void Scene::renderUFO(glm::mat4& view_matrix)
+	void Scene::renderUFO(glm::mat4& view_matrix, float y_offset)
 	{
-
 		glm::mat4 ufo_matrix(1.0f);
-		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(30.f, 45.f, -40.f));
+
+		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(30.f, 45.f + y_offset, -40.f));
 		ufo_matrix = glm::rotate(ufo_matrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
 		ufo_matrix = glm::scale(ufo_matrix, glm::vec3(0.1f));
 		ufo_matrix = glm::rotate(ufo_matrix, angle, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -290,6 +297,23 @@ namespace udit
 		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
 
 		ufo.render();
+	}
+
+	void Scene::renderCow(glm::mat4& view_matrix, float y_offset)
+	{
+
+		glm::mat4 cow_matrix(1.0f);
+		cow_matrix = glm::translate(cow_matrix, glm::vec3(30.f, 10.f + y_offset, -40.f));
+		cow_matrix = glm::scale(cow_matrix, glm::vec3(0.01f));
+		cow_matrix = glm::rotate(cow_matrix, angle, glm::vec3(0.0f, -1.0f, 0.0f));
+
+		glm::mat4 cow_view_matrix = view_matrix * cow_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cow_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, cowTextureID);
+
+		cow.render();
 	}
 
 	void Scene::renderHeightmap(glm::mat4& view_matrix)
@@ -317,11 +341,11 @@ namespace udit
 		heightmap.render();
 	}
 
-	void Scene::renderCone(glm::mat4& view_matrix)
+	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
 	{
 		glUseProgram(unlit_program_id);
 		glm::mat4 cone_matrix(1.0f);
-		cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, -3.4f, -40.f));
+		cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, y_offset - 10.f, -40.f));
 		cone_matrix = glm::rotate(cone_matrix, angle, glm::vec3(0.f, -1.f, 0.f));
 		glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
 
@@ -342,8 +366,6 @@ namespace udit
 
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
-
-		glUseProgram(program_id);
 	}
 
 	// Ajusta el tamaño de la ventana y la proyección

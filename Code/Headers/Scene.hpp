@@ -102,6 +102,7 @@ namespace udit
         Cone cone; ///< Objeto cono.
         Plane heightmap; ///< Objeto heightmap.
         AssimpMesh ufo; ///< Objeto UFO.
+        AssimpMesh cow; ///< Objeto UFO.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -118,8 +119,7 @@ namespace udit
         GLuint heightmapID; ///< ID de la textura para el heightmap.
         GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
 
-        GLuint tableTextureID; ///< ID de la textura decorativa para la mesa.
-        GLuint vaseTextureID; ///< ID de la textura decorativa para la vasija.
+        GLuint cowTextureID;
         GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
 
@@ -162,11 +162,13 @@ namespace udit
          */
         void render();
 
-        void renderUFO(glm::mat4& view_matrix);
+        void renderUFO(glm::mat4& view_matrix, float y_offset);
+
+        void renderCow(glm::mat4& view_matrix, float y_offset);
 
         void renderHeightmap(glm::mat4& view_matrix);
 
-        void renderCone(glm::mat4& view_matrix);
+        void renderCone(glm::mat4& view_matrix, float y_offset);
 
         void lightSetup(glm::mat4& view_matrix);
 
