@@ -243,8 +243,8 @@ namespace udit
 		};
 
 		vector<glm::vec3> lightColors = {
-			glm::vec3(0.5f, 0.5f, 1.0f),
-			glm::vec3(0.5f, 0.5f, 1.0f)
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			glm::vec3(1.0f, 1.0f, 1.0f)
 		};
 
 		// Transformar direcciones al sistema de vista
@@ -255,7 +255,7 @@ namespace udit
 
 		vector<float> lightIntensities = {
 			1.0f,
-			0.3f
+			1.0f
 		};
 		glUseProgram(heightmap_program_id);
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
