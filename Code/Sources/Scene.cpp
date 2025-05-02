@@ -118,6 +118,8 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		heightmap(100, 100, 100, 100), table("../Objects/table.obj"), vase("../Objects/vase.obj"), ufo("../Objects/UFO.obj"),
+		plane(7, 5, 35, 35), cylinder(10, 10, 2, 10), cone(10, 20, 20),
+		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
 		skybox()
 #pragma region Constructor
 	{
@@ -162,6 +164,10 @@ namespace udit
 	}
 
 	void Scene::loadTextures() {
+		planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
+		cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
+		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
+		sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		tableTextureID = textureLoader.loadTexture("../Textures/table_texture.jpg");
@@ -194,10 +200,17 @@ namespace udit
 
 		renderVase(view_matrix);
 
+		//renderPlane(view_matrix);
+
 		renderUFO(view_matrix);
 
 		renderHeightmap(view_matrix);
 
+		//renderCylinders(view_matrix);
+
+		//renderCone(view_matrix);
+
+		//renderSpheres(view_matrix);
 	}
 
 	void Scene::renderTable(glm::mat4& view_matrix)
@@ -214,12 +227,11 @@ namespace udit
 
 		table.render();
 	}
-
 	void Scene::renderVase(glm::mat4& view_matrix)
 	{
 		glm::mat4 vase_matrix(1.0f);
 		vase_matrix = glm::translate(vase_matrix, glm::vec3(-15.f, -4.05f, -40.f));
-		vase_matrix = glm::scale(vase_matrix, glm::vec3(1.f));
+		vase_matrix = glm::scale(vase_matrix, glm::vec3(0.1f));
 
 		glm::mat4 vase_view_matrix = view_matrix * vase_matrix;
 
@@ -317,6 +329,50 @@ namespace udit
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
 	}*/
+
+	void Scene::renderPlane(glm::mat4& view_matrix)
+	{
+		// Renderiza el plano
+		glm::mat4 plane_matrix(1);
+		plane_matrix = glm::translate(plane_matrix, glm::vec3(0.f, -13.6f, -30.f));
+		glm::mat4 plane_view_matrix = view_matrix * plane_matrix;
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(plane_view_matrix));
+		glBindTexture(GL_TEXTURE_2D, planeTextureID);
+		plane.render();
+	}
+
+	void Scene::renderCylinders(glm::mat4& view_matrix)
+	{
+		float centerX = 0.0f;
+		float centerZ = -30.0f;
+		for (int i = 0; i < 8; ++i) {
+			float angle = (float)(i * (2 * M_PI / 8));
+			float x = cos(angle) * 15.f + centerX;
+			float z = sin(angle) * 15.f + centerZ;
+			placeCylinderAt(x, -8.5f, z, view_matrix);
+		}
+	}
+
+	void Scene::placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix)
+	{
+		glm::mat4 cylinder_matrix(1);
+		cylinder_matrix = glm::translate(cylinder_matrix, glm::vec3(x, y, z));
+		glm::mat4 cylinder_view_matrix = view_matrix * cylinder_matrix;
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cylinder_view_matrix));
+		glBindTexture(GL_TEXTURE_2D, cylinderTextureID);
+		cylinder.render();
+	}
+
+	void Scene::renderCone(glm::mat4& view_matrix)
+	{
+		// Renderiza el cono
+		glm::mat4 cone_matrix(1);
+		cone_matrix = glm::translate(cone_matrix, glm::vec3(0.f, -3.4f, -30.f));
+		glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+		glBindTexture(GL_TEXTURE_2D, coneTextureID);
+		cone.render();
+	}
 
 	void Scene::renderHeightmap(glm::mat4& view_matrix)
 	{
