@@ -66,7 +66,7 @@ namespace udit
             aiFace face = mesh->mFaces[i];
             for (unsigned int j = 0; j < face.mNumIndices; ++j)
             {
-                indices.push_back(static_cast<GLubyte>(face.mIndices[j]));
+                indices.push_back(static_cast<GLuint>(face.mIndices[j]));
             }
         }
     }
