@@ -1,8 +1,9 @@
 #include "../Headers/Mesh.hpp"
 namespace udit
 {
-    Mesh::Mesh() :vao_id(0), vbo_ids()
+    Mesh::Mesh()
 	{
+        generateBuffers();
 	}
     void Mesh::render()
     {
