@@ -6,7 +6,7 @@
 namespace udit
 {
 #pragma region Shaders
-#pragma region vertex shader
+#pragma region vertex shader (lit)
 	const string Scene::vertex_shader_code =
 		"#version 330\n"
 		"uniform mat4 model_view_matrix;"
@@ -26,7 +26,7 @@ namespace udit
 		"}";
 #pragma endregion
 
-#pragma region fragment shader
+#pragma region fragment shader (lit)
 	// Código fuente del shader de fragmentos para la escena
 	const string Scene::fragment_shader_code =
 		"#version 330 core\n"
@@ -57,6 +57,35 @@ namespace udit
 		"    fragment_color = vec4(result, texColor.a * transparency);\n"
 		"}\n";
 
+#pragma endregion
+
+#pragma region vertex shader unlit
+	const string Scene::vertex_shader_unlit_code =
+		"#version 330 core\n"
+		"uniform mat4 model_view_matrix;\n"
+		"uniform mat4 projection_matrix;\n"
+		"layout (location = 0) in vec3 vertex_coordinates;\n"
+		"layout (location = 1) in vec2 vertex_texCoords;\n"
+		"out vec2 texCoords;\n"
+		"void main()\n"
+		"{\n"
+		"    gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);\n"
+		"    texCoords = vertex_texCoords;\n"
+		"}\n";
+#pragma endregion
+
+#pragma region fragment shader unlit
+	const string Scene::fragment_shader_unlit_code =
+		"#version 330 core\n"
+		"in vec2 texCoords;\n"
+		"out vec4 fragment_color;\n"
+		"uniform sampler2D textureSampler;\n"
+		"uniform float transparency;\n"
+		"void main()\n"
+		"{\n"
+		"    vec4 texColor = texture(textureSampler, texCoords);\n"
+		"    fragment_color = vec4(texColor.rgb, texColor.a * transparency);\n"
+		"}\n";
 #pragma endregion
 
 #pragma region skybox vertex shader
@@ -117,8 +146,8 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		plane(7, 5, 35, 35), heightmap(15, 15, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 20),
-		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"),
+		plane(7, 5, 35, 35), heightmap(100, 100, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 40),
+		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"), vase("../Objects/vase.obj"),ufo("../Objects/UFO.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -136,6 +165,7 @@ namespace udit
 
 	void Scene::initializeShaders() {
 		program_id = shaderProgram.compile_shaders(vertex_shader_code, fragment_shader_code);
+		unlit_program_id = shaderProgram.compile_shaders(vertex_shader_unlit_code, fragment_shader_unlit_code);
 		glUseProgram(program_id);
 		skybox_program_id = shaderProgram.compile_shaders(skybox_vertex_shader, skybox_fragment_shader);
 		heightmap_program_id = shaderProgram.compile_shaders(heightmap_vertex_shader, fragment_shader_code);
@@ -165,11 +195,13 @@ namespace udit
 	void Scene::loadTextures() {
 		planeTextureID = textureLoader.loadTexture("../Textures/plane_texture.jpg");
 		cylinderTextureID = textureLoader.loadTexture("../Textures/cylinder_texture.jpg");
-		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
+		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture_2.jpg");
 		sphereTextureID = textureLoader.loadTexture("../Textures/sphere_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		tableTextureID = textureLoader.loadTexture("../Textures/table_texture.jpg");
+		vaseTextureID = textureLoader.loadTexture("../Textures/vase_texture.jpg");
+		ufoTextureID = textureLoader.loadTexture("../Textures/UFO_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -199,20 +231,23 @@ namespace udit
 
 		//renderCylinders(view_matrix);
 
-		renderCone(view_matrix);
 
+		renderVase(view_matrix);
+
+		renderUFO(view_matrix);
 		//renderSpheres(view_matrix);
 
-		//renderHeightmap(view_matrix);
+		renderHeightmap(view_matrix);
 
+		renderCone(view_matrix);
 	}
 
 	void Scene::renderTable(glm::mat4& view_matrix)
 	{
 
 		glm::mat4 table_matrix(1.0f);
-		table_matrix = glm::translate(table_matrix, glm::vec3(-15.f, -10.f, -40.f)); // Cambia posición si quieres
-		table_matrix = glm::scale(table_matrix, glm::vec3(10.f)); // Escala opcional
+		table_matrix = glm::translate(table_matrix, glm::vec3(-15.f, -10.f, -40.f));
+		table_matrix = glm::scale(table_matrix, glm::vec3(10.f));
 
 		glm::mat4 table_view_matrix = view_matrix * table_matrix;
 
@@ -221,6 +256,40 @@ namespace udit
 		glBindTexture(GL_TEXTURE_2D, tableTextureID);
 
 		table.render();
+	}
+
+	void Scene::renderVase(glm::mat4& view_matrix)
+	{
+
+		glm::mat4 vase_matrix(1.0f);
+		vase_matrix = glm::translate(vase_matrix, glm::vec3(-15.f, -3.95f, -40.f));
+		vase_matrix = glm::scale(vase_matrix, glm::vec3(2.f));
+
+		glm::mat4 vase_view_matrix = view_matrix * vase_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(vase_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, vaseTextureID);
+
+		vase.render();
+	}
+
+	void Scene::renderUFO(glm::mat4& view_matrix)
+	{
+
+		glm::mat4 ufo_matrix(1.0f);
+		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(30.f, 45.f, -40.f));
+		ufo_matrix = glm::rotate(ufo_matrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
+		ufo_matrix = glm::scale(ufo_matrix, glm::vec3(0.1f));
+		ufo_matrix = glm::rotate(ufo_matrix, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		glm::mat4 ufo_view_matrix = view_matrix * ufo_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
+
+		ufo.render();
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -306,13 +375,31 @@ namespace udit
 
 	void Scene::renderCone(glm::mat4& view_matrix)
 	{
-		// Renderiza el cono
-		glm::mat4 cone_matrix(1);
-		cone_matrix = glm::translate(cone_matrix, glm::vec3(0.f, -3.4f, -30.f));
+		glUseProgram(unlit_program_id);
+		glm::mat4 cone_matrix(1.0f);
+		cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, -3.4f, -40.f));
+		cone_matrix = glm::rotate(cone_matrix, angle, glm::vec3(0.f, -1.f, 0.f));
 		glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+
+		glActiveTexture(GL_TEXTURE0);
+		glUniform1i(glGetUniformLocation(unlit_program_id, "textureSampler"), 0);
 		glBindTexture(GL_TEXTURE_2D, coneTextureID);
+
+		glDepthMask(GL_FALSE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		GLint transparency = glGetUniformLocation(unlit_program_id, "transparency");
+		glUniform1f(transparency, 0.5f);
+
+		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "model_view_matrix"), 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
 		cone.render();
+
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+
+		glUseProgram(program_id);
 	}
 
 	void Scene::renderSpheres(glm::mat4& view_matrix)
@@ -359,7 +446,7 @@ namespace udit
 		glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
 		glBindTexture(GL_TEXTURE_2D, heightmapID);
 
-		float height_scale = 5.0f;
+		float height_scale = 25.0f;
 		glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
 		// Renderiza el plano (terreno)
 		heightmap.render();

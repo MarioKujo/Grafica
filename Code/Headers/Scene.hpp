@@ -65,8 +65,13 @@ namespace udit
         // Códigos de los shaders
         static const string vertex_shader_code; ///< Código fuente del shader de vértices.
         static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.
+
+        static const string vertex_shader_unlit_code; ///< Código fuente del shader de vértices.
+        static const string fragment_shader_unlit_code; ///< Código fuente del shader de fragmentos.
+
         static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+
         static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
 
@@ -75,6 +80,9 @@ namespace udit
         // Identificadores de las matrices y programas de los shaders
         GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
         GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
+
+        GLint unlit_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
+        GLint unlit_projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
 
         GLint skybox_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders del skybox.
         GLint skybox_projection_matrix_id; ///< ID de la matriz de proyección para los shaders del skybox.
@@ -87,6 +95,7 @@ namespace udit
         GLint viewPos_id; ///< ID de la posición de la cámara.
 
         GLuint program_id; ///< ID del programa principal de shaders.
+        GLuint unlit_program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
         GLuint heightmap_program_id; ///< ID del programa de shaders para el skybox.
 
@@ -99,8 +108,8 @@ namespace udit
         Plane plane; ///< Objeto plano.
         Plane heightmap; ///< Objeto heightmap.
         AssimpMesh table; ///< Objeto mesa.
-        /*AssimpMesh vase; ///< Objeto vasija.
-        AssimpMesh ufo; ///< Objeto UFO.*/
+        AssimpMesh vase; ///< Objeto vasija.
+        AssimpMesh ufo; ///< Objeto UFO.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
