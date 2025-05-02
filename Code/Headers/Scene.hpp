@@ -23,13 +23,10 @@
 
 #include "ShaderProgram.hpp"
 #include "AssimpMesh.hpp"
-#include "Cylinder.hpp"
-#include "Cone.hpp"
 #include "Plane.hpp"
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
-#include "Sphere.hpp"
 #include <cassert>
 #include <SDL.h>
 
@@ -65,8 +62,10 @@ namespace udit
         // Códigos de los shaders
         static const string vertex_shader_code; ///< Código fuente del shader de vértices.
         static const string fragment_shader_code; ///< Código fuente del shader de fragmentos.
+
         static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+
         static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
 
@@ -92,11 +91,6 @@ namespace udit
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
-        Sphere sphere1; ///< Primer objeto esfera.
-        Sphere sphere2; ///< Segundo objeto esfera.
-        Cone cone; ///< Objeto cono.
-        Cylinder cylinder; ///< Objeto cilindro.
-        Plane plane; ///< Objeto plano.
         Plane heightmap; ///< Objeto heightmap.
         AssimpMesh table; ///< Objeto mesa.
         AssimpMesh vase; ///< Objeto vasija.
@@ -110,13 +104,7 @@ namespace udit
         // Gestor de texturas
         TextureLoader textureLoader; ///< Cargador de texturas para los objetos 3D.
 
-        // Identificadores de las texturas para cada objeto 3D
-        GLuint cubeTextureID; ///< ID de la textura para el cubo.
-        GLuint planeTextureID; ///< ID de la textura para el plano.
-        GLuint cylinderTextureID; ///< ID de la textura para el cilindro.
-        GLuint coneTextureID; ///< ID de la textura para el cono.
         GLuint skyboxTextureID; ///< ID de la textura para el skybox.
-        GLuint sphereTextureID; ///< ID de la textura para la esfera.
         GLuint heightmapID; ///< ID de la textura para el heightmap.
         GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
         GLuint tableTextureID; ///< ID de la textura decorativa para la mesa.
@@ -167,16 +155,6 @@ namespace udit
         void renderVase(glm::mat4& view_matrix);
 
         void renderHeightmap(glm::mat4& view_matrix);
-
-        void renderSpheres(glm::mat4& view_matrix);
-
-        void renderCone(glm::mat4& view_matrix);
-
-        void renderCylinders(glm::mat4& view_matrix);
-
-        void placeCylinderAt(float x, float y, float z, glm::mat4& view_matrix);
-
-        void renderPlane(glm::mat4& view_matrix);
 
         void lightSetup(glm::mat4& view_matrix);
 

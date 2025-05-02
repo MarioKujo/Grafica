@@ -15,12 +15,6 @@
     <ClInclude Include="..\Code\Headers\Camera.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Code\Headers\Cone.hpp">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Headers\Cylinder.hpp">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Code\Headers\Plane.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -31,9 +25,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Headers\Skybox.hpp">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Code\Headers\Sphere.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\Code\Headers\Window.hpp">
@@ -59,12 +50,6 @@
     <ClCompile Include="..\Code\Sources\Camera.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Sources\Cone.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Sources\Cylinder.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\Sources\Plane.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -75,9 +60,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\Skybox.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Sources\Sphere.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Sources\Window.cpp">
