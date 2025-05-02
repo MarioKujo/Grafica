@@ -94,6 +94,7 @@ namespace udit
         Plane heightmap; ///< Objeto heightmap.
         AssimpMesh table; ///< Objeto mesa.
         AssimpMesh vase; ///< Objeto vasija.
+        AssimpMesh ufo; ///< Objeto UFO.
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -105,10 +106,13 @@ namespace udit
         TextureLoader textureLoader; ///< Cargador de texturas para los objetos 3D.
 
         GLuint skyboxTextureID; ///< ID de la textura para el skybox.
+
         GLuint heightmapID; ///< ID de la textura para el heightmap.
         GLuint heightmapTextureID; ///< ID de la textura decorativa para el heightmap.
+
         GLuint tableTextureID; ///< ID de la textura decorativa para la mesa.
         GLuint vaseTextureID; ///< ID de la textura decorativa para la vasija.
+        GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
 
 
@@ -153,6 +157,8 @@ namespace udit
         void renderTable(glm::mat4& view_matrix);
 
         void renderVase(glm::mat4& view_matrix);
+
+        void renderUFO(glm::mat4& view_matrix);
 
         void renderHeightmap(glm::mat4& view_matrix);
 

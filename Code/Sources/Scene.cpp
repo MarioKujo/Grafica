@@ -117,7 +117,7 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		heightmap(15, 15, 100, 100), table("../Objects/table.obj"), vase("../Objects/vase.obj"),
+		heightmap(100, 100, 100, 100), table("../Objects/table.obj"), vase("../Objects/vase.obj"), ufo("../Objects/UFO.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -166,6 +166,7 @@ namespace udit
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		tableTextureID = textureLoader.loadTexture("../Textures/table_texture.jpg");
 		vaseTextureID = textureLoader.loadTexture("../Textures/vase_texture.jpg");
+		ufoTextureID = textureLoader.loadTexture("../Textures/UFO_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -192,6 +193,8 @@ namespace udit
 		renderTable(view_matrix);
 
 		renderVase(view_matrix);
+
+		renderUFO(view_matrix);
 
 		renderHeightmap(view_matrix);
 
@@ -225,6 +228,21 @@ namespace udit
 		glBindTexture(GL_TEXTURE_2D, vaseTextureID);
 
 		vase.render();
+	}
+	void Scene::renderUFO(glm::mat4& view_matrix)
+	{
+		glm::mat4 ufo_matrix(1.0f);
+		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(20.f, 20.f, -35.f));
+		ufo_matrix = glm::rotate(ufo_matrix, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
+		ufo_matrix = glm::scale(ufo_matrix, glm::vec3(0.1f));
+		ufo_matrix = glm::rotate(ufo_matrix, angle, glm::vec3(0.f, 0.f, 1.f));
+		glm::mat4 ufo_view_matrix = view_matrix * ufo_matrix;
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
+		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
+
+		ufo.render();
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -275,30 +293,30 @@ namespace udit
 
 	}
 
-	//void Scene::renderSpheres(glm::mat4& view_matrix)
-	//{
-	//	glm::mat4 sphere_matrix(1);
-	//	sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, -8.5f, -30.f));
-	//	sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+	/*void Scene::renderSpheres(glm::mat4& view_matrix)
+	{
+		glm::mat4 sphere_matrix(1);
+		sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, -8.5f, -30.f));
+		sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
 
-	//	glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
-	//	glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-	//	glBindTexture(GL_TEXTURE_2D, sphereTextureID);
-	//	sphere1.render();
+		glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+		glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+		sphere1.render();
 
-	//	glDepthMask(GL_FALSE);
-	//	glEnable(GL_BLEND);
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthMask(GL_FALSE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//	GLint transparency = glGetUniformLocation(program_id, "transparency");
-	//	glUniform1f(transparency, 0.5f);
+		GLint transparency = glGetUniformLocation(program_id, "transparency");
+		glUniform1f(transparency, 0.5f);
 
-	//	glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-	//	sphere2.render();
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+		sphere2.render();
 
-	//	glDisable(GL_BLEND);
-	//	glDepthMask(GL_TRUE);
-	//}
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+	}*/
 
 	void Scene::renderHeightmap(glm::mat4& view_matrix)
 	{
@@ -319,7 +337,7 @@ namespace udit
 		glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
 		glBindTexture(GL_TEXTURE_2D, heightmapID);
 
-		float height_scale = 5.0f;
+		float height_scale = 25.0f;
 		glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
 		// Renderiza el plano (terreno)
 		heightmap.render();
