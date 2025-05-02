@@ -99,8 +99,8 @@ namespace udit
         Plane plane; ///< Objeto plano.
         Plane heightmap; ///< Objeto heightmap.
         AssimpMesh table; ///< Objeto mesa.
-        AssimpMesh vase; ///< Objeto vasija.
-        AssimpMesh ufo; ///< Objeto UFO.
+        /*AssimpMesh vase; ///< Objeto vasija.
+        AssimpMesh ufo; ///< Objeto UFO.*/
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.

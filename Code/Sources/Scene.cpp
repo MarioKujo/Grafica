@@ -117,9 +117,8 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		heightmap(100, 100, 100, 100), table("../Objects/table.obj"), vase("../Objects/vase.obj"), ufo("../Objects/UFO.obj"),
-		plane(7, 5, 35, 35), cylinder(10, 10, 2, 10), cone(10, 20, 20),
-		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f),
+		plane(7, 5, 35, 35), heightmap(15, 15, 100, 100), cylinder(10, 10, 2, 10), cone(10, 20, 20),
+		sphere1(10, 10, 3.5f), sphere2(10, 10, 3.75f), table("../Objects/table.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -171,8 +170,6 @@ namespace udit
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
 		heightmapTextureID = textureLoader.loadTexture("../Textures/heightmap_texture.jpg");
 		tableTextureID = textureLoader.loadTexture("../Textures/table_texture.jpg");
-		vaseTextureID = textureLoader.loadTexture("../Textures/vase_texture.jpg");
-		ufoTextureID = textureLoader.loadTexture("../Textures/UFO_texture.jpg");
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
@@ -198,26 +195,24 @@ namespace udit
 
 		renderTable(view_matrix);
 
-		renderVase(view_matrix);
-
 		//renderPlane(view_matrix);
-
-		renderUFO(view_matrix);
-
-		renderHeightmap(view_matrix);
 
 		//renderCylinders(view_matrix);
 
 		renderCone(view_matrix);
 
 		//renderSpheres(view_matrix);
+
+		//renderHeightmap(view_matrix);
+
 	}
 
 	void Scene::renderTable(glm::mat4& view_matrix)
 	{
+
 		glm::mat4 table_matrix(1.0f);
-		table_matrix = glm::translate(table_matrix, glm::vec3(-15.f, -10.f, -40.f));
-		table_matrix = glm::scale(table_matrix, glm::vec3(10.f));
+		table_matrix = glm::translate(table_matrix, glm::vec3(-15.f, -10.f, -40.f)); // Cambia posición si quieres
+		table_matrix = glm::scale(table_matrix, glm::vec3(10.f)); // Escala opcional
 
 		glm::mat4 table_view_matrix = view_matrix * table_matrix;
 
@@ -226,35 +221,6 @@ namespace udit
 		glBindTexture(GL_TEXTURE_2D, tableTextureID);
 
 		table.render();
-	}
-	void Scene::renderVase(glm::mat4& view_matrix)
-	{
-		glm::mat4 vase_matrix(1.0f);
-		vase_matrix = glm::translate(vase_matrix, glm::vec3(-15.f, -4.05f, -40.f));
-		vase_matrix = glm::scale(vase_matrix, glm::vec3(0.1f));
-
-		glm::mat4 vase_view_matrix = view_matrix * vase_matrix;
-
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(vase_view_matrix));
-		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
-		glBindTexture(GL_TEXTURE_2D, vaseTextureID);
-
-		vase.render();
-	}
-	void Scene::renderUFO(glm::mat4& view_matrix)
-	{
-		glm::mat4 ufo_matrix(1.0f);
-		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(20.f, 20.f, -35.f));
-		ufo_matrix = glm::rotate(ufo_matrix, glm::radians(90.f), glm::vec3(1.f, 0.f, 0.f));
-		ufo_matrix = glm::scale(ufo_matrix, glm::vec3(0.1f));
-		ufo_matrix = glm::rotate(ufo_matrix, angle, glm::vec3(0.f, 0.f, 1.f));
-		glm::mat4 ufo_view_matrix = view_matrix * ufo_matrix;
-
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
-		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
-		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
-
-		ufo.render();
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -305,31 +271,6 @@ namespace udit
 
 	}
 
-	/*void Scene::renderSpheres(glm::mat4& view_matrix)
-	{
-		glm::mat4 sphere_matrix(1);
-		sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, -8.5f, -30.f));
-		sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
-
-		glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-		glBindTexture(GL_TEXTURE_2D, sphereTextureID);
-		sphere1.render();
-
-		glDepthMask(GL_FALSE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		GLint transparency = glGetUniformLocation(program_id, "transparency");
-		glUniform1f(transparency, 0.5f);
-
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
-		sphere2.render();
-
-		glDisable(GL_BLEND);
-		glDepthMask(GL_TRUE);
-	}*/
-
 	void Scene::renderPlane(glm::mat4& view_matrix)
 	{
 		// Renderiza el plano
@@ -374,6 +315,31 @@ namespace udit
 		cone.render();
 	}
 
+	void Scene::renderSpheres(glm::mat4& view_matrix)
+	{
+		glm::mat4 sphere_matrix(1);
+		sphere_matrix = glm::translate(sphere_matrix, glm::vec3(0.f, -8.5f, -30.f));
+		sphere_matrix = glm::rotate(sphere_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
+
+		glm::mat4 sphere_view_matrix = view_matrix * sphere_matrix;
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+		glBindTexture(GL_TEXTURE_2D, sphereTextureID);
+		sphere1.render();
+
+		glDepthMask(GL_FALSE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		GLint transparency = glGetUniformLocation(program_id, "transparency");
+		glUniform1f(transparency, 0.5f);
+
+		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(sphere_view_matrix));
+		sphere2.render();
+
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+	}
+
 	void Scene::renderHeightmap(glm::mat4& view_matrix)
 	{
 		glUseProgram(heightmap_program_id);
@@ -393,7 +359,7 @@ namespace udit
 		glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
 		glBindTexture(GL_TEXTURE_2D, heightmapID);
 
-		float height_scale = 25.0f;
+		float height_scale = 5.0f;
 		glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
 		// Renderiza el plano (terreno)
 		heightmap.render();
