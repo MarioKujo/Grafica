@@ -23,6 +23,6 @@ namespace udit
 		vector<GLfloat> coordinates; ///< Vectores que contienen las coordenadas de los vértices del plano.
 		vector<GLfloat> texCoords;   ///< Vectores que contienen las coordenadas de textura (UV) para los vértices.
 		vector<GLfloat> normals;     ///< Vectores que contienen las normales para la iluminación
-		vector<GLubyte> indices;     ///< Vectores que contienen los índices para dibujar el plano con triángulos.
+		vector<GLuint> indices;     ///< Vectores que contienen los índices para dibujar el plano con triángulos.
 	};
 }
