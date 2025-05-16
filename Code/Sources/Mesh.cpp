@@ -3,10 +3,17 @@ namespace udit
 {
     Mesh::Mesh()
 	{
-        generateBuffers();
 	}
+    Mesh::Mesh(const vector<GLfloat>& coords, const vector<GLfloat>& uvs, const vector<GLfloat>& norms, const vector<GLuint>& inds) : coordinates(coords), texCoords(uvs), normals(norms), indices(inds)
+    {
+        generateBuffers();
+    }
     void Mesh::render()
     {
+        if (!isInitialized)
+        {
+            return;
+        }
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         glDisable(GL_CULL_FACE);

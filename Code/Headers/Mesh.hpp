@@ -10,12 +10,15 @@ namespace udit
 	{
 	public:
 		Mesh();
+		Mesh(const vector<GLfloat>& coords, const vector<GLfloat>& uvs, const vector<GLfloat>& norms, const vector<GLuint>& inds);
 		void render();
 		void generateBuffers();
 		void deleteBuffers();
 	protected:
 
 		enum { COORDINATES_VBO, TEXCOORDS_VBO, NORMALS_VBO, INDICES_EBO, VBO_COUNT }; ///< Índices para los VBOs y el EBO.
+
+		bool isInitialized = false;
 
 		GLuint vao_id;               ///< Identificador del Vertex Array Object (VAO).
 		GLuint vbo_ids[VBO_COUNT];           ///< Identificadores de los Vertex Buffer Objects (VBOs) para las coordenadas, coordenadas de textura e índices.
