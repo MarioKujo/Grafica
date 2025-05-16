@@ -35,28 +35,28 @@ namespace udit
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
         {
             // Coordenadas
-            coordinates.push_back(mesh->mVertices[i].x);
-            coordinates.push_back(mesh->mVertices[i].y);
-            coordinates.push_back(mesh->mVertices[i].z);
+            data.coordinates.push_back(mesh->mVertices[i].x);
+            data.coordinates.push_back(mesh->mVertices[i].y);
+            data.coordinates.push_back(mesh->mVertices[i].z);
 
             // Normales
             if (mesh->HasNormals())
             {
-                normals.push_back(mesh->mNormals[i].x);
-                normals.push_back(mesh->mNormals[i].y);
-                normals.push_back(mesh->mNormals[i].z);
+                data.normals.push_back(mesh->mNormals[i].x);
+                data.normals.push_back(mesh->mNormals[i].y);
+                data.normals.push_back(mesh->mNormals[i].z);
             }
 
             // UVs
             if (mesh->mTextureCoords[0]) // Solo consideramos el primer set de UVs
             {
-                texCoords.push_back(mesh->mTextureCoords[0][i].x);
-                texCoords.push_back(mesh->mTextureCoords[0][i].y);
+                data.texCoords.push_back(mesh->mTextureCoords[0][i].x);
+                data.texCoords.push_back(mesh->mTextureCoords[0][i].y);
             }
             else
             {
-                texCoords.push_back(0.0f);
-                texCoords.push_back(0.0f);
+                data.texCoords.push_back(0.0f);
+                data.texCoords.push_back(0.0f);
             }
         }
 
@@ -66,7 +66,7 @@ namespace udit
             aiFace face = mesh->mFaces[i];
             for (unsigned int j = 0; j < face.mNumIndices; ++j)
             {
-                indices.push_back(static_cast<GLuint>(face.mIndices[j]));
+                data.indices.push_back(static_cast<GLuint>(face.mIndices[j]));
             }
         }
     }

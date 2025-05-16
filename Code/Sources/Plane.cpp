@@ -25,10 +25,10 @@ namespace udit
         int vertexCount = (subdivX + 1) * (subdivY + 1);
         int indexCount = subdivX * subdivY * 6;
 
-        coordinates.resize(vertexCount * 3);
-        texCoords.resize(vertexCount * 2);
-        normals.resize(vertexCount * 3);
-        indices.resize(indexCount);
+        data.coordinates.resize(vertexCount * 3);
+        data.texCoords.resize(vertexCount * 2);
+        data.normals.resize(vertexCount * 3);
+        data.indices.resize(indexCount);
 
         int vertexIndex = 0;
         int texCoordIndex = 0;
@@ -49,16 +49,16 @@ namespace udit
                 float posX = originX + x * dx;
                 float posY = originY + y * dy;
 
-                coordinates[vertexIndex++] = posX;
-                coordinates[vertexIndex++] = 0.0f;
-                coordinates[vertexIndex++] = posY;
+                data.coordinates[vertexIndex++] = posX;
+                data.coordinates[vertexIndex++] = 0.0f;
+                data.coordinates[vertexIndex++] = posY;
 
-                texCoords[texCoordIndex++] = static_cast<GLfloat>(x) / subdivX;
-                texCoords[texCoordIndex++] = static_cast<GLfloat>(y) / subdivY;
+                data.texCoords[texCoordIndex++] = static_cast<GLfloat>(x) / subdivX;
+                data.texCoords[texCoordIndex++] = static_cast<GLfloat>(y) / subdivY;
 
-                normals[normalIndex++] = 0.0f;
-                normals[normalIndex++] = 1.0f; // Apuntando hacia arriba (Y)
-                normals[normalIndex++] = 0.0f;
+                data.normals[normalIndex++] = 0.0f;
+                data.normals[normalIndex++] = 1.0f; // Apuntando hacia arriba (Y)
+                data.normals[normalIndex++] = 0.0f;
             }
         }
 
@@ -72,12 +72,12 @@ namespace udit
                 int bottomLeft = (y + 1) * (subdivX + 1) + x;
                 int bottomRight = bottomLeft + 1;
 
-                indices[index++] = topLeft;
-                indices[index++] = bottomLeft;
-                indices[index++] = bottomRight;
-                indices[index++] = topLeft;
-                indices[index++] = bottomRight;
-                indices[index++] = topRight;
+                data.indices[index++] = topLeft;
+                data.indices[index++] = bottomLeft;
+                data.indices[index++] = bottomRight;
+                data.indices[index++] = topLeft;
+                data.indices[index++] = bottomRight;
+                data.indices[index++] = topRight;
             }
         }
 

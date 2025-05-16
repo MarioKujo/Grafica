@@ -23,8 +23,6 @@
 
 #include "ShaderProgram.hpp"
 #include "AssimpMesh.hpp"
-#include "Cone.hpp"
-#include "Plane.hpp"
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
@@ -99,10 +97,11 @@ namespace udit
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
-        Cone cone; ///< Objeto cono.
-        Plane heightmap; ///< Objeto heightmap.
         AssimpMesh ufo; ///< Objeto UFO.
         AssimpMesh cow; ///< Objeto UFO.
+        Mesh plane;
+        Mesh cone;
+        GeometryGenerator generator;
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.

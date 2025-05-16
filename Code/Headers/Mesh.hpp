@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <numbers>
+#include "GeometryGenerator.hpp"
 using namespace std;
 namespace udit
 {
@@ -10,7 +11,7 @@ namespace udit
 	{
 	public:
 		Mesh();
-		Mesh(const vector<GLfloat>& coords, const vector<GLfloat>& uvs, const vector<GLfloat>& norms, const vector<GLuint>& inds);
+		Mesh(const MeshData receivedData);
 		void render();
 		void generateBuffers();
 		void deleteBuffers();
@@ -23,9 +24,6 @@ namespace udit
 		GLuint vao_id;               ///< Identificador del Vertex Array Object (VAO).
 		GLuint vbo_ids[VBO_COUNT];           ///< Identificadores de los Vertex Buffer Objects (VBOs) para las coordenadas, coordenadas de textura e índices.
 
-		vector<GLfloat> coordinates; ///< Vectores que contienen las coordenadas de los vértices del plano.
-		vector<GLfloat> texCoords;   ///< Vectores que contienen las coordenadas de textura (UV) para los vértices.
-		vector<GLfloat> normals;     ///< Vectores que contienen las normales para la iluminación
-		vector<GLuint> indices;     ///< Vectores que contienen los índices para dibujar el plano con triángulos.
+		MeshData data;
 	};
 }

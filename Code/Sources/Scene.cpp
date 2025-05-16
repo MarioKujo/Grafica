@@ -146,7 +146,7 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		heightmap(100, 100, 100, 100), cone(10, 20, 50), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"),
+		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"),
 		skybox()
 #pragma region Constructor
 	{
@@ -338,7 +338,7 @@ namespace udit
 		float height_scale = 25.0f;
 		glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
 		// Renderiza el plano (terreno)
-		heightmap.render();
+		plane.render();
 	}
 
 	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
@@ -362,8 +362,8 @@ namespace udit
 
 		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "model_view_matrix"), 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
 		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
-		cone.render();
 
+		cone.render();
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);
 	}
