@@ -18,7 +18,7 @@ namespace udit
 
 		enum { COORDINATES_VBO, TEXCOORDS_VBO, NORMALS_VBO, INDICES_EBO, VBO_COUNT }; ///< Índices para los VBOs y el EBO.
 
-		bool isInitialized = false;
+		bool isInitialized;
 
 		GLuint vao_id;               ///< Identificador del Vertex Array Object (VAO).
 		GLuint vbo_ids[VBO_COUNT];           ///< Identificadores de los Vertex Buffer Objects (VBOs) para las coordenadas, coordenadas de textura e índices.

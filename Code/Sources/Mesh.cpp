@@ -1,10 +1,11 @@
 #include "../Headers/Mesh.hpp"
 namespace udit
 {
-    Mesh::Mesh()
+    Mesh::Mesh() : isInitialized(false)
 	{
+        generateBuffers();
 	}
-    Mesh::Mesh(const vector<GLfloat>& coords, const vector<GLfloat>& uvs, const vector<GLfloat>& norms, const vector<GLuint>& inds) : coordinates(coords), texCoords(uvs), normals(norms), indices(inds)
+    Mesh::Mesh(const vector<GLfloat>& coords, const vector<GLfloat>& uvs, const vector<GLfloat>& norms, const vector<GLuint>& inds) : coordinates(coords), texCoords(uvs), normals(norms), indices(inds), isInitialized(false)
     {
         generateBuffers();
     }
@@ -53,6 +54,7 @@ namespace udit
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
         glBindVertexArray(0);
+        isInitialized = true;
     }
     void Mesh::deleteBuffers()
     {
