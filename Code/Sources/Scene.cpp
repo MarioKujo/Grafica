@@ -154,8 +154,6 @@ namespace udit
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
 
-		initializeUniformLocations();
-		initializeLightSettings();
 		loadTextures();
 		defaultProgram.use();
 		resize(width, height);
@@ -206,7 +204,7 @@ namespace udit
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glm::mat4 view_matrix = camera.get_view_matrix();
-		//renderSkybox(view_matrix);
+		renderSkybox(view_matrix);
 
 		lightSetup(view_matrix);
 		// Oscilación en Y (flotar hacia arriba y abajo)
@@ -225,6 +223,8 @@ namespace udit
 	void Scene::renderSkybox(glm::mat4& view_matrix)
 	{
 		skyboxProgram.use();
+		skyboxProgram.setMat4("view", view_matrix);
+		skyboxProgram.setMat4("projection", projection_matrix);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
 		skybox.render();
 	}
@@ -350,12 +350,12 @@ namespace udit
 	//}
 
 	// Ajusta el tamaño de la ventana y la proyección
-	//void Scene::resize(unsigned width, unsigned height)
-	//{
-	//	projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
-	//	glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-	//	glViewport(0, 0, width, height);
-	//}
+	void Scene::resize(unsigned width, unsigned height)
+	{
+		projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
+		defaultProgram.setMat4("projection_matrix", projection_matrix);
+		glViewport(0, 0, width, height);
+	}
 
 	void Scene::set_camera(Camera new_camera)
 	{
