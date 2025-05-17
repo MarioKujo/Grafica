@@ -146,8 +146,21 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 60, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
-		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram), cowObj(&cow, &defaultProgram), coneObj(&cone, &unlitProgram)
+		plane(generator.generatePlane(100, 100, 100, 100)),
+		cone(generator.generateCone(20, 60, 10)),
+		ufo("../Objects/UFO.obj"),
+		cow("../Objects/cow.obj"),
+		
+		defaultProgram(vertex_shader_code, fragment_shader_code),
+		unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code),
+		skyboxProgram(skybox_vertex_shader, skybox_fragment_shader),
+		heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
+
+		skybox(),
+		heightmapObj(&plane, &heightmapProgram),
+		ufoObj(&ufo, &defaultProgram),
+		cowObj(&cow, &defaultProgram),
+		coneObj(&cone, &unlitProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);

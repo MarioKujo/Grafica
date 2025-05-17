@@ -78,11 +78,15 @@ namespace udit
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
+
         AssimpMesh ufo; ///< Objeto UFO.
         AssimpMesh cow; ///< Objeto UFO.
+
         Mesh plane;
         Mesh cone;
+
         GeometryGenerator generator;
+
         Object heightmapObj;
         Object ufoObj;
         Object cowObj;
@@ -119,10 +123,6 @@ namespace udit
          * @param height Alto de la ventana de la escena.
          */
         Scene(unsigned width, unsigned height);
-
-        void initializeUniformLocations();
-
-        void initializeLightSettings();
 
         void loadTextures();
 
