@@ -1,70 +1,84 @@
 #include "../Headers/ShaderProgram.hpp"
-namespace udit
-{
+#include <fstream>
+#include <sstream>
 
-    // Compila los shaders de la escena
-    GLuint ShaderProgram::compile_shaders(string vertex_shader, string fragment_shader)
+namespace udit {
+
+    ShaderProgram::ShaderProgram(const std::string& vertex_source, const std::string& fragment_source)
     {
         GLint succeeded = GL_FALSE;
 
-        GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
-        GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+        GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+        GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-        const char* vertex_shaders_code[] = { vertex_shader.c_str() };
-        const char* fragment_shaders_code[] = { fragment_shader.c_str() };
-        const GLint vertex_shaders_size[] = { (GLint)vertex_shader.size() };
-        const GLint fragment_shaders_size[] = { (GLint)fragment_shader.size() };
+        const char* vertex_code = vertex_source.c_str();
+        const char* fragment_code = fragment_source.c_str();
 
-        glShaderSource(vertex_shader_id, 1, vertex_shaders_code, vertex_shaders_size);
-        glShaderSource(fragment_shader_id, 1, fragment_shaders_code, fragment_shaders_size);
+        glShaderSource(vertex_shader, 1, &vertex_code, nullptr);
+        glShaderSource(fragment_shader, 1, &fragment_code, nullptr);
 
-        glCompileShader(vertex_shader_id);
-        glCompileShader(fragment_shader_id);
+        glCompileShader(vertex_shader);
+        glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &succeeded);
+        if (!succeeded) show_compilation_error(vertex_shader);
 
-        glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &succeeded);
-        if (!succeeded) show_compilation_error(vertex_shader_id);
+        glCompileShader(fragment_shader);
+        glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &succeeded);
+        if (!succeeded) show_compilation_error(fragment_shader);
 
-        glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &succeeded);
-        if (!succeeded) show_compilation_error(fragment_shader_id);
-
-        GLuint program_id = glCreateProgram();
-        glAttachShader(program_id, vertex_shader_id);
-        glAttachShader(program_id, fragment_shader_id);
+        program_id = glCreateProgram();
+        glAttachShader(program_id, vertex_shader);
+        glAttachShader(program_id, fragment_shader);
         glLinkProgram(program_id);
 
         glGetProgramiv(program_id, GL_LINK_STATUS, &succeeded);
         if (!succeeded) show_linkage_error(program_id);
 
-        glDeleteShader(vertex_shader_id);
-        glDeleteShader(fragment_shader_id);
-
-        return program_id;
+        glDeleteShader(vertex_shader);
+        glDeleteShader(fragment_shader);
     }
-    // Muestra errores de compilación del shader
-    void ShaderProgram::show_compilation_error(GLuint shader_id)
-    {
-        string info_log;
-        GLint info_log_length;
-        glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
 
-        if (info_log_length > 0) {
-            info_log.resize(info_log_length);
-            glGetShaderInfoLog(shader_id, info_log_length, nullptr, &info_log[0]);
-            cerr << "Shader compilation error: " << endl << info_log << endl;
+    ShaderProgram::~ShaderProgram() {
+        glDeleteProgram(program_id);
+    }
+
+    void ShaderProgram::use() const {
+        glUseProgram(program_id);
+    }
+
+    void ShaderProgram::setMat4(const std::string& name, const glm::mat4& mat) const {
+        GLint loc = glGetUniformLocation(program_id, name.c_str());
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+    }
+
+    void ShaderProgram::setVec3(const std::string& name, const glm::vec3& vec) const {
+        GLint loc = glGetUniformLocation(program_id, name.c_str());
+        glUniform3fv(loc, 1, glm::value_ptr(vec));
+    }
+
+    void ShaderProgram::setFloat(const std::string& name, float value) const {
+        GLint loc = glGetUniformLocation(program_id, name.c_str());
+        glUniform1f(loc, value);
+    }
+
+    void ShaderProgram::show_compilation_error(GLuint shader_id) {
+        GLint log_length = 0;
+        glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
+
+        if (log_length > 0) {
+            std::string info_log(log_length, ' ');
+            glGetShaderInfoLog(shader_id, log_length, nullptr, &info_log[0]);
+            std::cerr << "Shader compilation error:\n" << info_log << std::endl;
         }
     }
 
-    // Muestra errores de enlace del programa de shaders
-    void ShaderProgram::show_linkage_error(GLuint program_id)
-    {
-        string info_log;
-        GLint info_log_length;
-        glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &info_log_length);
+    void ShaderProgram::show_linkage_error(GLuint program_id) {
+        GLint log_length = 0;
+        glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length);
 
-        if (info_log_length > 0) {
-            info_log.resize(info_log_length);
-            glGetProgramInfoLog(program_id, info_log_length, nullptr, &info_log[0]);
-            cerr << "Shader program linkage error: " << endl << info_log << endl;
+        if (log_length > 0) {
+            std::string info_log(log_length, ' ');
+            glGetProgramInfoLog(program_id, log_length, nullptr, &info_log[0]);
+            std::cerr << "Shader program linkage error:\n" << info_log << std::endl;
         }
     }
 }

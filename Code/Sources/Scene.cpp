@@ -146,29 +146,21 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"),
-		skybox()
+		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),
+		skybox(), obj(&plane, &defaultProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
 
-		initializeShaders();
 		initializeUniformLocations();
 		initializeLightSettings();
 		loadTextures();
+		defaultProgram.use();
 		resize(width, height);
 	}
 #pragma endregion
-
-	void Scene::initializeShaders() {
-		program_id = shaderProgram.compile_shaders(vertex_shader_code, fragment_shader_code);
-		unlit_program_id = shaderProgram.compile_shaders(vertex_shader_unlit_code, fragment_shader_unlit_code);
-		glUseProgram(program_id);
-		skybox_program_id = shaderProgram.compile_shaders(skybox_vertex_shader, skybox_fragment_shader);
-		heightmap_program_id = shaderProgram.compile_shaders(heightmap_vertex_shader, fragment_shader_code);
-	}
 
 	void Scene::initializeUniformLocations() {
 		model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
@@ -214,23 +206,22 @@ namespace udit
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glm::mat4 view_matrix = camera.get_view_matrix();
-		renderSkybox(view_matrix);
-
-		glUseProgram(program_id);
+		//renderSkybox(view_matrix);
 
 		lightSetup(view_matrix);
 
+		renderPlane(view_matrix);
 		// Oscilación en Y (flotar hacia arriba y abajo)
-		float float_height = 2.0f; // amplitud de flotación
-		float y_offset = sin(angle) * float_height;
+		//float float_height = 2.0f; // amplitud de flotación
+		//float y_offset = sin(angle) * float_height;
 
-		renderUFO(view_matrix, y_offset);
+		//renderUFO(view_matrix, y_offset);
 
-		renderCow(view_matrix, y_offset);
+		//renderCow(view_matrix, y_offset);
 
-		renderHeightmap(view_matrix);
+		//renderHeightmap(view_matrix);
 
-		renderCone(view_matrix, y_offset);
+		//renderCone(view_matrix, y_offset);
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -267,18 +258,15 @@ namespace udit
 			1.0f,
 			1.0f
 		};
-		glUseProgram(heightmap_program_id);
+		/*glUseProgram(heightmap_program_id);
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColors"), (GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
 		glUniform1fv(glGetUniformLocation(heightmap_program_id, "lightIntensities"), (GLsizei)lightIntensities.size(), &lightIntensities[0]);
-		glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);
-
-		glUseProgram(program_id);
-		glUniform3fv(glGetUniformLocation(program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
-		glUniform3fv(glGetUniformLocation(program_id, "lightColors"), (GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
-		glUniform1fv(glGetUniformLocation(program_id, "lightIntensities"), (GLsizei)lightIntensities.size(), &lightIntensities[0]);
-		glUniform3fv(viewPos_id, 1, glm::value_ptr(viewPos));
-
+		glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);*/
+		defaultProgram.setVec3("lightDirections", lightDirsView[0]);
+		defaultProgram.setVec3("lightColors", lightColors[0]);
+		defaultProgram.setFloat("lightIntensities", lightIntensities[0]);
+		defaultProgram.setVec3("viewPos", viewPos);
 	}
 
 	void Scene::renderUFO(glm::mat4& view_matrix, float y_offset)
@@ -341,6 +329,14 @@ namespace udit
 		plane.render();
 	}
 
+	void Scene::renderPlane(glm::mat4& view_matrix)
+	{
+		obj.setPosition(glm::vec3(25.f, -16.f, -35.f));
+		obj.setRotation(glm::vec3(0.f, 0.f, 0.f));
+		obj.setScale(glm::vec3(1.f, 1.f, 1.f));
+		obj.render(view_matrix, projection_matrix);
+	}
+
 	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
 	{
 		glUseProgram(unlit_program_id);
@@ -380,6 +376,5 @@ namespace udit
 	{
 		camera = new_camera;
 	}
-
 
 }

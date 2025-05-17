@@ -21,11 +21,11 @@
 
 #pragma once
 
-#include "ShaderProgram.hpp"
 #include "AssimpMesh.hpp"
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
+#include "Object.hpp"
 #include <cassert>
 #include <SDL.h>
 
@@ -49,7 +49,7 @@ namespace udit
     {
     private:
         // Programa de shaders
-        ShaderProgram shaderProgram;
+        ShaderProgram defaultProgram;
 
 
         // Propiedades de la luz
@@ -93,7 +93,7 @@ namespace udit
         GLuint program_id; ///< ID del programa principal de shaders.
         GLuint unlit_program_id; ///< ID del programa principal de shaders.
         GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
-        GLuint heightmap_program_id; ///< ID del programa de shaders para el skybox.
+        GLuint heightmap_program_id; ///< ID del programa de shaders para el heightmap.
 
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
@@ -102,6 +102,7 @@ namespace udit
         Mesh plane;
         Mesh cone;
         GeometryGenerator generator;
+        Object obj;
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -135,8 +136,6 @@ namespace udit
          */
         Scene(unsigned width, unsigned height);
 
-        void initializeShaders();
-
         void initializeUniformLocations();
 
         void initializeLightSettings();
@@ -166,6 +165,8 @@ namespace udit
         void renderCow(glm::mat4& view_matrix, float y_offset);
 
         void renderHeightmap(glm::mat4& view_matrix);
+
+        void renderPlane(glm::mat4& view_matrix);
 
         void renderCone(glm::mat4& view_matrix, float y_offset);
 

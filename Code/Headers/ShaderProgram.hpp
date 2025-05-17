@@ -10,6 +10,7 @@ namespace udit
 	class ShaderProgram
 	{
 	private:
+        GLuint program_id;
 
         /**
          * @brief Muestra los errores de compilación de un shader.
@@ -32,16 +33,15 @@ namespace udit
         void show_linkage_error(GLuint program_id);
 
     public:
+        ShaderProgram(const std::string& vertex_source, const std::string& fragment_source);
+        ~ShaderProgram();
 
-		/**
-         * @brief Compila los shaders para la escena.
-         *
-         * Compila los shaders de vértices y fragmentos para la escena 3D.
-         * Los shaders definen cómo se procesan los vértices y los fragmentos (pixeles)
-         * de los objetos 3D renderizados en la escena.
-         *
-         * @return El identificador del programa de shaders compilado.
-         */
-        GLuint compile_shaders(string vertex_shader, string fragment_shader);
+        void use() const;
+        GLuint id() const { return program_id; }
+
+        // Métodos para subir uniforms
+        void setMat4(const std::string& name, const glm::mat4& mat) const;
+        void setVec3(const std::string& name, const glm::vec3& vec) const;
+        void setFloat(const std::string& name, float value) const;
 	};
 }

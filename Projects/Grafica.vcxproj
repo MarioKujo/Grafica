@@ -28,12 +28,16 @@
     <ClCompile Include="..\Code\Sources\GeometryGenerator.cpp" />
     <ClCompile Include="..\Code\Sources\main.cpp" />
     <ClCompile Include="..\Code\Sources\Mesh.cpp" />
+    <ClCompile Include="..\Code\Sources\Object.cpp" />
     <ClCompile Include="..\Code\Sources\Scene.cpp" />
     <ClCompile Include="..\Code\Sources\ShaderProgram.cpp" />
     <ClCompile Include="..\Code\Sources\Skybox.cpp" />
     <ClCompile Include="..\Code\Sources\stb_image.cpp" />
     <ClCompile Include="..\Code\Sources\TextureLoader.cpp" />
     <ClCompile Include="..\Code\Sources\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Code\Headers\Object.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
