@@ -146,8 +146,8 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
-		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram), cowObj(&cow, &defaultProgram)
+		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 60, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
+		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram), cowObj(&cow, &defaultProgram), coneObj(&cone, &unlitProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
@@ -217,7 +217,7 @@ namespace udit
 
 		renderHeightmap(view_matrix);
 
-		//renderCone(view_matrix, y_offset);
+		renderCone(view_matrix, y_offset);
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
@@ -271,9 +271,9 @@ namespace udit
 
 	void Scene::renderUFO(glm::mat4& view_matrix, float y_offset)
 	{
-		ufoObj.setPosition(glm::vec3(30.f, 45.f + y_offset, -40.f));
+		ufoObj.setPosition(glm::vec3(30.f, 50.f + y_offset, -40.f));
 		ufoObj.setScale(glm::vec3(0.1f));
-		ufoObj.setRotation(glm::vec3(90.0f, 0.0f, angle));
+		ufoObj.setRotation(glm::vec3(90.0f, 0.0f, -angle));
 		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
 		ufoObj.render(view_matrix, projection_matrix);
 	}
@@ -281,7 +281,7 @@ namespace udit
 	void Scene::renderCow(glm::mat4& view_matrix, float y_offset)
 	{
 		cowObj.setPosition(glm::vec3(30.f, 10.f + y_offset, -40.f));
-		cowObj.setRotation(glm::vec3(0.0f, -angle, 0.0f));
+		cowObj.setRotation(glm::vec3(0.0f, angle, 0.0f));
 		cowObj.setScale(glm::vec3(0.01f));
 		glBindTexture(GL_TEXTURE_2D, cowTextureID);
 		cowObj.render(view_matrix, projection_matrix);
@@ -305,32 +305,28 @@ namespace udit
 		heightmapObj.render(view_matrix, projection_matrix);
 	}
 
-	//void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
-	//{
-	//	glUseProgram(unlit_program_id);
-	//	glm::mat4 cone_matrix(1.0f);
-	//	cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, y_offset - 10.f, -40.f));
-	//	cone_matrix = glm::rotate(cone_matrix, angle, glm::vec3(0.f, -1.f, 0.f));
-	//	glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
+	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
+	{
+		unlitProgram.use();
+		coneObj.setPosition(glm::vec3(30.f, y_offset - 10.f, -40.f));
+		coneObj.setRotation(glm::vec3(0.f, angle, 0.f));
 
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glUniform1i(glGetUniformLocation(unlit_program_id, "textureSampler"), 0);
-	//	glBindTexture(GL_TEXTURE_2D, coneTextureID);
+		glActiveTexture(GL_TEXTURE0);
 
-	//	glDepthMask(GL_FALSE);
-	//	glEnable(GL_BLEND);
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		unlitProgram.setInt("textureSampler", 0);
 
-	//	GLint transparency = glGetUniformLocation(unlit_program_id, "transparency");
-	//	glUniform1f(transparency, 0.5f);
+		glBindTexture(GL_TEXTURE_2D, coneTextureID);
 
-	//	glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "model_view_matrix"), 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
-	//	glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
+		glDepthMask(GL_FALSE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//	cone.render();
-	//	glDisable(GL_BLEND);
-	//	glDepthMask(GL_TRUE);
-	//}
+		unlitProgram.setFloat("transparency", 0.5f);
+
+		coneObj.render(view_matrix, projection_matrix);
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
+	}
 
 	// Ajusta el tamaño de la ventana y la proyección
 	void Scene::resize(unsigned width, unsigned height)
