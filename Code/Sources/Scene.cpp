@@ -143,7 +143,7 @@ namespace udit
 
 #pragma endregion
 	// Constructor de la escena, inicializa objetos 3D, cámara, shaders y texturas
-	Scene::Scene(unsigned width, unsigned height)
+	Scene::Scene(unsigned w, unsigned h)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(generator.generatePlane(100, 100, 100, 100)),
@@ -163,13 +163,15 @@ namespace udit
 		coneObj(&cone, &unlitProgram)
 #pragma region Constructor
 	{
+		width = w;
+		height = h;
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
 
 		loadTextures();
 		defaultProgram.use();
-		resize(width, height);
+		resize(w, h);
 	}
 #pragma endregion
 

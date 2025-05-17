@@ -110,8 +110,11 @@ namespace udit
         GLuint cowTextureID;
         GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
+        GLuint framebuffer;
+        GLuint texColorBuffer;
+        GLuint rbo;
 
-
+        unsigned width, height;
     public:
         /**
          * @brief Constructor de la clase Scene.
