@@ -147,7 +147,7 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
-		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram)
+		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram), cowObj(&cow, &defaultProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
@@ -196,7 +196,7 @@ namespace udit
 	// Actualiza la escena (cámara y rotación de objetos)
 	void Scene::update()
 	{
-		angle += 0.01f;
+		angle += 1.0f;
 	}
 
 	// Renderiza todos los objetos en la escena
@@ -209,11 +209,11 @@ namespace udit
 		lightSetup(view_matrix);
 		// Oscilación en Y (flotar hacia arriba y abajo)
 		float float_height = 2.0f; // amplitud de flotación
-		float y_offset = sin(angle) * float_height;
+		float y_offset = sin(angle/100) * float_height;
 
 		renderUFO(view_matrix, y_offset);
 
-		//renderCow(view_matrix, y_offset);
+		renderCow(view_matrix, y_offset);
 
 		renderHeightmap(view_matrix);
 
@@ -274,27 +274,17 @@ namespace udit
 		ufoObj.setPosition(glm::vec3(30.f, 45.f + y_offset, -40.f));
 		ufoObj.setScale(glm::vec3(0.1f));
 		ufoObj.setRotation(glm::vec3(90.0f, 0.0f, angle));
-		//glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
-		//glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
 		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
 		ufoObj.render(view_matrix, projection_matrix);
 	}
 
 	void Scene::renderCow(glm::mat4& view_matrix, float y_offset)
 	{
-
-		glm::mat4 cow_matrix(1.0f);
-		cow_matrix = glm::translate(cow_matrix, glm::vec3(30.f, 10.f + y_offset, -40.f));
-		cow_matrix = glm::scale(cow_matrix, glm::vec3(0.01f));
-		cow_matrix = glm::rotate(cow_matrix, angle, glm::vec3(0.0f, -1.0f, 0.0f));
-
-		glm::mat4 cow_view_matrix = view_matrix * cow_matrix;
-
-		//glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cow_view_matrix));
-		//glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		cowObj.setPosition(glm::vec3(30.f, 10.f + y_offset, -40.f));
+		cowObj.setRotation(glm::vec3(0.0f, -angle, 0.0f));
+		cowObj.setScale(glm::vec3(0.01f));
 		glBindTexture(GL_TEXTURE_2D, cowTextureID);
-
-		cow.render();
+		cowObj.render(view_matrix, projection_matrix);
 	}
 
 	void Scene::renderHeightmap(glm::mat4& view_matrix)

@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
     bool exit = false; ///< Flag para determinar si el programa debe salir.
     do
     {
-        
         scene.update(); ///< Actualiza la escena.
 
         scene.render(); ///< Renderiza la escena.
