@@ -10,7 +10,7 @@ namespace udit
     {
         shader->use();
         glm::mat4 model = computeModelMatrix();
-        shader->setMat4("model_view_matrix", model * view);
+        shader->setMat4("model_view_matrix", (view * model));
         shader->setMat4("projection_matrix", projection);
         mesh->render();
     }

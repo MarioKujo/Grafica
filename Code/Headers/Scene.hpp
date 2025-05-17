@@ -84,6 +84,7 @@ namespace udit
         Mesh cone;
         GeometryGenerator generator;
         Object heightmapObj;
+        Object ufoObj;
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.

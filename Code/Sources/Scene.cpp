@@ -147,7 +147,7 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
-		skybox(), heightmapObj(&plane, &heightmapProgram)
+		skybox(), heightmapObj(&plane, &heightmapProgram), ufoObj(&ufo, &defaultProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
@@ -208,10 +208,10 @@ namespace udit
 
 		lightSetup(view_matrix);
 		// Oscilación en Y (flotar hacia arriba y abajo)
-		//float float_height = 2.0f; // amplitud de flotación
-		//float y_offset = sin(angle) * float_height;
+		float float_height = 2.0f; // amplitud de flotación
+		float y_offset = sin(angle) * float_height;
 
-		//renderUFO(view_matrix, y_offset);
+		renderUFO(view_matrix, y_offset);
 
 		//renderCow(view_matrix, y_offset);
 
@@ -252,17 +252,17 @@ namespace udit
 			1.0f,
 			1.0f
 		};
+
 		heightmapProgram.use();
+
 		heightmapProgram.setVec3("lightDirections", lightDirsView[0]);
 		heightmapProgram.setVec3("lightColors", lightColors[0]);
 		heightmapProgram.setVec3("viewPos", viewPos);
 		heightmapProgram.setFloat("lightIntensities", lightIntensities[0]);
-		/*glUseProgram(heightmap_program_id);
-		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
-		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColors"), (GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
-		glUniform1fv(glGetUniformLocation(heightmap_program_id, "lightIntensities"), (GLsizei)lightIntensities.size(), &lightIntensities[0]);
-		glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);*/
+
+
 		defaultProgram.use();
+
 		defaultProgram.setVec3("lightDirections", lightDirsView[0]);
 		defaultProgram.setVec3("lightColors", lightColors[0]);
 		defaultProgram.setFloat("lightIntensities", lightIntensities[0]);
@@ -271,20 +271,13 @@ namespace udit
 
 	void Scene::renderUFO(glm::mat4& view_matrix, float y_offset)
 	{
-		glm::mat4 ufo_matrix(1.0f);
-
-		ufo_matrix = glm::translate(ufo_matrix, glm::vec3(30.f, 45.f + y_offset, -40.f));
-		ufo_matrix = glm::rotate(ufo_matrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-		ufo_matrix = glm::scale(ufo_matrix, glm::vec3(0.1f));
-		ufo_matrix = glm::rotate(ufo_matrix, angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		glm::mat4 ufo_view_matrix = view_matrix * ufo_matrix;
-
+		ufoObj.setPosition(glm::vec3(30.f, 45.f + y_offset, -40.f));
+		ufoObj.setScale(glm::vec3(0.1f));
+		ufoObj.setRotation(glm::vec3(90.0f, 0.0f, angle));
 		//glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
 		//glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
 		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
-
-		ufo.render();
+		ufoObj.render(view_matrix, projection_matrix);
 	}
 
 	void Scene::renderCow(glm::mat4& view_matrix, float y_offset)
