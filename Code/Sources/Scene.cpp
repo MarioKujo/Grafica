@@ -146,8 +146,8 @@ namespace udit
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
-		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),
-		skybox(), obj(&plane, &defaultProgram)
+		plane(generator.generatePlane(100, 100, 100, 100)), cone(generator.generateCone(20, 50, 10)), ufo("../Objects/UFO.obj"), cow("../Objects/cow.obj"), defaultProgram(vertex_shader_code, fragment_shader_code),unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code), skyboxProgram(skybox_vertex_shader, skybox_fragment_shader), heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
+		skybox(), heightmapObj(&plane, &heightmapProgram)
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
@@ -162,7 +162,7 @@ namespace udit
 	}
 #pragma endregion
 
-	void Scene::initializeUniformLocations() {
+	/*void Scene::initializeUniformLocations() {
 		model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
 		projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
 
@@ -175,13 +175,13 @@ namespace udit
 		lightPos_id = glGetUniformLocation(program_id, "lightPos");
 		lightColor_id = glGetUniformLocation(program_id, "lightColor");
 		viewPos_id = glGetUniformLocation(program_id, "viewPos");
-	}
+	}*/
 
-	void Scene::initializeLightSettings() {
-		lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
-		lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
-		viewPos = glm::vec3(0.0f, 0.0f, 8.0f);    // Posición de la cámara
-	}
+	//void Scene::initializeLightSettings() {
+	//	lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
+	//	lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
+	//	viewPos = glm::vec3(0.0f, 0.0f, 8.0f);    // Posición de la cámara
+	//}
 
 	void Scene::loadTextures() {
 		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
@@ -209,8 +209,6 @@ namespace udit
 		//renderSkybox(view_matrix);
 
 		lightSetup(view_matrix);
-
-		renderPlane(view_matrix);
 		// Oscilación en Y (flotar hacia arriba y abajo)
 		//float float_height = 2.0f; // amplitud de flotación
 		//float y_offset = sin(angle) * float_height;
@@ -219,18 +217,14 @@ namespace udit
 
 		//renderCow(view_matrix, y_offset);
 
-		//renderHeightmap(view_matrix);
+		renderHeightmap(view_matrix);
 
 		//renderCone(view_matrix, y_offset);
 	}
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
 	{
-		glUseProgram(skybox_program_id);
-
-		glUniformMatrix4fv(skybox_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(view_matrix));
-		glUniformMatrix4fv(skybox_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-
+		skyboxProgram.use();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
 		skybox.render();
 	}
@@ -258,11 +252,17 @@ namespace udit
 			1.0f,
 			1.0f
 		};
+		heightmapProgram.use();
+		heightmapProgram.setVec3("lightDirections", lightDirsView[0]);
+		heightmapProgram.setVec3("lightColors", lightColors[0]);
+		heightmapProgram.setVec3("viewPos", viewPos);
+		heightmapProgram.setFloat("lightIntensities", lightIntensities[0]);
 		/*glUseProgram(heightmap_program_id);
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightDirections"), (GLsizei)lightDirsView.size(), glm::value_ptr(lightDirsView[0]));
 		glUniform3fv(glGetUniformLocation(heightmap_program_id, "lightColors"), (GLsizei)lightColors.size(), glm::value_ptr(lightColors[0]));
 		glUniform1fv(glGetUniformLocation(heightmap_program_id, "lightIntensities"), (GLsizei)lightIntensities.size(), &lightIntensities[0]);
 		glUniform1f(glGetUniformLocation(heightmap_program_id, "transparency"), 1.0f);*/
+		defaultProgram.use();
 		defaultProgram.setVec3("lightDirections", lightDirsView[0]);
 		defaultProgram.setVec3("lightColors", lightColors[0]);
 		defaultProgram.setFloat("lightIntensities", lightIntensities[0]);
@@ -280,8 +280,8 @@ namespace udit
 
 		glm::mat4 ufo_view_matrix = view_matrix * ufo_matrix;
 
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
-		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		//glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(ufo_view_matrix));
+		//glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
 		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
 
 		ufo.render();
@@ -297,8 +297,8 @@ namespace udit
 
 		glm::mat4 cow_view_matrix = view_matrix * cow_matrix;
 
-		glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cow_view_matrix));
-		glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
+		//glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(cow_view_matrix));
+		//glUniform1f(glGetUniformLocation(program_id, "transparency"), 1.0f);
 		glBindTexture(GL_TEXTURE_2D, cowTextureID);
 
 		cow.render();
@@ -306,71 +306,56 @@ namespace udit
 
 	void Scene::renderHeightmap(glm::mat4& view_matrix)
 	{
-		glUseProgram(heightmap_program_id);
-
-		glm::mat4 heightmap_matrix(1);
-		heightmap_matrix = glm::translate(heightmap_matrix, glm::vec3(25.f, -16.f, -35.f));
-		glm::mat4 heightmap_view_matrix = view_matrix * heightmap_matrix;
-
-		glUniformMatrix4fv(heightmap_model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(heightmap_view_matrix));
-		glUniformMatrix4fv(heightmap_projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+		heightmapProgram.use();
+		heightmapObj.setPosition(glm::vec3(25.f, -16.f, -35.f));
+		heightmapObj.setScale(glm::vec3(1.f, 1.f, 1.f));
 
 		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(glGetUniformLocation(heightmap_program_id, "textureSampler"), 0); // sampler0
-		glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
-
-		glActiveTexture(GL_TEXTURE1);
-		glUniform1i(glGetUniformLocation(heightmap_program_id, "heightmap"), 1); // sampler1
+		heightmapProgram.setInt("textureSampler", 0);
 		glBindTexture(GL_TEXTURE_2D, heightmapID);
 
-		float height_scale = 25.0f;
-		glUniform1f(glGetUniformLocation(heightmap_program_id, "height_scale"), height_scale);
+		glActiveTexture(GL_TEXTURE1);
+		heightmapProgram.setInt("textureSampler", 1);
+		glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
+		heightmapProgram.setFloat("height_scale", 25.f);
 		// Renderiza el plano (terreno)
-		plane.render();
+		heightmapObj.render(view_matrix, projection_matrix);
 	}
 
-	void Scene::renderPlane(glm::mat4& view_matrix)
-	{
-		obj.setPosition(glm::vec3(25.f, -16.f, -35.f));
-		obj.setRotation(glm::vec3(0.f, 0.f, 0.f));
-		obj.setScale(glm::vec3(1.f, 1.f, 1.f));
-		obj.render(view_matrix, projection_matrix);
-	}
+	//void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
+	//{
+	//	glUseProgram(unlit_program_id);
+	//	glm::mat4 cone_matrix(1.0f);
+	//	cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, y_offset - 10.f, -40.f));
+	//	cone_matrix = glm::rotate(cone_matrix, angle, glm::vec3(0.f, -1.f, 0.f));
+	//	glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
 
-	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
-	{
-		glUseProgram(unlit_program_id);
-		glm::mat4 cone_matrix(1.0f);
-		cone_matrix = glm::translate(cone_matrix, glm::vec3(30.f, y_offset - 10.f, -40.f));
-		cone_matrix = glm::rotate(cone_matrix, angle, glm::vec3(0.f, -1.f, 0.f));
-		glm::mat4 cone_view_matrix = view_matrix * cone_matrix;
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glUniform1i(glGetUniformLocation(unlit_program_id, "textureSampler"), 0);
+	//	glBindTexture(GL_TEXTURE_2D, coneTextureID);
 
-		glActiveTexture(GL_TEXTURE0);
-		glUniform1i(glGetUniformLocation(unlit_program_id, "textureSampler"), 0);
-		glBindTexture(GL_TEXTURE_2D, coneTextureID);
+	//	glDepthMask(GL_FALSE);
+	//	glEnable(GL_BLEND);
+	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glDepthMask(GL_FALSE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//	GLint transparency = glGetUniformLocation(unlit_program_id, "transparency");
+	//	glUniform1f(transparency, 0.5f);
 
-		GLint transparency = glGetUniformLocation(unlit_program_id, "transparency");
-		glUniform1f(transparency, 0.5f);
+	//	glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "model_view_matrix"), 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
+	//	glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "model_view_matrix"), 1, GL_FALSE, glm::value_ptr(cone_view_matrix));
-		glUniformMatrix4fv(glGetUniformLocation(unlit_program_id, "projection_matrix"), 1, GL_FALSE, glm::value_ptr(projection_matrix));
-
-		cone.render();
-		glDisable(GL_BLEND);
-		glDepthMask(GL_TRUE);
-	}
+	//	cone.render();
+	//	glDisable(GL_BLEND);
+	//	glDepthMask(GL_TRUE);
+	//}
 
 	// Ajusta el tamaño de la ventana y la proyección
-	void Scene::resize(unsigned width, unsigned height)
-	{
-		projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
-		glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
-		glViewport(0, 0, width, height);
-	}
+	//void Scene::resize(unsigned width, unsigned height)
+	//{
+	//	projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
+	//	glUniformMatrix4fv(projection_matrix_id, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+	//	glViewport(0, 0, width, height);
+	//}
 
 	void Scene::set_camera(Camera new_camera)
 	{

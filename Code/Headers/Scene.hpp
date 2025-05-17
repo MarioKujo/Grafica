@@ -50,12 +50,9 @@ namespace udit
     private:
         // Programa de shaders
         ShaderProgram defaultProgram;
-
-
-        // Propiedades de la luz
-        glm::vec3 lightPos;  // Posición de la luz
-        glm::vec3 lightColor;  // Color blanco para la luz
-        glm::vec3 viewPos;  // Posición de la cámara
+        ShaderProgram unlitProgram;
+        ShaderProgram skyboxProgram;
+        ShaderProgram heightmapProgram;
 
 
         // Códigos de los shaders
@@ -73,28 +70,6 @@ namespace udit
 
         glm::mat4 projection_matrix;
 
-        // Identificadores de las matrices y programas de los shaders
-        GLint model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
-        GLint projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
-
-        GLint unlit_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders.
-        GLint unlit_projection_matrix_id; ///< ID de la matriz de proyección para los shaders.
-
-        GLint skybox_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders del skybox.
-        GLint skybox_projection_matrix_id; ///< ID de la matriz de proyección para los shaders del skybox.
-
-        GLint heightmap_model_view_matrix_id; ///< ID de la matriz de vista y modelo para los shaders del heightmap.
-        GLint heightmap_projection_matrix_id; ///< ID de la matriz de proyección para los shaders del heightmap.
-
-        GLint lightPos_id; ///< ID de la posición de la luz.
-        GLint lightColor_id; ///< ID del color de la luz.
-        GLint viewPos_id; ///< ID de la posición de la cámara.
-
-        GLuint program_id; ///< ID del programa principal de shaders.
-        GLuint unlit_program_id; ///< ID del programa principal de shaders.
-        GLuint skybox_program_id; ///< ID del programa de shaders para el skybox.
-        GLuint heightmap_program_id; ///< ID del programa de shaders para el heightmap.
-
         // Objetos 3D de la escena
         Skybox skybox; ///< Objeto para representar el skybox.
         AssimpMesh ufo; ///< Objeto UFO.
@@ -102,7 +77,7 @@ namespace udit
         Mesh plane;
         Mesh cone;
         GeometryGenerator generator;
-        Object obj;
+        Object heightmapObj;
 
         // Ángulo de rotación de la escena.
         float angle; ///< Ángulo de rotación para objetos en la escena.
@@ -165,8 +140,6 @@ namespace udit
         void renderCow(glm::mat4& view_matrix, float y_offset);
 
         void renderHeightmap(glm::mat4& view_matrix);
-
-        void renderPlane(glm::mat4& view_matrix);
 
         void renderCone(glm::mat4& view_matrix, float y_offset);
 

@@ -60,6 +60,12 @@ namespace udit {
         glUniform1f(loc, value);
     }
 
+    void ShaderProgram::setInt(const std::string& name, int value) const
+    {
+        GLint loc = glGetUniformLocation(program_id, name.c_str());
+        glUniform1i(loc, value);
+    }
+
     void ShaderProgram::show_compilation_error(GLuint shader_id) {
         GLint log_length = 0;
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
