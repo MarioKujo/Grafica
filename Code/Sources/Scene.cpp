@@ -160,27 +160,6 @@ namespace udit
 	}
 #pragma endregion
 
-	/*void Scene::initializeUniformLocations() {
-		model_view_matrix_id = glGetUniformLocation(program_id, "model_view_matrix");
-		projection_matrix_id = glGetUniformLocation(program_id, "projection_matrix");
-
-		skybox_model_view_matrix_id = glGetUniformLocation(skybox_program_id, "view");
-		skybox_projection_matrix_id = glGetUniformLocation(skybox_program_id, "projection");
-
-		heightmap_model_view_matrix_id = glGetUniformLocation(heightmap_program_id, "model_view_matrix");
-		heightmap_projection_matrix_id = glGetUniformLocation(heightmap_program_id, "projection_matrix");
-
-		lightPos_id = glGetUniformLocation(program_id, "lightPos");
-		lightColor_id = glGetUniformLocation(program_id, "lightColor");
-		viewPos_id = glGetUniformLocation(program_id, "viewPos");
-	}*/
-
-	//void Scene::initializeLightSettings() {
-	//	lightPos = glm::vec3(10.0f, 10.0f, 10.0f);  // Posición de la luz
-	//	lightColor = glm::vec3(1.0f, 1.0f, 1.0f);  // Color blanco para la luz
-	//	viewPos = glm::vec3(0.0f, 0.0f, 8.0f);    // Posición de la cámara
-	//}
-
 	void Scene::loadTextures() {
 		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
 		heightmapID = textureLoader.loadTexture("../Textures/heightmap.png");
@@ -255,17 +234,22 @@ namespace udit
 
 		heightmapProgram.use();
 
-		heightmapProgram.setVec3("lightDirections", lightDirsView[0]);
-		heightmapProgram.setVec3("lightColors", lightColors[0]);
-		heightmapProgram.setVec3("viewPos", viewPos);
-		heightmapProgram.setFloat("lightIntensities", lightIntensities[0]);
+		for (int i = 0; i < 2; ++i) {
+			string index = std::to_string(i);
+			heightmapProgram.setVec3("lightDirections[" + index + "]", lightDirsView[i]);
+			heightmapProgram.setVec3("lightColors[" + index + "]", lightColors[i]);
+			heightmapProgram.setFloat("lightIntensities[" + index + "]", lightIntensities[i]);
+		}
 
 
 		defaultProgram.use();
 
-		defaultProgram.setVec3("lightDirections", lightDirsView[0]);
-		defaultProgram.setVec3("lightColors", lightColors[0]);
-		defaultProgram.setFloat("lightIntensities", lightIntensities[0]);
+		for (int i = 0; i < 2; ++i) {
+			string index = std::to_string(i);
+			defaultProgram.setVec3("lightDirections[" + index + "]", lightDirsView[i]);
+			defaultProgram.setVec3("lightColors[" + index + "]", lightColors[i]);
+			defaultProgram.setFloat("lightIntensities[" + index + "]", lightIntensities[i]);
+		}
 		defaultProgram.setVec3("viewPos", viewPos);
 	}
 
