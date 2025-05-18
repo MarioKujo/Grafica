@@ -71,8 +71,10 @@ namespace udit
         static const string skybox_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
         static const string skybox_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
 
-        static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el skybox.
-        static const string heightmap_fragment_shader; ///< Código fuente del shader de fragmentos para el skybox.
+        static const string heightmap_vertex_shader; ///< Código fuente del shader de vértices para el heightmap.
+
+        static const string postprocess_vertex_shader; ///< Código fuente del shader de vértices para el postprocess.
+        static const string postprocess_fragment_shader; ///< Código fuente del shader de fragmentos para el postprocess.
 
         glm::mat4 projection_matrix;
 
@@ -110,9 +112,7 @@ namespace udit
         GLuint cowTextureID;
         GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
-        GLuint framebuffer;
-        GLuint texColorBuffer;
-        GLuint rbo;
+        GLuint fbo, colorBuffer, rbo;
 
         unsigned width, height;
     public:
@@ -126,6 +126,8 @@ namespace udit
          * @param height Alto de la ventana de la escena.
          */
         Scene(unsigned width, unsigned height);
+
+        void initFramebuffer();
 
         void loadTextures();
 
