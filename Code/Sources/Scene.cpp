@@ -155,6 +155,7 @@ namespace udit
 		unlitProgram(vertex_shader_unlit_code, fragment_shader_unlit_code),
 		skyboxProgram(skybox_vertex_shader, skybox_fragment_shader),
 		heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
+		postprocessProgram(postprocess_vertex_shader, postprocess_fragment_shader),
 
 		skybox(),
 		heightmapObj(&plane, &heightmapProgram),
