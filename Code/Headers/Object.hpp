@@ -10,7 +10,8 @@ namespace udit
         void setPosition(const glm::vec3& pos);
         void setRotation(const glm::vec3& rot);
         void setScale(const glm::vec3& scl);
-
+        ShaderProgram* getShader() const;
+        Mesh* getMesh() const;
     private:
         Mesh* mesh;
         ShaderProgram* shader;

@@ -19,6 +19,16 @@ namespace udit
     void Object::setRotation(const glm::vec3& rot) { rotation = rot; }
     void Object::setScale(const glm::vec3& scl) { scale = scl; }
 
+    ShaderProgram* Object::getShader() const
+    {
+        return shader;
+    }
+
+    Mesh* Object::getMesh() const
+    {
+        return mesh;
+    }
+
     glm::mat4 Object::computeModelMatrix() const
     {
         glm::mat4 model = glm::mat4(1.0f);
