@@ -53,6 +53,7 @@ namespace udit
         ShaderProgram unlitProgram;
         ShaderProgram skyboxProgram;
         ShaderProgram heightmapProgram;
+        ShaderProgram postprocessProgram;
 
 
         // Propiedades de la luz
