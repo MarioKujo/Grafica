@@ -115,6 +115,8 @@ namespace udit
 
         GLuint fbo, colorBuffer, rbo;
 
+        GLuint quadVAO, quadVBO;
+
         unsigned width, height;
     public:
         /**
