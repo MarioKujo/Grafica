@@ -5,7 +5,7 @@ namespace udit
 	{
         generateBuffers();
 	}
-    Mesh::Mesh(const MeshData receivedData) : data(receivedData)
+    Mesh::Mesh(MeshData receivedData) : data(receivedData)
     {
         generateBuffers();
     }

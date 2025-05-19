@@ -162,7 +162,7 @@ namespace udit
 		skyboxProgram(skybox_vertex_shader, skybox_fragment_shader),
 		heightmapProgram(heightmap_vertex_shader, fragment_shader_code),
 
-		skybox(),
+		skybox(generator.generateCube(), &skyboxProgram),
 		heightmapObj(&plane, &heightmapProgram),
 		ufoObj(&ufo, &defaultProgram),
 		cowObj(&cow, &defaultProgram),
@@ -175,7 +175,7 @@ namespace udit
 		glClearColor(.2f, .2f, .2f, 1.f);
 
 		loadTextures();
-
+		
 		setGraph();
 
 		defaultProgram.use();
@@ -221,7 +221,7 @@ namespace udit
 		skyboxTextureID = textureLoader.loadCubemap({
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
-		skybox.set_texture(skyboxTextureID);
+		skybox.setTexture(skyboxTextureID);
 
 		setTextures();
 	}
@@ -249,21 +249,15 @@ namespace udit
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glm::mat4 view_matrix = camera.get_view_matrix();
 
-		renderSkybox(view_matrix);
+		skybox.render(view_matrix, projection_matrix);
+
 		lightSetup(view_matrix);
+
 		float float_height = 2.0f; // amplitud de flotación
 		float y_offset = sin(angle / 100) * float_height;
 		glm::mat4 identity = glm::mat4(1.f);
 		ufoCowConeNode->setTransform({ 5.f, y_offset, 5.f }, { 0.f, angle, 0.f }, { 0.1f, 0.1f, 0.1f });
 		rootNode->render(identity, view_matrix, projection_matrix);
-	}
-	void Scene::renderSkybox(glm::mat4& view_matrix)
-	{
-		skyboxProgram.use();
-		skyboxProgram.setMat4("view", view_matrix);
-		skyboxProgram.setMat4("projection", projection_matrix);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.get_texture_id());
-		skybox.render();
 	}
 
 	void Scene::lightSetup(glm::mat4& view_matrix)

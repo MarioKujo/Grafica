@@ -1,5 +1,4 @@
 #include "Mesh.hpp"
-#include "ShaderProgram.hpp"
 namespace udit
 {
     class Object {

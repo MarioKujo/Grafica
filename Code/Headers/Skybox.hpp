@@ -18,7 +18,8 @@
 #include <glm.hpp>
 #include <iostream>
 #include <stb_image.h>
-#include "GeometryGenerator.hpp"
+#include "Mesh.hpp"
+#include "TextureLoader.hpp"
 
 namespace udit
 {
@@ -32,7 +33,8 @@ namespace udit
       * como fondo estático. También maneja la carga de texturas, la creación de buffers y la configuración
       * de las propiedades necesarias para su renderizado en OpenGL.
       */
-      class Skybox {
+      class Skybox
+      {
       public:
           /**
            * @brief Constructor de la clase Skybox.
@@ -42,7 +44,7 @@ namespace udit
            *
            * @param faces Rutas de las texturas para las caras del cubo.
            */
-          Skybox();
+          Skybox(MeshData mesh, ShaderProgram* shader);
 
           /**
            * @brief Destructor de la clase Skybox.
@@ -59,7 +61,7 @@ namespace udit
            *
            * @param texture_id El identificador de la textura para el skybox.
            */
-          void set_texture(GLuint texture_id);
+          void setTexture(GLuint textureID);
 
           /**
            * @brief Obtiene el identificador de la textura del skybox.
@@ -68,7 +70,7 @@ namespace udit
            *
            * @return GLuint El identificador de la textura del skybox.
            */
-          GLuint get_texture_id();
+          GLuint getTextureID();
 
           /**
            * @brief Renderiza el skybox en la escena.
@@ -76,19 +78,12 @@ namespace udit
            * Este método realiza el renderizado del cubo del skybox, usando la textura proporcionada para
            * las seis caras del cubo. Debe ser llamado en cada ciclo de renderizado.
            */
-          void render();
+          void render(const glm::mat4& view, const glm::mat4& projection);
 
       private:
-          GLuint vao_id;      ///< Identificador del VAO (Vertex Array Object) del skybox.
-          GLuint vbo_id;      ///< Identificador del VBO (Vertex Buffer Object) del skybox.
-          GLuint texture_id;  ///< Identificador de la textura del skybox.
+          Mesh mesh;
+          ShaderProgram* shader;
 
-          /**
-           * @brief Configura los buffers necesarios para renderizar el skybox.
-           *
-           * Este método crea los buffers de OpenGL (VAO, VBO) necesarios para almacenar la información
-           * de los vértices que representan el cubo del skybox. Debe ser llamado una vez al inicio.
-           */
-          void setup_buffers();
+          GLuint textureID;  ///< Identificador de la textura del skybox.
       };
 }

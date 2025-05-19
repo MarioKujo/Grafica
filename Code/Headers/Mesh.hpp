@@ -4,6 +4,7 @@
 #include <cmath>
 #include <numbers>
 #include "GeometryGenerator.hpp"
+#include "ShaderProgram.hpp"
 using namespace std;
 namespace udit
 {
@@ -11,7 +12,7 @@ namespace udit
 	{
 	public:
 		Mesh();
-		Mesh(const MeshData receivedData);
+		Mesh(MeshData receivedData);
 		void render();
 		void generateBuffers();
 		void deleteBuffers();
