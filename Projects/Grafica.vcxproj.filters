@@ -7,6 +7,9 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{24d1d6cf-b2e9-47f3-9b21-e61f67fe7424}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{f36071c6-8a36-4d1b-b0f7-e231b5e36df7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\Headers\Scene.hpp">
@@ -84,6 +87,27 @@
   <ItemGroup>
     <None Include="..\Code\Headers\Object.hpp">
       <Filter>Headers</Filter>
+    </None>
+    <None Include="..\Code\Shaders\default_vertex_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\default_fragment_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\unlit_vertex_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\unlit_fragment_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\skybox_vertex_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\skybox_fragment_shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Code\Shaders\heightmap_vertex_shader.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

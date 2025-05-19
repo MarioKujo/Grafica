@@ -39,6 +39,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Code\Headers\Object.hpp" />
+    <None Include="..\Code\Shaders\default_fragment_shader.glsl" />
+    <None Include="..\Code\Shaders\default_vertex_shader.glsl" />
+    <None Include="..\Code\Shaders\heightmap_vertex_shader.glsl" />
+    <None Include="..\Code\Shaders\skybox_fragment_shader.glsl" />
+    <None Include="..\Code\Shaders\skybox_vertex_shader.glsl" />
+    <None Include="..\Code\Shaders\unlit_fragment_shader.glsl" />
+    <None Include="..\Code\Shaders\unlit_vertex_shader.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

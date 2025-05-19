@@ -48,7 +48,7 @@ namespace udit
          * @param vertex_source Código fuente del shader de vértices.
          * @param fragment_source Código fuente del shader de fragmentos.
          */
-        ShaderProgram(const std::string& vertex_source, const std::string& fragment_source);
+        ShaderProgram(const std::string& vertex_path, const std::string& fragment_path);
 
         /**
          * @brief Destructor. Libera el programa de OpenGL.

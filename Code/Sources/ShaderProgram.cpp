@@ -1,9 +1,24 @@
 #include "../Headers/ShaderProgram.hpp"
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+
+static std::string readFile(const std::string& filepath) {
+    std::ifstream file(filepath);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open shader file: " + filepath);
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
 namespace udit {
 
-    ShaderProgram::ShaderProgram(const std::string& vertex_source, const std::string& fragment_source)
-    {
+    ShaderProgram::ShaderProgram(const std::string& vertex_path, const std::string& fragment_path) {
+        std::string vertex_source = readFile(vertex_path);
+        std::string fragment_source = readFile(fragment_path);
+
         GLint success = GL_FALSE;
 
         GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -55,6 +70,7 @@ namespace udit {
         glDeleteShader(vertex_shader);
         glDeleteShader(fragment_shader);
     }
+
 
     // Destructor libera el programa si existe
     ShaderProgram::~ShaderProgram() {
