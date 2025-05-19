@@ -12,24 +12,8 @@ namespace udit
 	private:
         GLuint program_id;
 
-        /**
-         * @brief Muestra los errores de compilación de un shader.
-         *
-         * Si ocurre un error durante la compilación de un shader, este método muestra
-         * los detalles del error para facilitar la depuración.
-         *
-         * @param shader_id El identificador del shader cuya compilación falló.
-         */
         void show_compilation_error(GLuint shader_id);
 
-        /**
-         * @brief Muestra los errores de enlace de un programa de shaders.
-         *
-         * Si ocurre un error al enlazar los shaders (vértices y fragmentos)
-         * en un solo programa, este método muestra los detalles del error.
-         *
-         * @param program_id El identificador del programa de shaders cuyo enlace falló.
-         */
         void show_linkage_error(GLuint program_id);
 
     public:
