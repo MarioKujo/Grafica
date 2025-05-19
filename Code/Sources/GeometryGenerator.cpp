@@ -93,4 +93,54 @@ namespace udit
 		return data;
 	}
 
+	MeshData GeometryGenerator::generateCube(float size) {
+		MeshData data;
+		float s = size / 2.0f;
+
+		// Coordenadas, normales y UV por cara
+		struct Face {
+			glm::vec3 normal;
+			glm::vec3 vertices[4];
+			glm::vec2 uvs[4];
+		};
+
+		Face faces[6] = {
+			// Cara +Z
+			{{ 0,  0,  1}, {{-s, -s,  s}, { s, -s,  s}, { s,  s,  s}, {-s,  s,  s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+			// Cara -Z
+			{{ 0,  0, -1}, {{ s, -s, -s}, {-s, -s, -s}, {-s,  s, -s}, { s,  s, -s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+			// Cara +X
+			{{ 1,  0,  0}, {{ s, -s,  s}, { s, -s, -s}, { s,  s, -s}, { s,  s,  s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+			// Cara -X
+			{{-1,  0,  0}, {{-s, -s, -s}, {-s, -s,  s}, {-s,  s,  s}, {-s,  s, -s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+			// Cara +Y
+			{{ 0,  1,  0}, {{-s,  s,  s}, { s,  s,  s}, { s,  s, -s}, {-s,  s, -s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+			// Cara -Y
+			{{ 0, -1,  0}, {{-s, -s, -s}, { s, -s, -s}, { s, -s,  s}, {-s, -s,  s}}, {{0, 0}, {1, 0}, {1, 1}, {0, 1}}},
+		};
+
+		for (const auto& face : faces) {
+			GLuint startIdx = static_cast<GLuint>(data.coordinates.size() / 3);
+
+			for (int i = 0; i < 4; ++i) {
+				const auto& v = face.vertices[i];
+				const auto& uv = face.uvs[i];
+				const auto& n = face.normal;
+
+				data.coordinates.insert(data.coordinates.end(), { v.x, v.y, v.z });
+				data.normals.insert(data.normals.end(), { n.x, n.y, n.z });
+				data.texCoords.insert(data.texCoords.end(), { uv.x, uv.y });
+			}
+
+			// Dos triángulos por cara
+			data.indices.insert(data.indices.end(), {
+				startIdx, startIdx + 1, startIdx + 2,
+				startIdx, startIdx + 2, startIdx + 3
+				});
+		}
+
+		return data;
+	}
+
+
 }
