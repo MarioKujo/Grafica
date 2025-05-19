@@ -77,6 +77,15 @@ namespace udit
          */
         void swap_buffers();
 
+		/**
+		* @brief Procesa eventos de entrada SDL como movimiento del ratón y salida del programa.
+        *
+        * Esta función recorre la cola de eventos SDL y maneja los eventos relevantes:
+        * - Si el ratón se mueve, actualiza la orientación de la cámara.
+        * - Si el usuario solicita cerrar la ventana (evento SDL_QUIT), activa la bandera de salida.
+        *
+        * @param exit Puntero a una bandera booleana que se establecerá en true si se recibe un evento de salida.
+        */
         void poll_input_events(bool* exit);
 
         /**
