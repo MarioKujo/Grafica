@@ -1,3 +1,8 @@
+/**
+ * @file Scene.hpp
+ * @brief Declaración de la clase Scene que representa una escena 3D completa.
+ */
+
 #pragma once
 
 #include "AssimpMesh.hpp"
@@ -11,122 +16,119 @@
 namespace udit
 {
     /**
-     * @brief Clase que representa una escena 3D completa con objetos, cámara, luz y shaders.
+     * @class Scene
+     * @brief Representa una escena 3D con cámara, objetos, skybox, texturas, iluminación y shaders.
      *
-     * Gestiona la carga, configuración, actualización y renderizado de todos los elementos 3D,
-     * así como la configuración de iluminación y cámara.
+     * Esta clase se encarga de gestionar la creación, configuración, actualización y renderizado de una
+     * escena 3D compuesta por distintos objetos jerárquicos. También configura el sistema de iluminación
+     * y controla la cámara.
      */
     class Scene
     {
     private:
-        ShaderProgram defaultProgram; ///< Programa de shaders con iluminación.
-        ShaderProgram unlitProgram;   ///< Programa de shaders sin iluminación.
-        ShaderProgram skyboxProgram;  ///< Programa de shaders para skybox.
-        ShaderProgram heightmapProgram; ///< Programa de shaders para heightmap.
+        ShaderProgram defaultProgram;      ///< Shader con iluminación estándar.
+        ShaderProgram unlitProgram;        ///< Shader sin iluminación (para objetos como el cono).
+        ShaderProgram skyboxProgram;       ///< Shader para renderizar el skybox.
+        ShaderProgram heightmapProgram;    ///< Shader especializado en renderizar heightmaps.
 
-        static const float UFO_HEIGHT;    ///< Altura del UFO.
-        static const float COW_HEIGHT;    ///< Altura de la vaca.
-        static const float CONE_HEIGHT;   ///< Altura del cono.
-        static const float SCALE_SMALL;   ///< Escala pequeña para ciertos objetos.
-        static const float SCALE_BIG;     ///< Escala grande para ciertos objetos.
+        static const float UFO_HEIGHT;     ///< Altura base del modelo OVNI.
+        static const float COW_HEIGHT;     ///< Altura base del modelo vaca.
+        static const float CONE_HEIGHT;    ///< Altura base del modelo cono.
+        static const float SCALE_SMALL;    ///< Escala reducida para modelos pequeños.
+        static const float SCALE_BIG;      ///< Escala ampliada para modelos grandes.
 
-        glm::vec3 lightPos;   ///< Posición de la luz principal.
-        glm::vec3 lightColor; ///< Color de la luz (blanco).
-        glm::vec3 viewPos;    ///< Posición de la cámara.
+        glm::vec3 lightPos;     ///< Posición de la luz principal (no usada directamente si se usan direcciones).
+        glm::vec3 lightColor;   ///< Color de la luz.
+        glm::vec3 viewPos;      ///< Posición de la cámara en el espacio de mundo.
 
-        glm::mat4 projection_matrix; ///< Matriz de proyección de la cámara.
+        glm::mat4 projection_matrix; ///< Matriz de proyección en perspectiva.
 
-        Skybox skybox;           ///< Objeto skybox para fondo de la escena.
+        Skybox skybox;             ///< Objeto que representa el skybox de fondo.
 
-        AssimpMesh ufo;          ///< Malla 3D del OVNI.
-        AssimpMesh cow;          ///< Malla 3D de la vaca.
+        AssimpMesh ufo;            ///< Modelo 3D del OVNI.
+        AssimpMesh cow;            ///< Modelo 3D de la vaca.
 
-        Mesh plane;              ///< Malla plana para el heightmap.
-        Mesh cone;               ///< Malla del cono.
+        Mesh plane;                ///< Malla del plano (heightmap).
+        Mesh cone;                 ///< Malla del cono.
 
-        GeometryGenerator generator; ///< Generador de geometría para primitivas.
+        GeometryGenerator generator; ///< Generador de primitivas geométricas.
 
-        Object heightmapObj; ///< Objeto heightmap.
-        Object ufoObj;       ///< Objeto OVNI.
-        Object cowObj;       ///< Objeto vaca.
-        Object coneObj;      ///< Objeto cono.
+        Object heightmapObj;       ///< Objeto gráfico del heightmap.
+        Object ufoObj;             ///< Objeto gráfico del OVNI.
+        Object cowObj;             ///< Objeto gráfico de la vaca.
+        Object coneObj;            ///< Objeto gráfico del cono.
 
-        float angle; ///< Ángulo de rotación para animar la escena.
+        float angle;               ///< Ángulo de rotación usado para animación.
 
-        Camera camera; ///< Cámara que define la vista y perspectiva.
+        Camera camera;             ///< Cámara activa de la escena.
 
-        TextureLoader textureLoader; ///< Gestor para cargar texturas.
+        TextureLoader textureLoader; ///< Gestor de carga de texturas.
 
-        GLuint coneTextureID;        ///< ID de la textura para el cono.
-        GLuint skyboxTextureID;      ///< ID de la textura para el skybox.
-        GLuint heightmapID;          ///< ID de la textura heightmap (altura).
-        GLuint heightmapTextureID;   ///< ID de la textura decorativa para heightmap.
-        GLuint cowTextureID;         ///< ID de la textura para la vaca.
-        GLuint ufoTextureID;         ///< ID de la textura para el OVNI.
+        GLuint coneTextureID;        ///< ID de la textura del cono.
+        GLuint skyboxTextureID;      ///< ID del cubemap del skybox.
+        GLuint heightmapID;          ///< ID de la textura de altura.
+        GLuint heightmapTextureID;   ///< ID de la textura difusa para el heightmap.
+        GLuint cowTextureID;         ///< ID de la textura de la vaca.
+        GLuint ufoTextureID;         ///< ID de la textura del OVNI.
 
-        std::shared_ptr<SceneNode> rootNode;         ///< Nodo raíz de la escena.
-        std::shared_ptr<SceneNode> ufoCowConeNode;   ///< Nodo contenedor para UFO, vaca y cono.
-        std::shared_ptr<SceneNode> ufoNode;          ///< Nodo para el UFO.
-        std::shared_ptr<SceneNode> cowNode;          ///< Nodo para la vaca.
-        std::shared_ptr<SceneNode> coneNode;         ///< Nodo para el cono.
-        std::shared_ptr<SceneNode> heightmapNode;    ///< Nodo para el heightmap.
+        std::shared_ptr<SceneNode> rootNode;       ///< Nodo raíz de la jerarquía de escena.
+        std::shared_ptr<SceneNode> ufoCowConeNode; ///< Nodo contenedor de OVNI, vaca y cono.
+        std::shared_ptr<SceneNode> ufoNode;        ///< Nodo del OVNI.
+        std::shared_ptr<SceneNode> cowNode;        ///< Nodo de la vaca.
+        std::shared_ptr<SceneNode> coneNode;       ///< Nodo del cono.
+        std::shared_ptr<SceneNode> heightmapNode;  ///< Nodo del terreno con heightmap.
 
     public:
-
         /**
-         * @brief Constructor de la escena.
+         * @brief Constructor de Scene.
+         * @param width Ancho de la ventana de visualización.
+         * @param height Alto de la ventana de visualización.
          *
-         * Inicializa los objetos 3D, cámaras, shaders y texturas.
-         *
-         * @param width Ancho de la ventana.
-         * @param height Alto de la ventana.
+         * Inicializa la cámara, objetos, shaders, texturas y configura la jerarquía de escena.
          */
         Scene(unsigned width, unsigned height);
 
         /**
-         * @brief Construye el grafo de la escena configurando los nodos y sus transformaciones.
+         * @brief Construye la jerarquía de nodos de la escena y configura sus transformaciones.
          */
         void setGraph();
 
         /**
-         * @brief Carga todas las texturas necesarias para la escena.
+         * @brief Carga las texturas requeridas desde disco y las transfiere a la GPU.
          */
         void loadTextures();
 
         /**
-         * @brief Asigna las texturas cargadas a los objetos correspondientes.
+         * @brief Asigna los identificadores de textura a los objetos 3D correspondientes.
          */
         void setTextures();
 
         /**
-         * @brief Actualiza la escena, animando el ángulo de rotación u otros parámetros.
+         * @brief Actualiza parámetros dinámicos de la escena (como rotaciones).
          */
         void update();
 
         /**
-         * @brief Renderiza la escena completa, incluyendo skybox y todos los nodos.
+         * @brief Renderiza toda la escena, incluyendo skybox, terreno y objetos.
          */
         void render();
 
         /**
-         * @brief Configura la iluminación en los shaders según la posición y color de las luces.
-         *
-         * @param view_matrix Matriz de vista actual para transformar las luces a espacio de cámara.
+         * @brief Configura las fuentes de luz y sus propiedades en los shaders activos.
+         * @param view_matrix Matriz de vista desde la cámara.
          */
         void lightSetup(glm::mat4& view_matrix);
 
         /**
-         * @brief Ajusta el tamaño de la ventana y actualiza la matriz de proyección.
-         *
+         * @brief Recalcula la matriz de proyección y ajusta el viewport tras un redimensionado.
          * @param width Nuevo ancho de la ventana.
          * @param height Nuevo alto de la ventana.
          */
         void resize(unsigned width, unsigned height);
 
         /**
-         * @brief Establece una nueva cámara para la escena.
-         *
-         * @param new_camera Nueva instancia de la cámara.
+         * @brief Establece una nueva instancia de cámara para la escena.
+         * @param new_camera Objeto Camera que será usado para generar la vista.
          */
         void set_camera(Camera new_camera);
     };
