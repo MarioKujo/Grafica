@@ -25,7 +25,7 @@
 #include "Camera.hpp"
 #include "TextureLoader.hpp"
 #include "Skybox.hpp"
-#include "Object.hpp"
+#include "SceneNode.hpp"
 #include <cassert>
 #include <SDL.h>
 
@@ -110,7 +110,11 @@ namespace udit
         GLuint cowTextureID;
         GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
-
+        std::shared_ptr<SceneNode> rootNode;
+        std::shared_ptr<SceneNode> ufoNode;
+        std::shared_ptr<SceneNode> cowNode;
+        std::shared_ptr<SceneNode> coneNode;
+        std::shared_ptr<SceneNode> heightmapNode;
 
     public:
         /**
@@ -123,6 +127,8 @@ namespace udit
          * @param height Alto de la ventana de la escena.
          */
         Scene(unsigned width, unsigned height);
+
+        void setGraph();
 
         void loadTextures();
 

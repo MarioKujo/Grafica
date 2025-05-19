@@ -167,11 +167,31 @@ namespace udit
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
 
+		setGraph();
+
 		loadTextures();
 		defaultProgram.use();
 		resize(width, height);
 	}
 #pragma endregion
+
+	void Scene::setGraph()
+	{
+		rootNode = std::make_shared<SceneNode>();
+
+		ufoNode = std::make_shared<SceneNode>(&ufoObj);
+		ufoNode->setTransform({ 30.f, 50.f, -40.f }, { 90.f, 0.f, 0.f }, { 0.1f, 0.1f, 0.1f });
+
+		cowNode = std::make_shared<SceneNode>(&cowObj);
+		cowNode->setTransform({ 0.f, 0.f, 350.f }, { -90.f, 0.f, 0.f }, { 0.1f, 0.1f, 0.1f });
+
+		// Hacer a la vaca hija del OVNI
+		ufoNode->addChild(cowNode);
+
+		// Añadir el OVNI a la raíz
+		rootNode->addChild(ufoNode);
+
+	}
 
 	void Scene::loadTextures() {
 		coneTextureID = textureLoader.loadTexture("../Textures/cone_texture.jpg");
@@ -192,25 +212,19 @@ namespace udit
 	}
 
 	// Renderiza todos los objetos en la escena
-	void Scene::render()
-	{
+	void Scene::render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glm::mat4 view_matrix = camera.get_view_matrix();
+
 		renderSkybox(view_matrix);
-
 		lightSetup(view_matrix);
-		// Oscilación en Y (flotar hacia arriba y abajo)
 		float float_height = 2.0f; // amplitud de flotación
-		float y_offset = sin(angle/100) * float_height;
-
-		renderUFO(view_matrix, y_offset);
-
-		renderCow(view_matrix, y_offset);
-
-		renderHeightmap(view_matrix);
-
-		renderCone(view_matrix, y_offset);
+		float y_offset = sin(angle / 100) * float_height;
+		glm::mat4 identity = glm::mat4(1.f);
+		ufoNode->setTransform({ 30.f, 50.f + y_offset, -40.f }, { 90.f, 0.f, angle }, { 0.1f, 0.1f, 0.1f });
+		rootNode->render(identity, view_matrix, projection_matrix);
 	}
+
 
 	void Scene::renderSkybox(glm::mat4& view_matrix)
 	{
