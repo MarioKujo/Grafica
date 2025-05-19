@@ -14,7 +14,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <iostream>
-#include "../Headers/stb_image.hpp"
+#include <stb_image.h>
 
 using namespace std;
 namespace udit

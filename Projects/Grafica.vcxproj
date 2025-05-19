@@ -19,7 +19,6 @@
     <ClInclude Include="..\Code\Headers\SceneNode.hpp" />
     <ClInclude Include="..\Code\Headers\ShaderProgram.hpp" />
     <ClInclude Include="..\Code\Headers\Skybox.hpp" />
-    <ClInclude Include="..\Code\Headers\stb_image.hpp" />
     <ClInclude Include="..\Code\Headers\TextureLoader.hpp" />
     <ClInclude Include="..\Code\Headers\Window.hpp" />
   </ItemGroup>
@@ -81,7 +80,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/assimp/include;../Libraries/stb_image/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>

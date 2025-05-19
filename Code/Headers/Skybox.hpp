@@ -17,7 +17,9 @@
 #include <gtc/type_ptr.hpp>
 #include <glm.hpp>
 #include <iostream>
-#include "../Headers/stb_image.hpp"
+#include <stb_image.h>
+#include "GeometryGenerator.hpp"
+
 namespace udit
 {
 
