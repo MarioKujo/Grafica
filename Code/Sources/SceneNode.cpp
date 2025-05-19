@@ -32,10 +32,7 @@ namespace udit {
         if (object) {
             // Solo para el objeto actual, pasamos el model transform ya acumulado
             glm::mat4 modelView = view * global;
-            object->getShader()->use();
-            object->getShader()->setMat4("model_view_matrix", modelView);
-            object->getShader()->setMat4("projection_matrix", projection);
-            object->getMesh()->render();
+            object->render(modelView, projection);
         }
 
         for (auto& child : children) {

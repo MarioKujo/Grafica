@@ -54,6 +54,11 @@ namespace udit
         ShaderProgram skyboxProgram;
         ShaderProgram heightmapProgram;
 
+        static const float UFO_HEIGHT;
+        static const float COW_HEIGHT;
+        static const float CONE_HEIGHT;
+        static const float SCALE_SMALL;
+        static const float SCALE_BIG;
 
         // Propiedades de la luz
         glm::vec3 lightPos;  // Posición de la luz
@@ -111,6 +116,7 @@ namespace udit
         GLuint ufoTextureID; ///< ID de la textura decorativa para el UFO.
 
         std::shared_ptr<SceneNode> rootNode;
+        std::shared_ptr<SceneNode> ufoCowConeNode;
         std::shared_ptr<SceneNode> ufoNode;
         std::shared_ptr<SceneNode> cowNode;
         std::shared_ptr<SceneNode> coneNode;
@@ -132,6 +138,8 @@ namespace udit
 
         void loadTextures();
 
+        void setTextures();
+
         /**
          * @brief Actualiza la escena.
          *
@@ -149,14 +157,6 @@ namespace udit
          * aplicando las transformaciones y shaders correspondientes.
          */
         void render();
-
-        void renderUFO(glm::mat4& view_matrix, float y_offset);
-
-        void renderCow(glm::mat4& view_matrix, float y_offset);
-
-        void renderHeightmap(glm::mat4& view_matrix);
-
-        void renderCone(glm::mat4& view_matrix, float y_offset);
 
         void lightSetup(glm::mat4& view_matrix);
 

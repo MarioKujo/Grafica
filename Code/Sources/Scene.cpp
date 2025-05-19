@@ -5,6 +5,13 @@
 #include "../Headers/Scene.hpp"
 namespace udit
 {
+#pragma region constants
+	const float Scene::UFO_HEIGHT = 250.f;
+	const float Scene::COW_HEIGHT = -100.f;
+	const float Scene::CONE_HEIGHT = -400.f;
+	const float Scene::SCALE_SMALL = 0.1f;
+	const float Scene::SCALE_BIG = 10.f;
+#pragma endregion
 #pragma region Shaders
 #pragma region vertex shader (lit)
 	const string Scene::vertex_shader_code =
@@ -35,7 +42,6 @@ namespace udit
 		"in vec3 fragPos;\n"
 		"out vec4 fragment_color;\n"
 		"uniform sampler2D textureSampler;\n"
-		"uniform float transparency;\n"
 
 		"#define NUM_LIGHTS 3\n"
 		"uniform vec3 lightDirections[NUM_LIGHTS];\n"
@@ -54,7 +60,7 @@ namespace udit
 		"        totalDiffuse += diff * lightColors[i] * lightIntensities[i];\n"
 		"    }\n"
 		"    vec3 result = texColor.rgb * totalDiffuse;\n"
-		"    fragment_color = vec4(result, texColor.a * transparency);\n"
+		"    fragment_color = vec4(result, texColor.a);\n"
 		"}\n";
 
 #pragma endregion
@@ -147,7 +153,7 @@ namespace udit
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f),
 		plane(generator.generatePlane(100, 100, 100, 100)),
-		cone(generator.generateCone(20, 60, 10)),
+		cone(generator.generateCone(30, 60, 10)),
 		ufo("../Objects/UFO.obj"),
 		cow("../Objects/cow.obj"),
 		
@@ -161,15 +167,17 @@ namespace udit
 		ufoObj(&ufo, &defaultProgram),
 		cowObj(&cow, &defaultProgram),
 		coneObj(&cone, &unlitProgram)
+
 #pragma region Constructor
 	{
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
 
+		loadTextures();
+
 		setGraph();
 
-		loadTextures();
 		defaultProgram.use();
 		resize(width, height);
 	}
@@ -177,20 +185,31 @@ namespace udit
 
 	void Scene::setGraph()
 	{
-		rootNode = std::make_shared<SceneNode>();
+		rootNode = make_shared<SceneNode>();
+		rootNode->setTransform({ 25.f, 0.f, -35.f }, { 0.f, 0.f, 0.f }, { 1.f, 1.f , 1.f });
 
-		ufoNode = std::make_shared<SceneNode>(&ufoObj);
-		ufoNode->setTransform({ 30.f, 50.f, -40.f }, { 90.f, 0.f, 0.f }, { 0.1f, 0.1f, 0.1f });
+		ufoCowConeNode = make_shared<SceneNode>();
+		ufoCowConeNode->setTransform({1.2f, 0.f, 1.14f}, {0.f, 0.f, 0.f}, {SCALE_SMALL, SCALE_SMALL, SCALE_SMALL });
 
-		cowNode = std::make_shared<SceneNode>(&cowObj);
-		cowNode->setTransform({ 0.f, 0.f, 350.f }, { -90.f, 0.f, 0.f }, { 0.1f, 0.1f, 0.1f });
+		ufoNode = make_shared<SceneNode>(&ufoObj);
+		ufoNode->setTransform({ 0.f, UFO_HEIGHT, 0.f }, { 90.f, 0.f, 0.f}, { 1.f, 1.f, 1.f });
 
-		// Hacer a la vaca hija del OVNI
-		ufoNode->addChild(cowNode);
+		cowNode = make_shared<SceneNode>(&cowObj);
+		cowNode->setTransform({ 0.f, COW_HEIGHT, 0.f }, { 0.f, 0.f, 0.f}, { SCALE_SMALL, SCALE_SMALL, SCALE_SMALL });
+
+		coneNode = make_shared<SceneNode>(&coneObj);
+		coneNode->setTransform({0.f, CONE_HEIGHT, 0.f}, {0.f, 0.f, 0.f}, { SCALE_BIG, SCALE_BIG, SCALE_BIG });
+
+		ufoCowConeNode->addChild(ufoNode);
+		ufoCowConeNode->addChild(cowNode);
+		ufoCowConeNode->addChild(coneNode);
+
+		heightmapNode = make_shared<SceneNode>(&heightmapObj);
+		heightmapNode->setTransform({0.f, -40.f, 0.f}, {0.f, 0.f, 0.f}, {1.f, 1.f, 1.f});
 
 		// Añadir el OVNI a la raíz
-		rootNode->addChild(ufoNode);
-
+		rootNode->addChild(heightmapNode);
+		rootNode->addChild(ufoCowConeNode);
 	}
 
 	void Scene::loadTextures() {
@@ -203,6 +222,20 @@ namespace udit
 			"../Textures/skybox-right-1.jpg", "../Textures/skybox-left.jpg", "../Textures/skybox-up.jpg",
 			"../Textures/skybox-down.jpg", "../Textures/skybox-center.jpg", "../Textures/skybox-right-2.jpg" });
 		skybox.set_texture(skyboxTextureID);
+
+		setTextures();
+	}
+
+	void Scene::setTextures()
+	{
+		ufoObj.setTextureID(ufoTextureID);
+
+		cowObj.setTextureID(cowTextureID);
+
+		coneObj.setTextureID(coneTextureID);
+
+		heightmapObj.setHeightmapTextureID(heightmapID);
+		heightmapObj.setTextureID(heightmapTextureID);
 	}
 
 	// Actualiza la escena (cámara y rotación de objetos)
@@ -221,11 +254,9 @@ namespace udit
 		float float_height = 2.0f; // amplitud de flotación
 		float y_offset = sin(angle / 100) * float_height;
 		glm::mat4 identity = glm::mat4(1.f);
-		ufoNode->setTransform({ 30.f, 50.f + y_offset, -40.f }, { 90.f, 0.f, angle }, { 0.1f, 0.1f, 0.1f });
+		ufoCowConeNode->setTransform({ 5.f, y_offset, 5.f }, { 0.f, angle, 0.f }, { 0.1f, 0.1f, 0.1f });
 		rootNode->render(identity, view_matrix, projection_matrix);
 	}
-
-
 	void Scene::renderSkybox(glm::mat4& view_matrix)
 	{
 		skyboxProgram.use();
@@ -278,65 +309,6 @@ namespace udit
 			defaultProgram.setFloat("lightIntensities[" + index + "]", lightIntensities[i]);
 		}
 		defaultProgram.setVec3("viewPos", viewPos);
-	}
-
-	void Scene::renderUFO(glm::mat4& view_matrix, float y_offset)
-	{
-		ufoObj.setPosition(glm::vec3(30.f, 50.f + y_offset, -40.f));
-		ufoObj.setScale(glm::vec3(0.1f));
-		ufoObj.setRotation(glm::vec3(90.0f, 0.0f, -angle));
-		glBindTexture(GL_TEXTURE_2D, ufoTextureID);
-		ufoObj.render(view_matrix, projection_matrix);
-	}
-
-	void Scene::renderCow(glm::mat4& view_matrix, float y_offset)
-	{
-		cowObj.setPosition(glm::vec3(30.f, 10.f + y_offset, -40.f));
-		cowObj.setRotation(glm::vec3(0.0f, angle, 0.0f));
-		cowObj.setScale(glm::vec3(0.01f));
-		glBindTexture(GL_TEXTURE_2D, cowTextureID);
-		cowObj.render(view_matrix, projection_matrix);
-	}
-
-	void Scene::renderHeightmap(glm::mat4& view_matrix)
-	{
-		heightmapProgram.use();
-		heightmapObj.setPosition(glm::vec3(25.f, -16.f, -35.f));
-		heightmapObj.setScale(glm::vec3(1.f, 1.f, 1.f));
-
-		glActiveTexture(GL_TEXTURE0);
-		heightmapProgram.setInt("textureSampler", 0);
-		glBindTexture(GL_TEXTURE_2D, heightmapID);
-
-		glActiveTexture(GL_TEXTURE1);
-		heightmapProgram.setInt("textureSampler", 1);
-		glBindTexture(GL_TEXTURE_2D, heightmapTextureID);
-		heightmapProgram.setFloat("height_scale", 25.f);
-		// Renderiza el plano (terreno)
-		heightmapObj.render(view_matrix, projection_matrix);
-	}
-
-	void Scene::renderCone(glm::mat4& view_matrix, float y_offset)
-	{
-		unlitProgram.use();
-		coneObj.setPosition(glm::vec3(30.f, y_offset - 10.f, -40.f));
-		coneObj.setRotation(glm::vec3(0.f, angle, 0.f));
-
-		glActiveTexture(GL_TEXTURE0);
-
-		unlitProgram.setInt("textureSampler", 0);
-
-		glBindTexture(GL_TEXTURE_2D, coneTextureID);
-
-		glDepthMask(GL_FALSE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		unlitProgram.setFloat("transparency", 0.5f);
-
-		coneObj.render(view_matrix, projection_matrix);
-		glDisable(GL_BLEND);
-		glDepthMask(GL_TRUE);
 	}
 
 	// Ajusta el tamaño de la ventana y la proyección
