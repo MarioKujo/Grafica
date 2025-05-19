@@ -26,10 +26,13 @@ namespace udit
     class Scene
     {
     private:
-        ShaderProgram defaultProgram;      ///< Shader con iluminación estándar.
-        ShaderProgram unlitProgram;        ///< Shader sin iluminación (para objetos como el cono).
-        ShaderProgram skyboxProgram;       ///< Shader para renderizar el skybox.
-        ShaderProgram heightmapProgram;    ///< Shader especializado en renderizar heightmaps.
+
+        GeometryGenerator generator; ///< Generador de primitivas geométricas.
+
+        unique_ptr<ShaderProgram> defaultProgram;      ///< Shader con iluminación estándar.
+        unique_ptr<ShaderProgram> unlitProgram;        ///< Shader sin iluminación (para objetos como el cono).
+        unique_ptr<ShaderProgram> skyboxProgram;       ///< Shader para renderizar el skybox.
+        unique_ptr<ShaderProgram> heightmapProgram;    ///< Shader especializado en renderizar heightmaps.
 
         static const float UFO_HEIGHT;     ///< Altura base del modelo OVNI.
         static const float COW_HEIGHT;     ///< Altura base del modelo vaca.
@@ -43,20 +46,18 @@ namespace udit
 
         glm::mat4 projection_matrix; ///< Matriz de proyección en perspectiva.
 
-        Skybox skybox;             ///< Objeto que representa el skybox de fondo.
 
-        AssimpMesh ufo;            ///< Modelo 3D del OVNI.
-        AssimpMesh cow;            ///< Modelo 3D de la vaca.
+        unique_ptr<AssimpMesh> ufo;            ///< Modelo 3D del OVNI.
+        unique_ptr<AssimpMesh> cow;            ///< Modelo 3D de la vaca.
 
-        Mesh plane;                ///< Malla del plano (heightmap).
-        Mesh cone;                 ///< Malla del cono.
+        unique_ptr<Mesh> plane;                ///< Malla del plano (heightmap).
+        unique_ptr<Mesh> cone;                 ///< Malla del cono.
 
-        GeometryGenerator generator; ///< Generador de primitivas geométricas.
-
-        Object heightmapObj;       ///< Objeto gráfico del heightmap.
-        Object ufoObj;             ///< Objeto gráfico del OVNI.
-        Object cowObj;             ///< Objeto gráfico de la vaca.
-        Object coneObj;            ///< Objeto gráfico del cono.
+        unique_ptr<Object> heightmapObj;       ///< Objeto gráfico del heightmap.
+        unique_ptr<Object> ufoObj;             ///< Objeto gráfico del OVNI.
+        unique_ptr<Object> cowObj;             ///< Objeto gráfico de la vaca.
+        unique_ptr<Object> coneObj;            ///< Objeto gráfico del cono.
+        unique_ptr<Skybox> skybox;             ///< Objeto que representa el skybox de fondo.
 
         float angle;               ///< Ángulo de rotación usado para animación.
 
@@ -78,6 +79,10 @@ namespace udit
         std::shared_ptr<SceneNode> coneNode;       ///< Nodo del cono.
         std::shared_ptr<SceneNode> heightmapNode;  ///< Nodo del terreno con heightmap.
 
+
+        void initResources();
+        void initObjects();
+        void initSceneGraph();
     public:
         /**
          * @brief Constructor de Scene.
@@ -88,10 +93,7 @@ namespace udit
          */
         Scene(unsigned width, unsigned height);
 
-        /**
-         * @brief Construye la jerarquía de nodos de la escena y configura sus transformaciones.
-         */
-        void setGraph();
+        ~Scene();
 
         /**
          * @brief Carga las texturas requeridas desde disco y las transfiere a la GPU.
@@ -112,6 +114,8 @@ namespace udit
          * @brief Renderiza toda la escena, incluyendo skybox, terreno y objetos.
          */
         void render();
+
+        void applyLightSettings(ShaderProgram& shader, const vector<glm::vec3>& dirsView, const vector<glm::vec3>& colors, const vector<float>& intensities);
 
         /**
          * @brief Configura las fuentes de luz y sus propiedades en los shaders activos.
