@@ -1,11 +1,13 @@
 // Este código es de dominio público
 // andrmatgonros@gmail.com
+
 #pragma once
 
 #include <cassert>
 #include <glad/glad.h>
 #include <SDL_opengl.h>
 #include "../Headers/Window.hpp"
+#include <stdexcept>
 
 namespace udit
 {
@@ -20,29 +22,29 @@ namespace udit
     )
         : camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f)
     {
-        // Inicializar el subsistema de video de SDL
+        // Inicializa el subsistema de video de SDL
         if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         {
-            throw "Failed to initialize the video subsystem.";
+            throw std::runtime_error("Failed to initialize the video subsystem.");
         }
 
-        // Configurar los atributos del contexto OpenGL
+        // Configura versión y atributos básicos del contexto OpenGL
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, context_details.version_major);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, context_details.version_minor);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // Doble buffer para evitar parpadeos
+        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Asegura aceleración por hardware
 
-        // Si se requiere el perfil core de OpenGL, configurarlo
+        // Aplica perfil core si está especificado
         if (context_details.core_profile)
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        // Configurar tamaño del buffer de profundidad y stencil
+        // Configura buffers de profundidad y stencil si están habilitados
         if (context_details.depth_buffer_size)
             SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, context_details.depth_buffer_size);
         if (context_details.stencil_buffer_size)
             SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, context_details.stencil_buffer_size);
 
-        // Crear la ventana SDL con soporte OpenGL
+        // Crea la ventana SDL con soporte OpenGL
         window_handle = SDL_CreateWindow
         (
             title,
@@ -53,74 +55,70 @@ namespace udit
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
         );
 
-        // Asegurarse de que la ventana se creó correctamente
-        assert(window_handle != nullptr);
+        // Verifica que la ventana fue creada correctamente
+        if (!window_handle)
+            throw std::runtime_error("Failed to create SDL Window.");
 
-        // Crear el contexto OpenGL asociado con la ventana
+
+        // Crea el contexto OpenGL
         opengl_context = SDL_GL_CreateContext(window_handle);
 
-        // Asegurarse de que el contexto se creó correctamente
+        // Verifica que el contexto fue creado correctamente
         assert(opengl_context != nullptr);
 
-        // Cargar GLAD para gestionar las funciones de OpenGL
+        // Carga las funciones de OpenGL mediante GLAD
         GLenum glad_is_initialized = gladLoadGL();
+        assert(glad_is_initialized); // Verifica la carga correcta
 
-        // Asegurarse de que GLAD se inicializó correctamente
-        assert(glad_is_initialized);
-
-        // Configurar V-Sync según la configuración proporcionada
+        // Habilita o deshabilita V-Sync
         SDL_GL_SetSwapInterval(context_details.enable_vsync ? 1 : 0);
     }
 
     Window::~Window()
     {
-        // Eliminar el contexto OpenGL si existe
+        // Elimina el contexto de OpenGL
         if (opengl_context)
         {
             SDL_GL_DeleteContext(opengl_context);
         }
 
-        // Destruir la ventana SDL si existe
+        // Destruye la ventana SDL
         if (window_handle)
         {
             SDL_DestroyWindow(window_handle);
         }
 
-        // Limpiar el subsistema de video de SDL
+        // Finaliza el subsistema de video de SDL
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
     void Window::swap_buffers()
     {
-        // Intercambiar los buffers del contexto OpenGL para mostrar el contenido renderizado
+        // Intercambia los buffers del contexto actual para mostrar el nuevo frame
         SDL_GL_SwapWindow(window_handle);
     }
-    void Window::move_camera(bool* exit)
+
+    void Window::poll_input_events(bool* exit)
     {
         SDL_Event event;
         while (SDL_PollEvent(&event) > 0)
         {
-            switch (event.type)
-            {
-                case SDL_MOUSEMOTION:
-                {
-                    camera.process_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
-                    break;
-                }
-                case SDL_QUIT:
-                {
-                    *exit = true;
-                    break;
-                }
-            }
+            if (event.type == SDL_MOUSEMOTION)
+                camera.process_mouse_motion((float)event.motion.xrel, (float)event.motion.yrel);
+            else if (event.type == SDL_QUIT)
+                *exit = true;
         }
-
-        // Obtener el estado del teclado
-        const Uint8* state = SDL_GetKeyboardState(NULL);
-        camera.process_keyboard(state);
     }
+
+    void Window::move_camera(bool* exit)
+    {
+        poll_input_events(exit);
+        camera.process_keyboard(SDL_GetKeyboardState(NULL));
+    }
+
     Camera Window::get_camera()
     {
+        // Devuelve una copia de la cámara actual
         return camera;
     }
 }
