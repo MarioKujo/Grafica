@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <string>
 #include <vector>
@@ -16,7 +16,7 @@ namespace udit
      * @class Skybox
      * @brief Clase que representa un skybox para el entorno 3D.
      *
-     * Maneja la carga, asignaciÛn y renderizado de la textura del skybox.
+     * Maneja la carga, asignaci√≥n y renderizado de la textura del skybox.
      */
     class Skybox
     {
@@ -25,7 +25,7 @@ namespace udit
         /**
          * @brief Constructor que inicializa el skybox con los datos de la malla y el shader.
          * @param mesh Datos de la malla que representa el skybox.
-         * @param shader Puntero al shader que se usar· para renderizar el skybox.
+         * @param shader Puntero al shader que se usar√° para renderizar el skybox.
          */
         Skybox(MeshData mesh, ShaderProgram* shader);
 
@@ -47,9 +47,9 @@ namespace udit
         GLuint getTextureID();
 
         /**
-         * @brief Renderiza el skybox usando las matrices de vista y proyecciÛn proporcionadas.
+         * @brief Renderiza el skybox usando las matrices de vista y proyecci√≥n proporcionadas.
          * @param view Matriz de vista.
-         * @param projection Matriz de proyecciÛn.
+         * @param projection Matriz de proyecci√≥n.
          */
         void render(const glm::mat4& view, const glm::mat4& projection);
 

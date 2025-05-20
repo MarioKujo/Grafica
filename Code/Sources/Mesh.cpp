@@ -1,10 +1,10 @@
-#include "../Headers/Mesh.hpp"
+ï»¿#include "../Headers/Mesh.hpp"
 
 namespace udit
 {
     Mesh::Mesh() : isInitialized(false)
     {
-        // Crear buffers vacíos para la malla
+        // Crear buffers vacÃ­os para la malla
         generateBuffers();
     }
 
@@ -29,7 +29,7 @@ namespace udit
 
     void Mesh::generateBuffers()
     {
-        // Generar VAO y VBOs (posición, texcoords, normales, índices)
+        // Generar VAO y VBOs (posiciÃ³n, texcoords, normales, Ã­ndices)
         glGenVertexArrays(1, &vao_id);
         glGenBuffers(VBO_COUNT, vbo_ids);
 
@@ -50,7 +50,7 @@ namespace udit
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-        // Configurar buffer para los índices (EBO)
+        // Configurar buffer para los Ã­ndices (EBO)
         uploadBuffer(vbo_ids[INDICES_EBO], GL_ELEMENT_ARRAY_BUFFER, data.indices.data(), data.indices.size() * sizeof(GLuint));
 
         glBindVertexArray(0);
@@ -59,7 +59,7 @@ namespace udit
 
     void Mesh::uploadBuffer(GLuint bufferId, GLenum target, const void* dataPtr, size_t dataSize)
     {
-        // Función auxiliar para cargar datos en buffers OpenGL
+        // FunciÃ³n auxiliar para cargar datos en buffers OpenGL
         glBindBuffer(target, bufferId);
         glBufferData(target, dataSize, dataPtr, GL_STATIC_DRAW);
     }

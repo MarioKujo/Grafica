@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Mesh.hpp"
 
 namespace udit
@@ -6,7 +6,7 @@ namespace udit
     /**
      * @brief Representa un objeto 3D con una malla, shader y transformaciones.
      *
-     * Permite configurar posición, rotación, escala, texturas y renderizar el objeto.
+     * Permite configurar posiciÃ³n, rotaciÃ³n, escala, texturas y renderizar el objeto.
      */
     class Object {
     public:
@@ -18,17 +18,17 @@ namespace udit
         Object(Mesh* mesh, ShaderProgram* shader);
 
         /**
-         * @brief Renderiza el objeto usando las matrices de vista y proyección dadas.
+         * @brief Renderiza el objeto usando las matrices de vista y proyecciÃ³n dadas.
          *
-         * Configura texturas, activa blending si es necesario, y envía las matrices al shader.
+         * Configura texturas, activa blending si es necesario, y envÃ­a las matrices al shader.
          * @param view Matriz de vista (camera).
-         * @param projection Matriz de proyección.
+         * @param projection Matriz de proyecciÃ³n.
          */
         void render(const glm::mat4& view, const glm::mat4& projection);
 
         /**
-         * @brief Configura las texturas y el blending para la renderización,
-         *        seleccionando el método adecuado según la presencia de
+         * @brief Configura las texturas y el blending para la renderizaciÃ³n,
+         *        seleccionando el mÃ©todo adecuado segÃºn la presencia de
          *        heightmap o transparencia.
          */
         void setupTexturesAndBlending();
@@ -51,21 +51,21 @@ namespace udit
         void bindTextureOnly();
 
         /**
-         * @brief Limpia el estado de blending y máscara de profundidad después
+         * @brief Limpia el estado de blending y mÃ¡scara de profundidad despuÃ©s
          *        de renderizar objetos con transparencia.
          */
         void cleanupBlending();
 
 
         /**
-         * @brief Establece la posición del objeto en el espacio 3D.
-         * @param pos Vector 3D con la nueva posición.
+         * @brief Establece la posiciÃ³n del objeto en el espacio 3D.
+         * @param pos Vector 3D con la nueva posiciÃ³n.
          */
         void setPosition(const glm::vec3& pos);
 
         /**
-         * @brief Establece la rotación del objeto en grados sobre cada eje.
-         * @param rot Vector 3D con la rotación en grados (x, y, z).
+         * @brief Establece la rotaciÃ³n del objeto en grados sobre cada eje.
+         * @param rot Vector 3D con la rotaciÃ³n en grados (x, y, z).
          */
         void setRotation(const glm::vec3& rot);
 
@@ -106,15 +106,15 @@ namespace udit
         GLuint textureID;            ///< ID de la textura principal
         GLuint heightmapID;          ///< ID de la textura del mapa de altura
 
-        GLint heightmapLoc;          ///< Localización del uniform "heightmap" en el shader
-        GLint transparencyLoc;       ///< Localización del uniform "transparency" en el shader
+        GLint heightmapLoc;          ///< LocalizaciÃ³n del uniform "heightmap" en el shader
+        GLint transparencyLoc;       ///< LocalizaciÃ³n del uniform "transparency" en el shader
 
-        glm::vec3 position;          ///< Posición del objeto en el espacio 3D
-        glm::vec3 rotation;          ///< Rotación del objeto (en grados) sobre cada eje
+        glm::vec3 position;          ///< PosiciÃ³n del objeto en el espacio 3D
+        glm::vec3 rotation;          ///< RotaciÃ³n del objeto (en grados) sobre cada eje
         glm::vec3 scale;             ///< Escala del objeto en cada eje
 
         /**
-         * @brief Calcula la matriz modelo combinando traslación, rotación y escala.
+         * @brief Calcula la matriz modelo combinando traslaciÃ³n, rotaciÃ³n y escala.
          * @return Matriz modelo 4x4.
          */
         glm::mat4 computeModelMatrix() const;

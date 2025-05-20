@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include <glad/glad.h>
 #include <vector>
 #include <cmath>
@@ -12,22 +12,22 @@ namespace udit
     /**
      * @brief Clase que representa una malla 3D y gestiona sus buffers OpenGL.
      *
-     * Esta clase encapsula los datos de la malla (vÈrtices, normales, texturas, Ìndices)
-     * y proporciona funciones para crear y liberar buffers GPU, asÌ como para renderizar.
+     * Esta clase encapsula los datos de la malla (v√©rtices, normales, texturas, √≠ndices)
+     * y proporciona funciones para crear y liberar buffers GPU, as√≠ como para renderizar.
      */
     class Mesh
     {
     public:
         /**
          * @brief Constructor por defecto.
-         * Inicializa la malla vacÌa y genera los buffers OpenGL.
+         * Inicializa la malla vac√≠a y genera los buffers OpenGL.
          */
         Mesh();
 
         /**
          * @brief Constructor con datos de malla.
          *
-         * @param receivedData Datos de la malla (vÈrtices, normales, texturas, Ìndices).
+         * @param receivedData Datos de la malla (v√©rtices, normales, texturas, √≠ndices).
          * Crea la malla y genera los buffers en GPU con esos datos.
          */
         Mesh(MeshData receivedData);
@@ -35,7 +35,7 @@ namespace udit
         /**
          * @brief Renderiza la malla usando los datos almacenados y buffers GPU.
          *
-         * Si la malla no est· inicializada, no hace nada.
+         * Si la malla no est√° inicializada, no hace nada.
          * Usa `glDrawElements` con modo GL_TRIANGLES.
          */
         void render();
@@ -43,7 +43,7 @@ namespace udit
         /**
          * @brief Genera los buffers OpenGL (VBOs y VAO) para la malla actual.
          *
-         * Carga los datos (vÈrtices, normales, texturas e Ìndices) a la GPU.
+         * Carga los datos (v√©rtices, normales, texturas e √≠ndices) a la GPU.
          * Marca la malla como inicializada para renderizado posterior.
          */
         void generateBuffers();
@@ -54,7 +54,7 @@ namespace udit
         * @param bufferId Identificador del buffer a configurar.
         * @param target Tipo de buffer (por ejemplo, GL_ARRAY_BUFFER o GL_ELEMENT_ARRAY_BUFFER).
         * @param dataPtr Puntero a los datos a subir al buffer.
-        * @param dataSize TamaÒo en bytes de los datos.
+        * @param dataSize Tama√±o en bytes de los datos.
         */
         void uploadBuffer(GLuint bufferId, GLenum target, const void* dataPtr, size_t dataSize);
 
@@ -67,10 +67,10 @@ namespace udit
 
     protected:
 
-        /// Õndices para los diferentes buffers usados
+        /// √çndices para los diferentes buffers usados
         enum { COORDINATES_VBO, TEXCOORDS_VBO, NORMALS_VBO, INDICES_EBO, VBO_COUNT };
 
-        /// Indica si los buffers est·n inicializados y listos para renderizar
+        /// Indica si los buffers est√°n inicializados y listos para renderizar
         bool isInitialized;
 
         /// Identificador del Vertex Array Object
@@ -79,7 +79,7 @@ namespace udit
         /// Identificadores de Vertex Buffer Objects y Element Buffer Object
         GLuint vbo_ids[VBO_COUNT];
 
-        /// Datos de la malla: coordenadas, normales, texturas e Ìndices
+        /// Datos de la malla: coordenadas, normales, texturas e √≠ndices
         MeshData data;
     };
 }

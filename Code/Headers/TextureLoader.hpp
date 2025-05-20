@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <string>
 #include <vector>
@@ -13,8 +13,8 @@ namespace udit
     /**
      * @brief Clase para cargar texturas 2D y cubemaps en OpenGL.
      * 
-     * Utiliza stb_image para leer im·genes desde disco y cargarlas como texturas
-     * compatibles con OpenGL. Soporta tanto texturas 2D est·ndar como cubemaps.
+     * Utiliza stb_image para leer im√°genes desde disco y cargarlas como texturas
+     * compatibles con OpenGL. Soporta tanto texturas 2D est√°ndar como cubemaps.
      */
     class TextureLoader
     {
@@ -44,9 +44,9 @@ namespace udit
         /**
          * @brief Carga un cubemap desde 6 rutas de archivo (una por cada cara).
          * 
-         * Las caras deben estar ordenadas seg˙n GL_TEXTURE_CUBE_MAP_POSITIVE_X + i.
+         * Las caras deben estar ordenadas seg√∫n GL_TEXTURE_CUBE_MAP_POSITIVE_X + i.
          * 
-         * @param faces Vector con las rutas a las im·genes de cada cara.
+         * @param faces Vector con las rutas a las im√°genes de cada cara.
          * @return GLuint Identificador del cubemap generado en OpenGL. Devuelve 0 si hay error.
          */
         GLuint loadCubemap(const vector<string>& faces);

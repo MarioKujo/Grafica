@@ -1,4 +1,4 @@
-#include "../Headers/Skybox.hpp"
+ï»¿#include "../Headers/Skybox.hpp"
 
 namespace udit
 {
@@ -24,12 +24,12 @@ namespace udit
         return textureID;
     }
 
-    // Renderiza el skybox usando las matrices de vista y proyección
+    // Renderiza el skybox usando las matrices de vista y proyecciÃ³n
     void Skybox::render(const glm::mat4& view, const glm::mat4& projection)
     {
         shader->use();
 
-        // Quitar la traslación de la matriz de vista para que el skybox siga la cámara
+        // Quitar la traslaciÃ³n de la matriz de vista para que el skybox siga la cÃ¡mara
         glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(view));
         shader->setMat4("view", viewNoTranslation);
         shader->setMat4("projection", projection);

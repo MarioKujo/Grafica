@@ -1,19 +1,19 @@
-#include "../Headers/SceneNode.hpp"
+ï»¿#include "../Headers/SceneNode.hpp"
 
 namespace udit
 {
 
-    // Constructor: Inicializa el nodo con un objeto y valores por defecto para posición, rotación y escala
+    // Constructor: Inicializa el nodo con un objeto y valores por defecto para posiciÃ³n, rotaciÃ³n y escala
     SceneNode::SceneNode(Object* obj)
         : object(obj), position(0.0f), rotation(0.0f), scale(1.0f) {}
 
-    // Añade un nodo hijo a la lista de hijos
+    // AÃ±ade un nodo hijo a la lista de hijos
     void SceneNode::addChild(std::shared_ptr<SceneNode> child)
     {
         children.push_back(std::move(child));
     }
 
-    // Establece la transformación local (posición, rotación, escala)
+    // Establece la transformaciÃ³n local (posiciÃ³n, rotaciÃ³n, escala)
     void SceneNode::setTransform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scl)
     {
         position = pos;
@@ -21,11 +21,11 @@ namespace udit
         scale = scl;
     }
 
-    // Calcula la matriz de transformación local combinando traslación, rotación y escala
+    // Calcula la matriz de transformaciÃ³n local combinando traslaciÃ³n, rotaciÃ³n y escala
     glm::mat4 SceneNode::computeLocalTransform() const
     {
         glm::mat4 transform = glm::mat4(1.0f);            // Matriz identidad
-        transform = glm::translate(transform, position);  // Traslación
+        transform = glm::translate(transform, position);  // TraslaciÃ³n
 
         // Aplicar rotaciones en X, Y y Z en ese orden
         transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1, 0, 0));
@@ -49,7 +49,7 @@ namespace udit
             object->render(modelView, projection);
         }
 
-        // Renderizar todos los nodos hijos con la transformación global actualizada
+        // Renderizar todos los nodos hijos con la transformaciÃ³n global actualizada
         for (const auto& child : children)
         {
             child->render(globalTransform, view, projection);

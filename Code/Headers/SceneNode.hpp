@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "Object.hpp"
 #include <vector>
 #include <memory>
@@ -9,7 +9,7 @@ namespace udit
 
     /**
      * @class SceneNode
-     * @brief Nodo de escena para jerarquÌa de objetos 3D.
+     * @brief Nodo de escena para jerarqu√≠a de objetos 3D.
      *
      * Representa un nodo en un grafo de escena, que puede contener un objeto
      * y varios nodos hijos, con transformaciones locales acumulables.
@@ -24,40 +24,40 @@ namespace udit
         SceneNode(Object* object = nullptr);
 
         /**
-         * @brief AÒade un nodo hijo a este nodo.
-         * @param child Nodo hijo a aÒadir.
+         * @brief A√±ade un nodo hijo a este nodo.
+         * @param child Nodo hijo a a√±adir.
          */
         void addChild(std::shared_ptr<SceneNode> child);
 
         /**
-         * @brief Define la transformaciÛn local del nodo.
-         * @param position Vector de posiciÛn local.
-         * @param rotation Vector de rotaciÛn local en grados (euler angles).
+         * @brief Define la transformaci√≥n local del nodo.
+         * @param position Vector de posici√≥n local.
+         * @param rotation Vector de rotaci√≥n local en grados (euler angles).
          * @param scale Vector de escala local.
          */
         void setTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
 
         /**
          * @brief Renderiza el nodo y sus hijos.
-         * @param parentTransform Matriz de transformaciÛn acumulada del nodo padre.
-         * @param view Matriz de vista de la c·mara.
-         * @param projection Matriz de proyecciÛn.
+         * @param parentTransform Matriz de transformaci√≥n acumulada del nodo padre.
+         * @param view Matriz de vista de la c√°mara.
+         * @param projection Matriz de proyecci√≥n.
          *
-         * Se calcula la transformaciÛn global y se pasa a los objetos para renderizar.
+         * Se calcula la transformaci√≥n global y se pasa a los objetos para renderizar.
          */
         void render(const glm::mat4& parentTransform, const glm::mat4& view, const glm::mat4& projection);
 
     private:
         Object* object; ///< Objeto representado en este nodo (puede ser nullptr).
-        glm::vec3 position; ///< PosiciÛn local.
-        glm::vec3 rotation; ///< RotaciÛn local (grados).
+        glm::vec3 position; ///< Posici√≥n local.
+        glm::vec3 rotation; ///< Rotaci√≥n local (grados).
         glm::vec3 scale;    ///< Escala local.
 
         std::vector<std::shared_ptr<SceneNode>> children; ///< Nodos hijos.
 
         /**
-         * @brief Calcula la matriz de transformaciÛn local (modelo).
-         * @return Matriz 4x4 que representa la transformaciÛn local.
+         * @brief Calcula la matriz de transformaci√≥n local (modelo).
+         * @return Matriz 4x4 que representa la transformaci√≥n local.
          */
         glm::mat4 computeLocalTransform() const;
     };

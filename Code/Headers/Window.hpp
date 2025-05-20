@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <SDL.h>
 #include <string>
@@ -9,46 +9,46 @@ namespace udit
 {
     /**
      * @class Window
-     * @brief Clase que encapsula una ventana con soporte para contexto OpenGL y control de c·mara.
+     * @brief Clase que encapsula una ventana con soporte para contexto OpenGL y control de c√°mara.
      *
      * Esta clase se encarga de crear y manejar una ventana SDL, configurar el contexto de OpenGL,
-     * controlar el ciclo de eventos b·sicos (ratÛn y teclado) y actualizar la c·mara asociada.
+     * controlar el ciclo de eventos b√°sicos (rat√≥n y teclado) y actualizar la c√°mara asociada.
      */
     class Window
     {
     public:
         /**
-         * @brief EnumeraciÛn para definir la posiciÛn inicial de la ventana.
+         * @brief Enumeraci√≥n para definir la posici√≥n inicial de la ventana.
          */
         enum Position
         {
-            UNDEFINED = SDL_WINDOWPOS_UNDEFINED, /**< La posiciÛn de la ventana no est· definida. */
-            CENTERED = SDL_WINDOWPOS_CENTERED,   /**< La ventana se centrar· en la pantalla. */
+            UNDEFINED = SDL_WINDOWPOS_UNDEFINED, /**< La posici√≥n de la ventana no est√° definida. */
+            CENTERED = SDL_WINDOWPOS_CENTERED,   /**< La ventana se centrar√° en la pantalla. */
         };
 
         /**
          * @struct OpenGL_Context_Settings
-         * @brief Estructura para configurar los par·metros del contexto de OpenGL.
+         * @brief Estructura para configurar los par√°metros del contexto de OpenGL.
          */
         struct OpenGL_Context_Settings
         {
-            unsigned version_major = 3;          /**< VersiÛn mayor del contexto OpenGL. */
-            unsigned version_minor = 3;          /**< VersiÛn menor del contexto OpenGL. */
+            unsigned version_major = 3;          /**< Versi√≥n mayor del contexto OpenGL. */
+            unsigned version_minor = 3;          /**< Versi√≥n menor del contexto OpenGL. */
             bool     core_profile = true;        /**< Indica si se debe usar el perfil core. */
-            unsigned depth_buffer_size = 24;     /**< TamaÒo del buffer de profundidad. */
-            unsigned stencil_buffer_size = 0;    /**< TamaÒo del buffer de stencil. */
+            unsigned depth_buffer_size = 24;     /**< Tama√±o del buffer de profundidad. */
+            unsigned stencil_buffer_size = 0;    /**< Tama√±o del buffer de stencil. */
             bool     enable_vsync = true;        /**< Si se debe activar V-Sync. */
         };
 
     private:
         SDL_Window* window_handle;     /**< Manejador de la ventana SDL. */
         SDL_GLContext opengl_context;  /**< Contexto OpenGL asociado con la ventana. */
-        Camera camera;                 /**< C·mara utilizada para navegar la escena 3D. */
+        Camera camera;                 /**< C√°mara utilizada para navegar la escena 3D. */
 
     public:
 
         /**
-         * @brief Constructor alternativo usando `const char*` como tÌtulo.
+         * @brief Constructor alternativo usando `const char*` como t√≠tulo.
          */
         Window(
             const char* title,
@@ -73,30 +73,30 @@ namespace udit
         /**
          * @brief Intercambia los buffers del contexto OpenGL.
          *
-         * Este mÈtodo debe llamarse al final de cada frame para mostrar el contenido renderizado.
+         * Este m√©todo debe llamarse al final de cada frame para mostrar el contenido renderizado.
          */
         void swap_buffers();
 
 		/**
-		* @brief Procesa eventos de entrada SDL como movimiento del ratÛn y salida del programa.
+		* @brief Procesa eventos de entrada SDL como movimiento del rat√≥n y salida del programa.
         *
-        * Esta funciÛn recorre la cola de eventos SDL y maneja los eventos relevantes:
-        * - Si el ratÛn se mueve, actualiza la orientaciÛn de la c·mara.
+        * Esta funci√≥n recorre la cola de eventos SDL y maneja los eventos relevantes:
+        * - Si el rat√≥n se mueve, actualiza la orientaci√≥n de la c√°mara.
         * - Si el usuario solicita cerrar la ventana (evento SDL_QUIT), activa la bandera de salida.
         *
-        * @param exit Puntero a una bandera booleana que se establecer· en true si se recibe un evento de salida.
+        * @param exit Puntero a una bandera booleana que se establecer√° en true si se recibe un evento de salida.
         */
         void poll_input_events(bool* exit);
 
         /**
-         * @brief Procesa eventos de entrada para mover la c·mara o salir.
-         * @param exit Puntero a un booleano que ser· puesto en true si se solicita salir (evento SDL_QUIT).
+         * @brief Procesa eventos de entrada para mover la c√°mara o salir.
+         * @param exit Puntero a un booleano que ser√° puesto en true si se solicita salir (evento SDL_QUIT).
          */
         void move_camera(bool* exit);
 
         /**
-         * @brief Obtiene una copia de la c·mara actual.
-         * @return Objeto Camera con la configuraciÛn actual.
+         * @brief Obtiene una copia de la c√°mara actual.
+         * @return Objeto Camera con la configuraci√≥n actual.
          */
         Camera get_camera();
     };

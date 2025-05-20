@@ -1,4 +1,4 @@
-// Este cÛdigo es de dominio p˙blico
+Ôªø// Este c√≥digo es de dominio p√∫blico
 // Autor: andrmatgonros@gmail.com
 
 #pragma once
@@ -17,7 +17,7 @@ namespace udit
 	constexpr float Scene::SCALE_BIG = 10.f;
 #pragma endregion
 
-	// Constructor: inicializa la escena (c·mara, mallas, shaders, texturas y nodos)
+	// Constructor: inicializa la escena (c√°mara, mallas, shaders, texturas y nodos)
 	Scene::Scene(unsigned width, unsigned height)
 		: angle(0),
 		camera(glm::vec3(0.f, 3.f, 8.f), glm::vec3(0.f, 1.f, 0.f), -90.f, 0.f)
@@ -25,13 +25,13 @@ namespace udit
 		// Inicializar recursos (mallas, modelos y shaders)
 		initResources();
 
-		// Construir objetos gr·ficos con referencias a recursos cargados
+		// Construir objetos gr√°ficos con referencias a recursos cargados
 		initObjects();
 
-		// Configurar jerarquÌa de nodos y transformaciones
+		// Configurar jerarqu√≠a de nodos y transformaciones
 		initSceneGraph();
 
-		// ConfiguraciÛn OpenGL, texturas y dem·s
+		// Configuraci√≥n OpenGL, texturas y dem√°s
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(.2f, .2f, .2f, 1.f);
@@ -126,7 +126,7 @@ namespace udit
 		heightmapObj->setTextureID(heightmapTextureID);
 	}
 
-	// Actualiza la escena animando el ·ngulo (para efectos como rotaciÛn o flotaciÛn)
+	// Actualiza la escena animando el √°ngulo (para efectos como rotaci√≥n o flotaci√≥n)
 	void Scene::update()
 	{
 		angle = fmod(angle + 1.0f, 360.f);
@@ -137,17 +137,17 @@ namespace udit
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Limpieza de buffers
 
-		glm::mat4 view_matrix = camera.get_view_matrix();   // Matriz de vista desde la c·mara
+		glm::mat4 view_matrix = camera.get_view_matrix();   // Matriz de vista desde la c√°mara
 
 		skybox->render(view_matrix, projection_matrix);      // Render del skybox
-		lightSetup(view_matrix);                            // ConfiguraciÛn de luces
+		lightSetup(view_matrix);                            // Configuraci√≥n de luces
 
-		// AnimaciÛn senoidal de flotaciÛn y rotaciÛn del grupo ufo-vaca-cono
+		// Animaci√≥n senoidal de flotaci√≥n y rotaci√≥n del grupo ufo-vaca-cono
 		float float_height = 2.0f;
 		float y_offset = sin(angle / 100) * float_height;
 		ufoCowConeNode->setTransform({ 5.f, y_offset, 5.f }, { 0.f, angle, 0.f }, { 0.1f, 0.1f, 0.1f });
 
-		glm::mat4 identity = glm::mat4(1.f); // Matriz identidad para la raÌz
+		glm::mat4 identity = glm::mat4(1.f); // Matriz identidad para la ra√≠z
 		rootNode->render(identity, view_matrix, projection_matrix); // Render del grafo
 	}
 
@@ -162,7 +162,7 @@ namespace udit
 		}
 	}
 
-	// EnvÌa informaciÛn de iluminaciÛn a los shaders (direcciÛn, color, intensidad, c·mara)
+	// Env√≠a informaci√≥n de iluminaci√≥n a los shaders (direcci√≥n, color, intensidad, c√°mara)
 	void Scene::lightSetup(glm::mat4& view_matrix)
 	{
 		vector<glm::vec3> lightDirsWorld = {
@@ -189,17 +189,17 @@ namespace udit
 		defaultProgram->setVec3("viewPos", viewPos);
 	}
 
-	// Actualiza la proyecciÛn y el viewport al redimensionar la ventana
+	// Actualiza la proyecci√≥n y el viewport al redimensionar la ventana
 	void Scene::resize(unsigned width, unsigned height)
 	{
 		projection_matrix = glm::perspective(20.f, GLfloat(width) / height, 1.f, 5000.f);
 
 		defaultProgram->setMat4("projection_matrix", projection_matrix);
 
-		glViewport(0, 0, width, height); // Ajuste del ·rea de dibujo
+		glViewport(0, 0, width, height); // Ajuste del √°rea de dibujo
 	}
 
-	// Establece una nueva c·mara como activa
+	// Establece una nueva c√°mara como activa
 	void Scene::set_camera(Camera new_camera)
 	{
 		camera = new_camera;

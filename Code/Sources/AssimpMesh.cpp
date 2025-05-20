@@ -1,4 +1,4 @@
-#include "../Headers/AssimpMesh.hpp"
+Ôªø#include "../Headers/AssimpMesh.hpp"
 #include <iostream>
 
 namespace udit
@@ -15,7 +15,7 @@ namespace udit
     {
         Assimp::Importer importer;
 
-        // Lee el archivo con flags para triangulaciÛn, invertir UVs y generar normales
+        // Lee el archivo con flags para triangulaci√≥n, invertir UVs y generar normales
         const aiScene* scene = importer.ReadFile(path,
             aiProcess_Triangulate |
             aiProcess_FlipUVs |
@@ -39,14 +39,14 @@ namespace udit
         processMesh(scene->mMeshes[0]);
     }
 
-    // Procesa una malla: vÈrtices y Ìndices
+    // Procesa una malla: v√©rtices y √≠ndices
     void AssimpMesh::processMesh(aiMesh* mesh)
     {
         processVertices(mesh);
         processIndices(mesh);
     }
 
-    // Extrae vÈrtices, normales y UVs de la malla
+    // Extrae v√©rtices, normales y UVs de la malla
     void AssimpMesh::processVertices(aiMesh* mesh)
     {
         const bool hasNormals = mesh->HasNormals();
@@ -54,13 +54,13 @@ namespace udit
 
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
         {
-            // AÒade posiciÛn del vÈrtice
+            // A√±ade posici√≥n del v√©rtice
             const auto& vertex = mesh->mVertices[i];
             data.coordinates.push_back(vertex.x);
             data.coordinates.push_back(vertex.y);
             data.coordinates.push_back(vertex.z);
 
-            // AÒade normales si existen
+            // A√±ade normales si existen
             if (hasNormals)
             {
                 const auto& normal = mesh->mNormals[i];
@@ -69,7 +69,7 @@ namespace udit
                 data.normals.push_back(normal.z);
             }
 
-            // AÒade UVs si existen, sino UVs a cero
+            // A√±ade UVs si existen, sino UVs a cero
             if (hasUVs)
             {
                 const auto& uv = mesh->mTextureCoords[0][i];
@@ -84,7 +84,7 @@ namespace udit
         }
     }
 
-    // Extrae los Ìndices de los tri·ngulos que forman la malla
+    // Extrae los √≠ndices de los tri√°ngulos que forman la malla
     void AssimpMesh::processIndices(aiMesh* mesh)
     {
         for (unsigned int i = 0; i < mesh->mNumFaces; ++i)

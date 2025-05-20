@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <glm.hpp>
 #include <glad/glad.h>
@@ -10,31 +10,31 @@ namespace udit
     /**
      * @brief Estructura que contiene datos de una malla generada.
      *
-     * Incluye coordenadas de vértices, coordenadas de textura, normales e índices.
+     * Incluye coordenadas de vÃ©rtices, coordenadas de textura, normales e Ã­ndices.
      */
     struct MeshData
     {
-        std::vector<GLfloat> coordinates; /**< Posiciones de vértices (x, y, z). */
+        std::vector<GLfloat> coordinates; /**< Posiciones de vÃ©rtices (x, y, z). */
         std::vector<GLfloat> texCoords;   /**< Coordenadas de textura (u, v). */
-        std::vector<GLfloat> normals;     /**< Normales para iluminación (x, y, z). */
-        std::vector<GLuint> indices;      /**< Índices para dibujar triángulos. */
+        std::vector<GLfloat> normals;     /**< Normales para iluminaciÃ³n (x, y, z). */
+        std::vector<GLuint> indices;      /**< Ãndices para dibujar triÃ¡ngulos. */
     };
 
     /**
-     * @brief Clase para generar primitivas geométricas básicas.
+     * @brief Clase para generar primitivas geomÃ©tricas bÃ¡sicas.
      *
-     * Proporciona funciones estáticas para crear mallas de planos, conos y cubos.
+     * Proporciona funciones estÃ¡ticas para crear mallas de planos, conos y cubos.
      */
     class GeometryGenerator
     {
     public:
         /**
          * @brief Genera una malla de un plano subdividido.
-         * @param hDivisions Número de subdivisiones horizontales.
-         * @param vDivisions Número de subdivisiones verticales.
+         * @param hDivisions NÃºmero de subdivisiones horizontales.
+         * @param vDivisions NÃºmero de subdivisiones verticales.
          * @param width Ancho total del plano.
          * @param height Alto total del plano.
-         * @return MeshData con los datos de vértices, normales, UVs e índices.
+         * @return MeshData con los datos de vÃ©rtices, normales, UVs e Ã­ndices.
          */
         static MeshData generatePlane(int hDivisions, int vDivisions, float width, float height);
 
@@ -42,15 +42,15 @@ namespace udit
          * @brief Genera una malla de un cono.
          * @param radius Radio de la base del cono.
          * @param height Altura del cono.
-         * @param segments Número de segmentos para aproximar la base circular.
-         * @return MeshData con vértices, normales, UVs e índices.
+         * @param segments NÃºmero de segmentos para aproximar la base circular.
+         * @return MeshData con vÃ©rtices, normales, UVs e Ã­ndices.
          */
         static MeshData generateCone(float radius, float height, int segments);
 
         /**
          * @brief Genera una malla de un cubo centrado en el origen.
-         * @param size Tamaño del lado del cubo. Por defecto 1.0f.
-         * @return MeshData con vértices, normales, UVs e índices.
+         * @param size TamaÃ±o del lado del cubo. Por defecto 1.0f.
+         * @return MeshData con vÃ©rtices, normales, UVs e Ã­ndices.
          */
         static MeshData generateCube(float size = 1.0f);
     };

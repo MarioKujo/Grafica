@@ -1,4 +1,4 @@
-#include "../Headers/Object.hpp"
+ï»¿#include "../Headers/Object.hpp"
 
 namespace udit
 {
@@ -13,9 +13,9 @@ namespace udit
     void Object::render(const glm::mat4& view, const glm::mat4& projection)
     {
         shader->use();  // Activar shader
-        setupTexturesAndBlending();  // Configurar texturas y blending según sea necesario
+        setupTexturesAndBlending();  // Configurar texturas y blending segÃºn sea necesario
 
-        // Calcular y enviar las matrices modelo-vista y proyección al shader
+        // Calcular y enviar las matrices modelo-vista y proyecciÃ³n al shader
         glm::mat4 model = computeModelMatrix();
         shader->setMat4("model_view_matrix", view * model);
         shader->setMat4("projection_matrix", projection);
@@ -62,7 +62,7 @@ namespace udit
 
         glDepthMask(GL_FALSE);  // Deshabilitar escritura en el buffer de profundidad
         glEnable(GL_BLEND);  // Habilitar blending
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Configurar función de blending
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Configurar funciÃ³n de blending
 
         shader->setFloat("transparency", 0.5f);  // Establecer nivel de transparencia
     }
@@ -77,7 +77,7 @@ namespace udit
     {
         if (transparencyLoc != -1)
         {
-            glDisable(GL_BLEND);  // Deshabilitar blending si se habilitó antes
+            glDisable(GL_BLEND);  // Deshabilitar blending si se habilitÃ³ antes
             glDepthMask(GL_TRUE);  // Habilitar escritura en el buffer de profundidad
         }
     }
@@ -96,7 +96,7 @@ namespace udit
     glm::mat4 Object::computeModelMatrix() const
     {
         glm::mat4 model(1.0f);  // Matriz identidad
-        model = glm::translate(model, position);  // Aplicar traslación
+        model = glm::translate(model, position);  // Aplicar traslaciÃ³n
         model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0));  // Rotar en X
         model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0));  // Rotar en Y
         model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1));  // Rotar en Z

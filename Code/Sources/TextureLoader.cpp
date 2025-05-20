@@ -1,4 +1,4 @@
-// Este cÛdigo es de dominio p˙blico
+Ôªø// Este c√≥digo es de dominio p√∫blico
 // andrmatgonros@gmail.com
 
 #include "../Headers/TextureLoader.hpp"
@@ -28,7 +28,7 @@ namespace udit
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
 
-        // Configurar par·metros de filtrado y repeticiÛn
+        // Configurar par√°metros de filtrado y repetici√≥n
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -84,7 +84,7 @@ namespace udit
             stbi_image_free(data);
         }
 
-        // Configurar los par·metros del cubemap
+        // Configurar los par√°metros del cubemap
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

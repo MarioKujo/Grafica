@@ -1,6 +1,6 @@
-/**
+Ôªø/**
  * @file Scene.hpp
- * @brief DeclaraciÛn de la clase Scene que representa una escena 3D completa.
+ * @brief Declaraci√≥n de la clase Scene que representa una escena 3D completa.
  */
 
 #pragma once
@@ -17,34 +17,34 @@ namespace udit
 {
     /**
      * @class Scene
-     * @brief Representa una escena 3D con c·mara, objetos, skybox, texturas, iluminaciÛn y shaders.
+     * @brief Representa una escena 3D con c√°mara, objetos, skybox, texturas, iluminaci√≥n y shaders.
      *
-     * Esta clase se encarga de gestionar la creaciÛn, configuraciÛn, actualizaciÛn y renderizado de una
-     * escena 3D compuesta por distintos objetos jer·rquicos. TambiÈn configura el sistema de iluminaciÛn
-     * y controla la c·mara.
+     * Esta clase se encarga de gestionar la creaci√≥n, configuraci√≥n, actualizaci√≥n y renderizado de una
+     * escena 3D compuesta por distintos objetos jer√°rquicos. Tambi√©n configura el sistema de iluminaci√≥n
+     * y controla la c√°mara.
      */
     class Scene
     {
     private:
 
-        GeometryGenerator generator; ///< Generador de primitivas geomÈtricas.
+        GeometryGenerator generator; ///< Generador de primitivas geom√©tricas.
 
-        unique_ptr<ShaderProgram> defaultProgram;      ///< Shader con iluminaciÛn est·ndar.
-        unique_ptr<ShaderProgram> unlitProgram;        ///< Shader sin iluminaciÛn (para objetos como el cono).
+        unique_ptr<ShaderProgram> defaultProgram;      ///< Shader con iluminaci√≥n est√°ndar.
+        unique_ptr<ShaderProgram> unlitProgram;        ///< Shader sin iluminaci√≥n (para objetos como el cono).
         unique_ptr<ShaderProgram> skyboxProgram;       ///< Shader para renderizar el skybox.
         unique_ptr<ShaderProgram> heightmapProgram;    ///< Shader especializado en renderizar heightmaps.
 
         static const float UFO_HEIGHT;     ///< Altura base del modelo OVNI.
         static const float COW_HEIGHT;     ///< Altura base del modelo vaca.
         static const float CONE_HEIGHT;    ///< Altura base del modelo cono.
-        static const float SCALE_SMALL;    ///< Escala reducida para modelos pequeÒos.
+        static const float SCALE_SMALL;    ///< Escala reducida para modelos peque√±os.
         static const float SCALE_BIG;      ///< Escala ampliada para modelos grandes.
 
-        glm::vec3 lightPos;     ///< PosiciÛn de la luz principal (no usada directamente si se usan direcciones).
+        glm::vec3 lightPos;     ///< Posici√≥n de la luz principal (no usada directamente si se usan direcciones).
         glm::vec3 lightColor;   ///< Color de la luz.
-        glm::vec3 viewPos;      ///< PosiciÛn de la c·mara en el espacio de mundo.
+        glm::vec3 viewPos;      ///< Posici√≥n de la c√°mara en el espacio de mundo.
 
-        glm::mat4 projection_matrix; ///< Matriz de proyecciÛn en perspectiva.
+        glm::mat4 projection_matrix; ///< Matriz de proyecci√≥n en perspectiva.
 
 
         unique_ptr<AssimpMesh> ufo;            ///< Modelo 3D del OVNI.
@@ -53,15 +53,15 @@ namespace udit
         unique_ptr<Mesh> plane;                ///< Malla del plano (heightmap).
         unique_ptr<Mesh> cone;                 ///< Malla del cono.
 
-        unique_ptr<Object> heightmapObj;       ///< Objeto gr·fico del heightmap.
-        unique_ptr<Object> ufoObj;             ///< Objeto gr·fico del OVNI.
-        unique_ptr<Object> cowObj;             ///< Objeto gr·fico de la vaca.
-        unique_ptr<Object> coneObj;            ///< Objeto gr·fico del cono.
+        unique_ptr<Object> heightmapObj;       ///< Objeto gr√°fico del heightmap.
+        unique_ptr<Object> ufoObj;             ///< Objeto gr√°fico del OVNI.
+        unique_ptr<Object> cowObj;             ///< Objeto gr√°fico de la vaca.
+        unique_ptr<Object> coneObj;            ///< Objeto gr√°fico del cono.
         unique_ptr<Skybox> skybox;             ///< Objeto que representa el skybox de fondo.
 
-        float angle;               ///< ¡ngulo de rotaciÛn usado para animaciÛn.
+        float angle;               ///< √Ångulo de rotaci√≥n usado para animaci√≥n.
 
-        Camera camera;             ///< C·mara activa de la escena.
+        Camera camera;             ///< C√°mara activa de la escena.
 
         TextureLoader textureLoader; ///< Gestor de carga de texturas.
 
@@ -72,7 +72,7 @@ namespace udit
         GLuint cowTextureID;         ///< ID de la textura de la vaca.
         GLuint ufoTextureID;         ///< ID de la textura del OVNI.
 
-        std::shared_ptr<SceneNode> rootNode;       ///< Nodo raÌz de la jerarquÌa de escena.
+        std::shared_ptr<SceneNode> rootNode;       ///< Nodo ra√≠z de la jerarqu√≠a de escena.
         std::shared_ptr<SceneNode> ufoCowConeNode; ///< Nodo contenedor de OVNI, vaca y cono.
         std::shared_ptr<SceneNode> ufoNode;        ///< Nodo del OVNI.
         std::shared_ptr<SceneNode> cowNode;        ///< Nodo de la vaca.
@@ -86,10 +86,10 @@ namespace udit
     public:
         /**
          * @brief Constructor de Scene.
-         * @param width Ancho de la ventana de visualizaciÛn.
-         * @param height Alto de la ventana de visualizaciÛn.
+         * @param width Ancho de la ventana de visualizaci√≥n.
+         * @param height Alto de la ventana de visualizaci√≥n.
          *
-         * Inicializa la c·mara, objetos, shaders, texturas y configura la jerarquÌa de escena.
+         * Inicializa la c√°mara, objetos, shaders, texturas y configura la jerarqu√≠a de escena.
          */
         Scene(unsigned width, unsigned height);
 
@@ -106,7 +106,7 @@ namespace udit
         void setTextures();
 
         /**
-         * @brief Actualiza par·metros din·micos de la escena (como rotaciones).
+         * @brief Actualiza par√°metros din√°micos de la escena (como rotaciones).
          */
         void update();
 
@@ -119,20 +119,20 @@ namespace udit
 
         /**
          * @brief Configura las fuentes de luz y sus propiedades en los shaders activos.
-         * @param view_matrix Matriz de vista desde la c·mara.
+         * @param view_matrix Matriz de vista desde la c√°mara.
          */
         void lightSetup(glm::mat4& view_matrix);
 
         /**
-         * @brief Recalcula la matriz de proyecciÛn y ajusta el viewport tras un redimensionado.
+         * @brief Recalcula la matriz de proyecci√≥n y ajusta el viewport tras un redimensionado.
          * @param width Nuevo ancho de la ventana.
          * @param height Nuevo alto de la ventana.
          */
         void resize(unsigned width, unsigned height);
 
         /**
-         * @brief Establece una nueva instancia de c·mara para la escena.
-         * @param new_camera Objeto Camera que ser· usado para generar la vista.
+         * @brief Establece una nueva instancia de c√°mara para la escena.
+         * @param new_camera Objeto Camera que ser√° usado para generar la vista.
          */
         void set_camera(Camera new_camera);
     };

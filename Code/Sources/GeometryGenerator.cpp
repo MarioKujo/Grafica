@@ -1,8 +1,8 @@
-#include "../Headers/GeometryGenerator.hpp"
+ï»¿#include "../Headers/GeometryGenerator.hpp"
 
 namespace udit
 {
-    // Función auxiliar para agregar un vértice con sus datos a MeshData
+    // FunciÃ³n auxiliar para agregar un vÃ©rtice con sus datos a MeshData
     static void addVertex(MeshData& data, const glm::vec3& pos, const glm::vec3& normal, const glm::vec2& uv) {
         data.coordinates.insert(data.coordinates.end(), { pos.x, pos.y, pos.z });
         data.normals.insert(data.normals.end(), { normal.x, normal.y, normal.z });
@@ -17,7 +17,7 @@ namespace udit
         float dz = height / vDiv;
         glm::vec3 normal(0.0f, 1.0f, 0.0f);
 
-        // Generar vértices, normales y UVs
+        // Generar vÃ©rtices, normales y UVs
         for (int i = 0; i <= vDiv; ++i) {
             for (int j = 0; j <= hDiv; ++j) {
                 glm::vec3 pos(j * dx - width / 2.0f, 0.0f, i * dz - height / 2.0f);
@@ -27,7 +27,7 @@ namespace udit
             }
         }
 
-        // Crear índices para triángulos
+        // Crear Ã­ndices para triÃ¡ngulos
         for (int i = 0; i < vDiv; ++i) {
             for (int j = 0; j < hDiv; ++j) {
                 int row1 = i * (hDiv + 1);
@@ -61,12 +61,12 @@ namespace udit
             addVertex(data, pos, { 0.0f, -1.0f, 0.0f }, uv);
         }
 
-        // Índices base (triángulos tipo pizza)
+        // Ãndices base (triÃ¡ngulos tipo pizza)
         for (int i = 1; i <= sides; ++i) {
             data.indices.insert(data.indices.end(), { 0, (unsigned int)i, (unsigned int)(i + 1) });
         }
 
-        // Ápice del cono
+        // Ãpice del cono
         int apexIndex = static_cast<int>(data.coordinates.size() / 3);
         addVertex(data, { 0.0f, height, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.5f, 1.0f });
 
@@ -78,7 +78,7 @@ namespace udit
         return data;
     }
 
-    // Genera un cubo centrado en el origen con lados de tamaño `size`
+    // Genera un cubo centrado en el origen con lados de tamaÃ±o `size`
     MeshData GeometryGenerator::generateCube(float size) {
         MeshData data;
         float s = size / 2.0f;

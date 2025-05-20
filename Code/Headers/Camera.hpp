@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -8,32 +8,32 @@ namespace udit
 {
     /**
      * @class Camera
-     * @brief Clase que representa una c·mara en un espacio 3D, controlada mediante teclado y ratÛn.
+     * @brief Clase que representa una c√°mara en un espacio 3D, controlada mediante teclado y rat√≥n.
      *
      * Permite calcular la matriz de vista y moverse/orientarse en un entorno tridimensional usando SDL.
      */
     class Camera
     {
     private:
-        glm::vec3 position;         /**< PosiciÛn actual de la c·mara en el espacio 3D. */
-        glm::vec3 front;            /**< Vector de direcciÛn hacia donde la c·mara est· mirando. */
-        glm::vec3 up;               /**< Vector hacia arriba relativo a la c·mara. */
-        glm::vec3 right;            /**< Vector hacia la derecha relativo a la c·mara. */
+        glm::vec3 position;         /**< Posici√≥n actual de la c√°mara en el espacio 3D. */
+        glm::vec3 front;            /**< Vector de direcci√≥n hacia donde la c√°mara est√° mirando. */
+        glm::vec3 up;               /**< Vector hacia arriba relativo a la c√°mara. */
+        glm::vec3 right;            /**< Vector hacia la derecha relativo a la c√°mara. */
         glm::vec3 world_up;         /**< Vector global hacia arriba (normalmente (0,1,0)). */
 
-        float yaw;                  /**< ¡ngulo de rotaciÛn horizontal (eje Y). */
-        float pitch;                /**< ¡ngulo de rotaciÛn vertical (eje X). */
-        float movement_speed;       /**< Velocidad de desplazamiento de la c·mara. */
-        float mouse_sensitivity;    /**< Sensibilidad de rotaciÛn con el movimiento del ratÛn. */
+        float yaw;                  /**< √Ångulo de rotaci√≥n horizontal (eje Y). */
+        float pitch;                /**< √Ångulo de rotaci√≥n vertical (eje X). */
+        float movement_speed;       /**< Velocidad de desplazamiento de la c√°mara. */
+        float mouse_sensitivity;    /**< Sensibilidad de rotaci√≥n con el movimiento del rat√≥n. */
 
     public:
         /**
-         * @brief Constructor con par·metros para inicializar la c·mara con valores especÌficos.
+         * @brief Constructor con par√°metros para inicializar la c√°mara con valores espec√≠ficos.
          *
-         * @param start_position PosiciÛn inicial de la c·mara.
-         * @param start_up Vector de orientaciÛn inicial hacia arriba.
-         * @param start_yaw Valor inicial del ·ngulo yaw.
-         * @param start_pitch Valor inicial del ·ngulo pitch.
+         * @param start_position Posici√≥n inicial de la c√°mara.
+         * @param start_up Vector de orientaci√≥n inicial hacia arriba.
+         * @param start_yaw Valor inicial del √°ngulo yaw.
+         * @param start_pitch Valor inicial del √°ngulo pitch.
          */
         Camera(
             glm::vec3 start_position,
@@ -43,51 +43,51 @@ namespace udit
         );
 
         /**
-         * @brief Constructor por defecto. Inicializa la c·mara con valores neutros.
+         * @brief Constructor por defecto. Inicializa la c√°mara con valores neutros.
          */
         Camera();
 
         /**
-         * @brief Genera y retorna la matriz de vista de la c·mara.
+         * @brief Genera y retorna la matriz de vista de la c√°mara.
          *
-         * @return glm::mat4 Matriz de vista utilizada para transformar el mundo en coordenadas de c·mara.
+         * @return glm::mat4 Matriz de vista utilizada para transformar el mundo en coordenadas de c√°mara.
          */
         glm::mat4 get_view_matrix() const;
 
         /**
-         * @brief Obtiene la posiciÛn actual de la c·mara en el espacio.
+         * @brief Obtiene la posici√≥n actual de la c√°mara en el espacio.
          *
-         * @return glm::vec3 PosiciÛn actual.
+         * @return glm::vec3 Posici√≥n actual.
          */
         glm::vec3 get_position() const;
 
         /**
-         * @brief Procesa la entrada del teclado para mover la c·mara.
+         * @brief Procesa la entrada del teclado para mover la c√°mara.
          *
          * @param state Puntero al estado actual del teclado proporcionado por SDL_GetKeyboardState().
          */
         void process_keyboard(const Uint8* state);
 
         /**
-         * @brief Configura el control de la c·mara activando el modo de ratÛn relativo.
+         * @brief Configura el control de la c√°mara activando el modo de rat√≥n relativo.
          *
-         * Oculta el cursor y permite capturar el movimiento del ratÛn.
+         * Oculta el cursor y permite capturar el movimiento del rat√≥n.
          */
         void start_camera_control();
 
         /**
-         * @brief Procesa el movimiento del ratÛn para rotar la c·mara.
+         * @brief Procesa el movimiento del rat√≥n para rotar la c√°mara.
          *
-         * @param xrel Movimiento relativo en el eje X del ratÛn.
-         * @param yrel Movimiento relativo en el eje Y del ratÛn.
+         * @param xrel Movimiento relativo en el eje X del rat√≥n.
+         * @param yrel Movimiento relativo en el eje Y del rat√≥n.
          */
         void process_mouse_motion(float xrel, float yrel);
 
     private:
         /**
-         * @brief Actualiza los vectores de orientaciÛn de la c·mara (front, right, up).
+         * @brief Actualiza los vectores de orientaci√≥n de la c√°mara (front, right, up).
          *
-         * Este mÈtodo debe llamarse cada vez que cambien los ·ngulos yaw o pitch.
+         * Este m√©todo debe llamarse cada vez que cambien los √°ngulos yaw o pitch.
          */
         void update_camera_vectors();
     };

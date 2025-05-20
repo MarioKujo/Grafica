@@ -1,4 +1,4 @@
-// Este código es de dominio público
+ï»¿// Este cÃ³digo es de dominio pÃºblico
 // andrmatgonros@gmail.com
 #include "../Headers/Camera.hpp"
 
@@ -12,8 +12,8 @@ namespace udit
         movement_speed(1.f),
         mouse_sensitivity(0.1f)
     {
-        start_camera_control();     // Activa el modo de control con ratón relativo
-        update_camera_vectors();    // Inicializa front, right y up con los ángulos dados
+        start_camera_control();     // Activa el modo de control con ratÃ³n relativo
+        update_camera_vectors();    // Inicializa front, right y up con los Ã¡ngulos dados
     }
 
     Camera::Camera()
@@ -27,12 +27,12 @@ namespace udit
         movement_speed(1.f),
         mouse_sensitivity(0.1f)
     {
-        update_camera_vectors();    // Inicializa los vectores en base a los ángulos por defecto
+        update_camera_vectors();    // Inicializa los vectores en base a los Ã¡ngulos por defecto
     }
 
     glm::mat4 Camera::get_view_matrix() const
     {
-        // Retorna la matriz de vista calculada a partir de posición, dirección y orientación
+        // Retorna la matriz de vista calculada a partir de posiciÃ³n, direcciÃ³n y orientaciÃ³n
         return glm::lookAt(position, position + front, up);
     }
 
@@ -43,7 +43,7 @@ namespace udit
 
     void Camera::process_keyboard(const Uint8* state)
     {
-        // Movimiento hacia adelante/atrás
+        // Movimiento hacia adelante/atrÃ¡s
         if (state[SDL_SCANCODE_W])
             position += front * movement_speed;
         if (state[SDL_SCANCODE_S])
@@ -69,14 +69,14 @@ namespace udit
         xrel *= mouse_sensitivity;
         yrel *= mouse_sensitivity;
 
-        // Modifica los ángulos yaw y pitch con el movimiento
+        // Modifica los Ã¡ngulos yaw y pitch con el movimiento
         yaw += xrel;
         pitch -= yrel;
 
         // Limita el pitch para evitar giros verticales excesivos (gimbal lock)
         pitch = glm::clamp(pitch, -89.0f, 89.0f);
 
-        // Actualiza los vectores front, right y up según los nuevos ángulos
+        // Actualiza los vectores front, right y up segÃºn los nuevos Ã¡ngulos
         update_camera_vectors();
     }
 

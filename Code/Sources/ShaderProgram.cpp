@@ -1,4 +1,4 @@
-#include "../Headers/ShaderProgram.hpp"
+ï»¿#include "../Headers/ShaderProgram.hpp"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -27,7 +27,7 @@ namespace udit {
         const char* vertex_code = vertex_source.c_str();
         const char* fragment_code = fragment_source.c_str();
 
-        // Compilar shader de vértice
+        // Compilar shader de vÃ©rtice
         glShaderSource(vertex_shader, 1, &vertex_code, nullptr);
         glCompileShader(vertex_shader);
         glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
@@ -85,7 +85,7 @@ namespace udit {
         other.program_id = 0;
     }
 
-    // Operador de asignación move: limpia programa actual y transfiere el nuevo
+    // Operador de asignaciÃ³n move: limpia programa actual y transfiere el nuevo
     ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
     {
         if (this != &other)
@@ -107,7 +107,7 @@ namespace udit {
             glUseProgram(program_id);
     }
 
-    // Busca la ubicación del uniform y cachea el resultado
+    // Busca la ubicaciÃ³n del uniform y cachea el resultado
     GLint ShaderProgram::getUniformLocation(const std::string& name) const
     {
         auto it = uniform_locations.find(name);
@@ -147,7 +147,7 @@ namespace udit {
             glUniform1i(loc, value);
     }
 
-    // Muestra errores de compilación del shader
+    // Muestra errores de compilaciÃ³n del shader
     void ShaderProgram::show_compilation_error(GLuint shader_id) const {
         GLint log_length = 0;
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);

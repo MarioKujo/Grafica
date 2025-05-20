@@ -1,4 +1,4 @@
-// Este cÛdigo es de dominio p˙blico
+Ôªø// Este c√≥digo es de dominio p√∫blico
 // andrmatgonros@gmail.com
 
 #pragma once
@@ -28,17 +28,17 @@ namespace udit
             throw std::runtime_error("Failed to initialize the video subsystem.");
         }
 
-        // Configura versiÛn y atributos b·sicos del contexto OpenGL
+        // Configura versi√≥n y atributos b√°sicos del contexto OpenGL
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, context_details.version_major);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, context_details.version_minor);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // Doble buffer para evitar parpadeos
-        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Asegura aceleraciÛn por hardware
+        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Asegura aceleraci√≥n por hardware
 
-        // Aplica perfil core si est· especificado
+        // Aplica perfil core si est√° especificado
         if (context_details.core_profile)
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        // Configura buffers de profundidad y stencil si est·n habilitados
+        // Configura buffers de profundidad y stencil si est√°n habilitados
         if (context_details.depth_buffer_size)
             SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, context_details.depth_buffer_size);
         if (context_details.stencil_buffer_size)
@@ -118,7 +118,7 @@ namespace udit
 
     Camera Window::get_camera()
     {
-        // Devuelve una copia de la c·mara actual
+        // Devuelve una copia de la c√°mara actual
         return camera;
     }
 }

@@ -89,6 +89,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/assimp/include;../Libraries/stb_image/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,15 +106,16 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../../../libraries/sdl/include;../../../libraries/glad/include;../../../libraries/glm/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Libraries/sdl/include;../Libraries/glad/include;../Libraries/glm/include;../Libraries/assimp/include;../Libraries/stb_image/include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2-static.lib;SDL2main.lib;glad.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../../libraries/sdl/lib/windows/visual-studio-2022/static-x64;../../../libraries/glad/lib/windows/visual-studio-2022/static-x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2-static.lib;SDL2main.lib;glad.lib;imm32.lib;setupapi.lib;version.lib;winmm.lib;opengl32.lib;assimp-vc143-mt.lib;zlibstatic.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../Libraries/sdl/lib/windows/visual-studio-2022/static-x64;../Libraries/glad/lib/windows/visual-studio-2022/static-x64;../Libraries/assimp/lib/windows/visual-studio-2022/static-x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

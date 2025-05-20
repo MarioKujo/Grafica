@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "Mesh.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -32,19 +32,19 @@ namespace udit
         void loadModel(const std::string& path);
 
         /**
-         * @brief Procesa una malla de Assimp extrayendo vÈrtices, normales, UVs e Ìndices.
+         * @brief Procesa una malla de Assimp extrayendo v√©rtices, normales, UVs e √≠ndices.
          * @param mesh Puntero a la malla de Assimp a procesar.
          */
         void processMesh(aiMesh* mesh);
 
         /**
-         * @brief Procesa los vÈrtices de la malla, incluyendo coordenadas, normales y UVs.
+         * @brief Procesa los v√©rtices de la malla, incluyendo coordenadas, normales y UVs.
          * @param mesh Puntero a la malla de Assimp.
          */
         void processVertices(aiMesh* mesh);
 
         /**
-         * @brief Procesa los Ìndices de la malla para formar los tri·ngulos.
+         * @brief Procesa los √≠ndices de la malla para formar los tri√°ngulos.
          * @param mesh Puntero a la malla de Assimp.
          */
         void processIndices(aiMesh* mesh);
