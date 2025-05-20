@@ -127,9 +127,10 @@ namespace udit
 	}
 
 	// Actualiza la escena animando el ángulo (para efectos como rotación o flotación)
-	void Scene::update()
+	void Scene::update(float deltaTime)
 	{
-		angle = fmod(angle + 1.0f, 360.f);
+		angle = fmod(angle + 45.0f * deltaTime, 360.f); // 45° por segundo
+
 	}
 
 	// Renderiza la escena completa, incluyendo skybox, luces y objetos
@@ -144,7 +145,7 @@ namespace udit
 
 		// Animación senoidal de flotación y rotación del grupo ufo-vaca-cono
 		float float_height = 2.0f;
-		float y_offset = sin(angle / 100) * float_height;
+		float y_offset = sin(glm::radians(angle)) * float_height;
 		ufoCowConeNode->setTransform({ 5.f, y_offset, 5.f }, { 0.f, angle, 0.f }, { 0.1f, 0.1f, 0.1f });
 
 		glm::mat4 identity = glm::mat4(1.f); // Matriz identidad para la raíz

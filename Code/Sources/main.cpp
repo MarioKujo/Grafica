@@ -1,5 +1,7 @@
 #include "../Headers/Scene.hpp"
 #include "../Headers/Window.hpp"
+#include <chrono>
+
 
 using udit::Scene;
 using udit::Window;
@@ -23,9 +25,18 @@ int main(int argc, char* argv[])
     Scene scene(viewport_width, viewport_height); ///< Crea la escena 3D con el tamaño de la ventana.
 
     bool exit = false; ///< Flag para determinar si el programa debe salir.
+
+    using clock = std::chrono::high_resolution_clock;
+    auto last_time = clock::now();
+
     do
     {
-        scene.update(); ///< Actualiza la escena.
+        auto current_time = clock::now();
+        std::chrono::duration<float> delta = current_time - last_time;
+        float deltaTime = delta.count(); // en segundos
+        last_time = current_time;
+
+        scene.update(deltaTime); ///< Actualiza la escena.
 
         scene.render(); ///< Renderiza la escena.
 

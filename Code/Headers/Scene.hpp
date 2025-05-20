@@ -108,7 +108,7 @@ namespace udit
         /**
          * @brief Actualiza parámetros dinámicos de la escena (como rotaciones).
          */
-        void update();
+        void update(float deltaTime);
 
         /**
          * @brief Renderiza toda la escena, incluyendo skybox, terreno y objetos.
