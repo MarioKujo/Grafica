@@ -192,27 +192,36 @@ namespace udit
     }
     void Scene::render_rubiks_cube()
     {
-        // Definir la disposición de los 27 cubos
         const int grid_size = 3;
-        const float spacing = 2.0f;  // Espaciado entre los cubos
+        const float spacing = 2.1f;
 
-        // Definir el ángulo de rotación para la cara (ejemplo: 90 grados)
-        constexpr float rotation_angle = glm::radians(90.0f);
-
-        // Loop para dibujar los 27 cubos (3x3x3)
         for (int x = 0; x < grid_size; ++x) {
             for (int y = 0; y < grid_size; ++y) {
                 for (int z = 0; z < grid_size; ++z) {
-                    // Calculamos la posición del cubo
-                    glm::mat4 model_matrix(1);
-                    // Trasladar el cubo a su posición en la cuadrícula 3x3x3
-                    model_matrix = glm::translate(model_matrix, glm::vec3(x * spacing - spacing, y * spacing - spacing, (z * spacing - spacing)*3));
 
-                    // Actualizamos la matriz de modelo para el cubo actual
+                    glm::mat4 model_matrix(1.0f);
+                    model_matrix = glm::rotate(model_matrix, glm::radians(-45.f), glm::vec3(0, 1, 0));
+                    model_matrix = glm::translate(model_matrix, glm::vec3(-10.f, 1.f, -10.f));
+                    model_matrix = glm::translate(model_matrix, glm::vec3(x * spacing - spacing, y * spacing - spacing, z * spacing - 10.f));
                     glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_matrix));
 
-                    // Renderizamos el cubo
-                    cube.render();
+                    // Colores por cara: [front, back, left, right, top, bottom]
+                    std::array<glm::vec3, 6 > face_colors;
+
+                    // FRONT (Z == 2)
+                    face_colors[0] = (z == 2) ? glm::vec3(1, 1, 1) : glm::vec3(0, 0, 0); // blanco
+                    // BACK (Z == 0)
+                    face_colors[1] = (z == 0) ? glm::vec3(1, 1, 0) : glm::vec3(0, 0, 0); // amarillo
+                    // LEFT (X == 0)
+                    face_colors[2] = (x == 0) ? glm::vec3(1, 0.5, 0) : glm::vec3(0, 0, 0); // naranja
+                    // RIGHT (X == 2)
+                    face_colors[3] = (x == 2) ? glm::vec3(1, 0, 0) : glm::vec3(0, 0, 0);   // rojo
+                    // TOP (Y == 2)
+                    face_colors[4] = (y == 2) ? glm::vec3(0, 1, 0) : glm::vec3(0, 0, 0);   // verde
+                    // BOTTOM (Y == 0)
+                    face_colors[5] = (y == 0) ? glm::vec3(0, 0, 1) : glm::vec3(0, 0, 0);   // azul
+
+                    cube.render(face_colors);
                 }
             }
         }

@@ -6,7 +6,8 @@
 #define CUBE_HEADER
 
 #include <glad/glad.h>
-
+#include <array>
+#include <glm.hpp>
 namespace udit
 {
 
@@ -40,7 +41,8 @@ namespace udit
         Cube();
         ~Cube();
 
-        void render();
+        void render(const std::array<glm::vec3, 6>& face_colors);
+
 
     };
 
