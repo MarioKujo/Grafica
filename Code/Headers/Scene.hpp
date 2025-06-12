@@ -20,6 +20,7 @@ namespace udit
         GLint  model_view_matrix_id;
         GLint  projection_matrix_id;
 
+
         Cube   cube;
         float  angle;
 
@@ -29,6 +30,7 @@ namespace udit
 
         void   update();
         void   render();
+        void   render_rubiks_cube();
         void   resize(unsigned width, unsigned height);
 
     private:
