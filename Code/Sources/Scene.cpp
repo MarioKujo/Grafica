@@ -19,23 +19,31 @@ namespace udit
 
     using namespace std;
 
-    const string Scene::vertex_shader_code =
-
-        "#version 330\n"
-        ""
-        "uniform mat4 model_view_matrix;"
-        "uniform mat4 projection_matrix;"
-        ""
-        "layout (location = 0) in vec3 vertex_coordinates;"
-        "layout (location = 1) in vec3 vertex_color;"
-        ""
-        "out vec3 front_color;"
-        ""
-        "void main()"
-        "{"
-        "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
-        "   front_color = vertex_color;"
-        "}";
+    const std::string Scene::vertex_shader_code =
+        "#version 330 core\n"
+        "\n"
+        "uniform mat4 model_view_matrix;\n"
+        "uniform mat4 projection_matrix;\n"
+        "\n"
+        "layout(location = 0) in float t;\n"
+        "\n"
+        "out vec3 front_color;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    float num_turns = 5.0;\n"
+        "    float height = 4.0;\n"
+        "    float angle = t * num_turns * 2.0 * 3.14159265359;\n"
+        "\n"
+        "    float x = cos(angle);\n"
+        "    float z = sin(angle);\n"
+        "    float y = t * height;\n"
+        "\n"
+        "    vec3 position = vec3(x, y, z);\n"
+        "    gl_Position = projection_matrix * model_view_matrix * vec4(position, 1.0);\n"
+        "\n"
+        "    front_color = vec3(1.0, 1.0, 1.0);\n"
+        "}\n";
 
     const string Scene::fragment_shader_code =
 
@@ -80,35 +88,23 @@ namespace udit
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Se rota la espiral y se empuja hacia el fondo:
         glm::mat4 model_view_matrix(1);
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(2.5f, 0.f, -5.f));
+        model_view_matrix = glm::rotate(model_view_matrix, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
+        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(0.f, 1.f, 0.f));
 
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
-        // Dibujar la espiral ascendente sobre el plano XZ
-        draw_spiral(1000, 5); // 1000 vértices, 5 giros
+        draw_spiral_single_float(1000);
     }
 
-    void Scene::draw_spiral(int num_vertices, float num_turns)
+    void Scene::draw_spiral_single_float(int num_vertices)
     {
-        // El número total de vértices
-        float step = num_turns * 2.0f * glm::pi<float>(); // 5 giros (en radianes)
-        float height_step = 4.0f / num_vertices; // Asignamos una altura normalizada para la espiral
-
-        // Creamos los vértices
-        vector<glm::vec3> vertices;
+        // Vector con un único float por vértice, t en [0, 1]
+        vector<float> ts(num_vertices);
         for (int i = 0; i < num_vertices; ++i)
         {
-            float t = (i / float(num_vertices)) * step; // Ángulo para cada vértice
-
-            // Coordenadas en el plano XZ, con altura creciente
-            float x = cos(t);
-            float z = sin(t);
-            float y = i * height_step; // Altura creciente
-
-            vertices.push_back(glm::vec3(x, y, z));
+            ts[i] = i / float(num_vertices - 1);
         }
 
         GLuint vbo, vao;
@@ -117,18 +113,16 @@ namespace udit
 
         glBindVertexArray(vao);
 
-        // Copiar datos de los vértices al VBO
+        // Copiar datos al VBO
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ts.size() * sizeof(float), ts.data(), GL_STATIC_DRAW);
 
-        // Enlazar el atributo de vértices (posición)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        // Atributo con un float
+        glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        // Dibujar la espiral
-        glDrawArrays(GL_LINE_STRIP, 0, vertices.size());
+        glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(ts.size()));
 
-        // Limpiar
         glBindVertexArray(0);
         glDeleteBuffers(1, &vbo);
         glDeleteVertexArrays(1, &vao);

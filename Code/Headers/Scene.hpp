@@ -29,7 +29,7 @@ namespace udit
 
         void   update();
         void   render();
-        void draw_spiral(int num_vertices, float num_turns);
+        void draw_spiral_single_float(int num_vertices);
         void   resize(unsigned width, unsigned height);
 
     private:
