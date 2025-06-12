@@ -78,7 +78,6 @@ namespace udit
     void Scene::render()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 model_matrix = glm::mat4(1.0f);
         // Dibujamos el cubo de Rubik:
         render_rubiks_cube();
     }
@@ -193,32 +192,51 @@ namespace udit
     void Scene::render_rubiks_cube()
     {
         const int grid_size = 3;
-        const float spacing = 2.1f;
+        const float spacing = 2.5f;
+
+        glm::vec3 world_translation(0.f, 0.f, -15.f);
 
         for (int x = 0; x < grid_size; ++x) {
             for (int y = 0; y < grid_size; ++y) {
                 for (int z = 0; z < grid_size; ++z) {
 
                     glm::mat4 model_matrix(1.0f);
-                    model_matrix = glm::rotate(model_matrix, glm::radians(-45.f), glm::vec3(0, 1, 0));
-                    model_matrix = glm::translate(model_matrix, glm::vec3(-10.f, 1.f, -10.f));
-                    model_matrix = glm::translate(model_matrix, glm::vec3(x * spacing - spacing, y * spacing - spacing, z * spacing - 10.f));
+
+                    // Trasladar el cubo completo a la escena
+                    model_matrix = glm::translate(model_matrix, world_translation);
+
+                    model_matrix = glm::rotate(model_matrix, glm::radians(45.f), glm::vec3(1.f, 0.f, 0.f));
+
+                    model_matrix = glm::rotate(model_matrix, glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
+                    // Cubie position within the Rubik's cube
+                    glm::vec3 cubie_translation(
+                        x * spacing - spacing,
+                        y * spacing - spacing,
+                        z * spacing - spacing);
+
+                    bool rotating_face = (y == 2);  // Ejemplo: cara superior
+
+                    if (rotating_face)
+                    {
+                        model_matrix = glm::rotate(model_matrix, angle, glm::vec3(0, 1, 0));
+                        model_matrix = glm::translate(model_matrix, cubie_translation);
+                    }
+                    else
+                    {
+                        // Si no pertenece a la cara, solo aplicar traslación
+                        model_matrix = glm::translate(model_matrix, cubie_translation);
+                    }
+
                     glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_matrix));
 
                     // Colores por cara: [front, back, left, right, top, bottom]
-                    std::array<glm::vec3, 6 > face_colors;
+                    std::array<glm::vec3, 6> face_colors;
 
-                    // FRONT (Z == 2)
                     face_colors[0] = (z == 2) ? glm::vec3(1, 1, 1) : glm::vec3(0, 0, 0); // blanco
-                    // BACK (Z == 0)
                     face_colors[1] = (z == 0) ? glm::vec3(1, 1, 0) : glm::vec3(0, 0, 0); // amarillo
-                    // LEFT (X == 0)
                     face_colors[2] = (x == 0) ? glm::vec3(1, 0.5, 0) : glm::vec3(0, 0, 0); // naranja
-                    // RIGHT (X == 2)
                     face_colors[3] = (x == 2) ? glm::vec3(1, 0, 0) : glm::vec3(0, 0, 0);   // rojo
-                    // TOP (Y == 2)
                     face_colors[4] = (y == 2) ? glm::vec3(0, 1, 0) : glm::vec3(0, 0, 0);   // verde
-                    // BOTTOM (Y == 0)
                     face_colors[5] = (y == 0) ? glm::vec3(0, 0, 1) : glm::vec3(0, 0, 0);   // azul
 
                     cube.render(face_colors);
@@ -226,7 +244,4 @@ namespace udit
             }
         }
     }
-
-
-
 }
