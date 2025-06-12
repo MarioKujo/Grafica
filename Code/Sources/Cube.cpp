@@ -7,45 +7,67 @@
 namespace udit
 {
 
+    // Cada cara tiene 4 vértices únicos para permitir colores distintos por cara
     const GLfloat Cube::coordinates[] =
     {
-       -1,-1,+1,            // 0
-       +1,-1,+1,            // 1
-       +1,+1,+1,            // 2
-       -1,+1,+1,            // 3
-       -1,-1,-1,            // 4
-       +1,-1,-1,            // 5
-       +1,+1,-1,            // 6
-       -1,+1,-1,            // 7
+        // Front face
+        -1, -1, +1,
+        +1, -1, +1,
+        +1, +1, +1,
+        -1, +1, +1,
+        // Back face
+        -1, -1, -1,
+        +1, -1, -1,
+        +1, +1, -1,
+        -1, +1, -1,
+        // Left face
+        -1, -1, -1,
+        -1, -1, +1,
+        -1, +1, +1,
+        -1, +1, -1,
+        // Right face
+        +1, -1, -1,
+        +1, -1, +1,
+        +1, +1, +1,
+        +1, +1, -1,
+        // Top face
+        -1, +1, +1,
+        +1, +1, +1,
+        +1, +1, -1,
+        -1, +1, -1,
+        // Bottom face
+        -1, -1, +1,
+        +1, -1, +1,
+        +1, -1, -1,
+        -1, -1, -1,
     };
 
-    const GLfloat Cube::colors[] =
-    {
-        0, 0, 1,            // 0    Representa un cubo RGB
-        1, 0, 1,            // 1
-        1, 1, 1,            // 2
-        0, 1, 1,            // 3
-        0, 0, 0,            // 4
-        1, 0, 0,            // 5
-        1, 1, 0,            // 6
-        0, 1, 0,            // 7
-    };
+	const GLubyte Cube::indices[] =
+	{
+		// Front face (0, 1, 2, 3)
+		0, 1, 2,
+		0, 2, 3,
 
-    const GLubyte Cube::indices[] =
-    {
-        0, 1, 2,            // front
-        0, 2, 3,
-        4, 0, 3,            // left
-        4, 3, 7,
-        7, 5, 4,            // back
-        7, 6, 5,
-        1, 5, 6,            // right
-        1, 6, 2,
-        3, 2, 6,            // top
-        3, 6, 7,
-        5, 0, 4,            // bottom
-        5, 1, 0,
-    };
+		// Back face (4, 5, 6, 7)
+			4, 6, 5,
+			4, 7, 6,
+
+		// Left face (8, 9, 10, 11)
+		8, 10, 9,
+		8, 11, 10,
+
+		// Right face (12, 13, 14, 15)
+		12, 14, 13,
+		12, 15, 14,
+
+		// Top face (16, 17, 18, 19)
+		16, 18, 17,
+		16, 19, 18,
+
+		// Bottom face (20, 21, 22, 23)
+		20, 22, 21,
+		20, 23, 22
+	};
 
     Cube::Cube()
     {
@@ -69,7 +91,7 @@ namespace udit
         // Se suben a un VBO los datos de color y se vinculan al VAO:
 
         glBindBuffer (GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
-        glBufferData (GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 24 * 3 * sizeof(GLfloat), nullptr, GL_DYNAMIC_DRAW);
 
         glEnableVertexAttribArray (1);
         glVertexAttribPointer (1, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -90,13 +112,25 @@ namespace udit
         glDeleteBuffers      (VBO_COUNT, vbo_ids);
     }
 
-    void Cube::render ()
+    void Cube::render(const std::array<glm::vec3, 6>& face_colors)
     {
-        // Se selecciona el VAO que contiene los datos del objeto y se dibujan sus elementos:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_CULL_FACE);
-        glBindVertexArray (vao_id);
-        glDrawElements    (GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_BYTE, 0);
-        glBindVertexArray (0);
+        // Construir el array de colores para cada vértice (4 por cara)
+        GLfloat face_vertex_colors[24 * 3]; // 24 vértices, 3 componentes por vértice
+
+        for (int i = 0; i < 6; ++i) {
+            glm::vec3 color = face_colors[i];
+            for (int j = 0; j < 4; ++j) {
+                face_vertex_colors[(i * 4 + j) * 3 + 0] = color.r;
+                face_vertex_colors[(i * 4 + j) * 3 + 1] = color.g;
+                face_vertex_colors[(i * 4 + j) * 3 + 2] = color.b;
+            }
+        }
+
+        // Subir al VBO de color en cada render
+        glBindVertexArray(vao_id);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[COLORS_VBO]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(face_vertex_colors), face_vertex_colors, GL_DYNAMIC_DRAW);
+        glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_BYTE, 0); // 6 caras × 2 triángulos × 3 vértices
+        glBindVertexArray(0);
     }
 }
