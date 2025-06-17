@@ -93,8 +93,8 @@ namespace udit
     void Cube::render ()
     {
         // Se selecciona el VAO que contiene los datos del objeto y se dibujan sus elementos:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         glBindVertexArray (vao_id);
         glDrawElements    (GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_BYTE, 0);
         glBindVertexArray (0);
