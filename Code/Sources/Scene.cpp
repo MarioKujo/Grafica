@@ -55,7 +55,7 @@ namespace udit
         // Se establece la configuración básica:
 
         glEnable(GL_CULL_FACE);
-        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         glClearColor(.2f, .2f, .2f, 1.f);
 
         // Se compilan y se activan los shaders:
@@ -77,19 +77,34 @@ namespace udit
 
     void Scene::render()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Se rota el cubo y se empuja hacia el fondo:
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.f, -10.f));
 
-        glm::mat4 model_view_matrix(1);
+        // 1. A rota sobre sí misma
+        glm::mat4 model_A = glm::rotate(view, angle, glm::vec3(0.f, 1.f, 0.f));
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_A));
+        cube.render();
 
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        // 2. B rota alrededor de A (en plano XZ)
+        glm::mat4 model_B = view;
+        model_B = glm::rotate(model_B, angle, glm::vec3(0.f, 1.f, 0.f)); // órbita
+        model_B = glm::translate(model_B, glm::vec3(3.f, 0.f, 0.f));     // distancia a A
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_B));
+        cube.render();
 
-        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
+        // 3. C rota alrededor de A (en sentido contrario, plano XZ)
+        glm::mat4 model_C = view;
+        model_C = glm::rotate(model_C, -angle, glm::vec3(0.f, 1.f, 0.f)); // órbita inversa
+        model_C = glm::translate(model_C, glm::vec3(-6.f, 0.f, 0.f));
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_C));
+        cube.render();
 
-        // Se dibuja el cubo:
-
+        // 4. D rota alrededor de C (en plano XY)
+        glm::mat4 model_D = model_C; // parte desde la posición de C
+        model_D = glm::rotate(model_D, angle * 2.f, glm::vec3(0.f, 0.f, 1.f)); // órbita en XY
+        model_D = glm::translate(model_D, glm::vec3(0.f, 3.f, 0.f)); // distancia a C
+        glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_D));
         cube.render();
     }
 
