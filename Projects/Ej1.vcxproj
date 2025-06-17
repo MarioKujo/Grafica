@@ -27,7 +27,7 @@
     <ProjectGuid>{848942a0-a830-4b89-842a-631e405c2a5c}</ProjectGuid>
     <RootNamespace>SDL2example</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Grafica</ProjectName>
+    <ProjectName>Ej1</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
