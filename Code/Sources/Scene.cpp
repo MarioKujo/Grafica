@@ -18,23 +18,35 @@ namespace udit
 
     using namespace std;
 
-    const string Scene::vertex_shader_code =
+    const string Scene::vertex_shader_code = R"(
+    #version 330
 
-        "#version 330\n"
-        ""
-        "uniform mat4 model_view_matrix;"
-        "uniform mat4 projection_matrix;"
-        ""
-        "layout (location = 0) in vec3 vertex_coordinates;"
-        "layout (location = 1) in vec3 vertex_color;"
-        ""
-        "out vec3 front_color;"
-        ""
-        "void main()"
-        "{"
-        "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
-        "   front_color = vertex_color;"
-        "}";
+    uniform mat4 model_view_matrix;
+    uniform mat4 projection_matrix;
+
+    layout (location = 0) in vec3 vertex_coordinates;
+    layout (location = 1) in vec3 vertex_color;
+
+    out vec3 front_color;
+
+    void main()
+    {
+        vec3 position = vertex_coordinates;
+
+        float r = 9.0;                          // Radio de la semiesfera
+        float d = length(position.xz);         // Distancia desde el centro en el plano XZ
+
+        if (d < r) {
+            position.y = sqrt(r*r - d*d);      // Semiesfera: y = sqrt(r^2 - x^2 - z^2)
+        } else {
+            position.y = 0.0;
+        }
+
+        gl_Position = projection_matrix * model_view_matrix * vec4(position, 1.0);
+        front_color = vertex_color;
+    }
+)";
+
 
     const string Scene::fragment_shader_code =
 
@@ -50,7 +62,7 @@ namespace udit
 
     Scene::Scene(unsigned width, unsigned height)
         :
-        angle(0)
+        angle(0), plane(10, 10)
     {
         // Se establece la configuración básica:
 
@@ -83,14 +95,14 @@ namespace udit
 
         glm::mat4 model_view_matrix(1);
 
-        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, 0.f, -4.f));
-        model_view_matrix = glm::rotate(model_view_matrix, angle, glm::vec3(1.f, 2.f, 1.f));
+        model_view_matrix = glm::translate(model_view_matrix, glm::vec3(0.f, -2.f, -20.f));
+        model_view_matrix = glm::rotate(model_view_matrix, glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
 
         glUniformMatrix4fv(model_view_matrix_id, 1, GL_FALSE, glm::value_ptr(model_view_matrix));
 
         // Se dibuja el cubo:
 
-        cube.render();
+        plane.render();
     }
 
     void Scene::resize(unsigned width, unsigned height)

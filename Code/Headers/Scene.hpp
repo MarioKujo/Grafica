@@ -5,6 +5,8 @@
 #pragma once
 
 #include "Cube.hpp"
+#include "Plane.hpp"
+
 #include <string>
 
 namespace udit
@@ -21,6 +23,7 @@ namespace udit
         GLint  projection_matrix_id;
 
         Cube   cube;
+        Plane plane;
         float  angle;
 
     public:
