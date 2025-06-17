@@ -19,34 +19,51 @@ namespace udit
     using namespace std;
 
     const string Scene::vertex_shader_code =
-
         "#version 330\n"
         ""
         "uniform mat4 model_view_matrix;"
         "uniform mat4 projection_matrix;"
         ""
         "layout (location = 0) in vec3 vertex_coordinates;"
-        "layout (location = 1) in vec3 vertex_color;"
         ""
-        "out vec3 front_color;"
+        "out vec3 position_local;"
         ""
         "void main()"
         "{"
         "   gl_Position = projection_matrix * model_view_matrix * vec4(vertex_coordinates, 1.0);"
-        "   front_color = vertex_color;"
+        "   position_local = vertex_coordinates;"
         "}";
 
-    const string Scene::fragment_shader_code =
 
+    const string Scene::fragment_shader_code =
         "#version 330\n"
         ""
-        "in  vec3    front_color;"
+        "in vec3 position_local;"
         "out vec4 fragment_color;"
+        ""
+        "float checker(vec2 uv)"
+        "{"
+        "    float x = floor(uv.x * 8.0);"
+        "    float y = floor(uv.y * 8.0);"
+        "    return mod(x + y, 2.0);"
+        "}"
         ""
         "void main()"
         "{"
-        "    fragment_color = vec4(front_color, 1.0);"
+        "    vec2 uv;"
+        "    vec3 abs_pos = abs(position_local);"
+        ""
+        "    if (abs_pos.z > abs_pos.x && abs_pos.z > abs_pos.y)"
+        "        uv = position_local.xy * 0.5 + 0.5;"
+        "    else if (abs_pos.x > abs_pos.y)"
+        "        uv = position_local.zy * 0.5 + 0.5;"
+        "    else"
+        "        uv = position_local.xz * 0.5 + 0.5;"
+        ""
+        "    float c = checker(uv);"
+        "    fragment_color = vec4(vec3(c), 1.0);"
         "}";
+
 
     Scene::Scene(unsigned width, unsigned height)
         :
